@@ -73,7 +73,7 @@ test('错误处理包含 "无法访问页面内容" 分支', () => {
  * 在隔离作用域中运行 waitForTabComplete，使用模拟的 chrome API。
  * @returns {object} 包含 promise 和触发方法的对象
  */
-function runWaitForTabComplete(tabId, timeoutMs) {
+function runWaitForTabComplete(tabId, timeoutMs, getReturnValue = null) {
     const listeners = [];
     const mockChrome = {
         tabs: {
@@ -83,7 +83,8 @@ function runWaitForTabComplete(tabId, timeoutMs) {
                     const i = listeners.indexOf(fn);
                     if (i >= 0) listeners.splice(i, 1);
                 }
-            }
+            },
+            get: () => Promise.resolve(getReturnValue)
         }
     };
 
@@ -132,6 +133,19 @@ test('waitForTabComplete 超时时 reject', async () => {
 
 test('waitForTabComplete resolve 后清理监听器', async () => {
     const { promise, trigger, listeners } = runWaitForTabComplete(123, 5000);
+    setTimeout(() => trigger(123, { status: 'complete' }), 10);
+    await promise;
+    assert.strictEqual(listeners.length, 0, '监听器应已被移除');
+});
+
+test('waitForTabComplete 在 tab 已是 complete 时立即 resolve', async () => {
+    const { promise, listeners } = runWaitForTabComplete(123, 5000, { status: 'complete' });
+    await promise;
+    assert.strictEqual(listeners.length, 0, '监听器应已被移除');
+});
+
+test('waitForTabComplete 在 tab 为 loading 时等待事件', async () => {
+    const { promise, trigger, listeners } = runWaitForTabComplete(123, 5000, { status: 'loading' });
     setTimeout(() => trigger(123, { status: 'complete' }), 10);
     await promise;
     assert.strictEqual(listeners.length, 0, '监听器应已被移除');

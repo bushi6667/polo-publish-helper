@@ -1796,6 +1796,17 @@ function waitForTabComplete(tabId, timeoutMs = 30000) {
         }
 
         chrome.tabs.onUpdated.addListener(onUpdated);
+
+        // 立即检查当前状态，防止监听器添加前页面已加载完成
+        chrome.tabs.get(tabId).then(tab => {
+            if (tab && tab.status === 'complete') {
+                clearTimeout(timer);
+                chrome.tabs.onUpdated.removeListener(onUpdated);
+                resolve();
+            }
+        }).catch(() => {
+            // tab 不存在，由超时或后续事件处理
+        });
     });
 }
 
