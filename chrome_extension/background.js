@@ -1769,47 +1769,6 @@ async function fetchColorImageAsBase64(rowNum, color) {
 const PS_SAVE_MARKER = 'http://ps-edit-save.local/save';
 let psEditState = null;
 
-/**
- * 等待指定标签页加载完成。
- * @param {number} tabId - 要监听的标签页 ID。
- * @param {number} [timeoutMs=30000] - 超时时间（毫秒）。
- * @returns {Promise<void>}
- */
-function waitForTabComplete(tabId, timeoutMs = 30000) {
-    return new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-            chrome.tabs.onUpdated.removeListener(onUpdated);
-            reject(new Error(`标签页 ${tabId} 加载超时（${timeoutMs}ms）`));
-        }, timeoutMs);
-
-        /**
-         * @param {number} updatedTabId
-         * @param {object} changeInfo
-         */
-        function onUpdated(updatedTabId, changeInfo) {
-            if (updatedTabId !== tabId) return;
-            if (changeInfo.status === 'complete') {
-                clearTimeout(timer);
-                chrome.tabs.onUpdated.removeListener(onUpdated);
-                resolve();
-            }
-        }
-
-        chrome.tabs.onUpdated.addListener(onUpdated);
-
-        // 立即检查当前状态，防止监听器添加前页面已加载完成
-        chrome.tabs.get(tabId).then(tab => {
-            if (tab && tab.status === 'complete') {
-                clearTimeout(timer);
-                chrome.tabs.onUpdated.removeListener(onUpdated);
-                resolve();
-            }
-        }).catch(() => {
-            // tab 不存在，由超时或后续事件处理
-        });
-    });
-}
-
 async function startPsEdit(task) {
     const { imageDataUrl, fileName, rowNum, imageDir } = task;
     const baseFileName = fileName.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
@@ -1838,16 +1797,9 @@ async function startPsEdit(task) {
         saved: false
     };
 
-    try {
-        await waitForTabComplete(tabId, 30000);
-    } catch (e) {
-        console.error('❌ 等待Photopea加载失败:', e.message);
-        return { ok: false, error: e.message };
-    }
+    await new Promise(r => setTimeout(r, 3000));
 
     try {
-        await chrome.tabs.get(tabId);
-
         console.log('[PS编辑] 开始注入拦截脚本到 MAIN world...');
         await chrome.scripting.executeScript({
             target: { tabId },
@@ -1868,14 +1820,8 @@ async function startPsEdit(task) {
         console.log('✅ PS编辑页面已打开，拦截脚本已注入');
         return { ok: true, tabId };
     } catch (e) {
-        let errorMsg = e.message;
-        if (e.message && e.message.includes('No tab with id')) {
-            errorMsg = '标签页已被关闭';
-        } else if (e.message && e.message.includes('Cannot access contents')) {
-            errorMsg = '无法访问页面内容，请检查扩展权限';
-        }
-        console.error('❌ 注入脚本失败:', errorMsg);
-        return { ok: false, error: errorMsg };
+        console.error('❌ 注入脚本失败:', e.message);
+        return { ok: false, error: e.message };
     }
 }
 
