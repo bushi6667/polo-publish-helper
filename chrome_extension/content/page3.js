@@ -3948,7 +3948,7 @@ function createPage3Panel() {
                 <button id="polo-autofill-dropdown-btn" style="width:36px;border:none;border-left:1px solid rgba(255,255,255,0.3);font-size:12px;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;">
                     ▾
                 </button>
-                <div id="polo-action-menu" style="position:absolute;top:100%;left:0;right:0;z-index:100000;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);padding:6px;display:none;margin-top:4px;"></div>
+                <div id="polo-action-menu" style="position:fixed;z-index:100000;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);padding:6px;display:none;"></div>
             </div>
             <div id="polo-mode-container" style="position:relative;display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
                 <div style="position:absolute;top:4px;left:4px;height:28px;border-radius:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);box-shadow:0 2px 8px rgba(102,126,234,0.3);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),width 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:1;pointer-events:none;" id="polo-mode-glider"></div>
@@ -4303,7 +4303,17 @@ function createPage3Panel() {
     ddBtn.onclick = (e) => {
         e.stopPropagation();
         open = !open;
-        menu.style.display = open ? 'block' : 'none';
+        if (open) {
+            // 动态计算菜单位置：父容器 #polo-autofill-split 有 overflow:hidden，
+            // 用 position:fixed + getBoundingClientRect() 避免菜单被裁剪
+            const splitRect = document.getElementById('polo-autofill-split').getBoundingClientRect();
+            menu.style.top = (splitRect.bottom + 4) + 'px';
+            menu.style.left = splitRect.left + 'px';
+            menu.style.width = splitRect.width + 'px';
+            menu.style.display = 'block';
+        } else {
+            menu.style.display = 'none';
+        }
     };
     document.addEventListener('click', () => { open = false; menu.style.display = 'none'; });
 

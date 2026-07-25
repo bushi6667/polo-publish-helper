@@ -39,6 +39,11 @@
 
 **删除**：旧的独立 `polo-action-dropdown-btn` div
 
+**菜单定位修复**：
+- 父容器 `#polo-autofill-split` 有 `overflow:hidden`（为配合圆角裁剪子按钮渐变背景）
+- 菜单若用 `position:absolute; top:100%` 会被父容器裁剪，表现为"点击下拉无反应"
+- 修复：菜单改用 `position:fixed`，点击时用 `getBoundingClientRect()` 动态计算 `top/left/width`，脱离父容器裁剪
+
 ### 2. 图片格式滑块样式
 **文件**：[page3.js](file:///d:/1/doubao_tool/测试文件/xlsx发品/chrome_extension/content/page3.js)
 

@@ -166,6 +166,27 @@ test('折叠宽度', () => {
     );
 });
 
+test('下拉菜单避免被父容器 overflow:hidden 裁剪', () => {
+    // 父容器 #polo-autofill-split 有 overflow:hidden，菜单若用 position:absolute 会被裁剪
+    // 修复方案：菜单改用 position:fixed，点击时用 getBoundingClientRect 动态定位
+    assert(
+        source.includes('id="polo-action-menu" style="position:fixed'),
+        'action-menu 使用 position:fixed 定位'
+    );
+    assert(
+        !source.includes('id="polo-action-menu" style="position:absolute'),
+        '不再使用 position:absolute 定位 action-menu'
+    );
+    assert(
+        source.includes("getBoundingClientRect()") && source.includes('splitRect'),
+        '下拉点击时动态计算菜单位置'
+    );
+    assert(
+        source.includes('splitRect.bottom') && source.includes('splitRect.left'),
+        '菜单 top/left 基于 split 容器位置动态计算'
+    );
+});
+
 console.log('\n' + '='.repeat(50));
 console.log(`通过: ${passed}  失败: ${failed}  总计: ${passed + failed}`);
 
