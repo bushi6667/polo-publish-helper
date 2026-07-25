@@ -3952,7 +3952,7 @@ function createPage3Panel() {
             </div>
             <div id="polo-mode-container" style="position:relative;display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
                 <div style="position:absolute;top:4px;left:4px;height:28px;border-radius:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);box-shadow:0 2px 8px rgba(102,126,234,0.3);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),width 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:1;pointer-events:none;" id="polo-mode-glider"></div>
-                <button id="polo-mode-overwrite" class="mode-tab active" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
+                <button id="polo-mode-overwrite" class="mode-tab active" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#fff;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
                     覆盖填入
                 </button>
                 <button id="polo-mode-append" class="mode-tab" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
