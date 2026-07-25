@@ -61,7 +61,7 @@ test('折叠时隐藏的元素', () => {
     const toggleFnMatch = source.match(/function togglePanel\(\)\s*\{[\s\S]*?^\}/m);
     const fnBody = toggleFnMatch ? toggleFnMatch[0] : '';
 
-    ['pasteBtn', 'autofillBtn', 'dropdownBtn', 'actionMenu', 'logArea'].forEach(name => {
+    ['pasteBtn', 'autofillBtn', 'autofillDropdownBtn', 'actionMenu', 'logArea'].forEach(name => {
         assert(
             fnBody.includes(`${name}.style.display = 'none'`),
             `折叠时隐藏 ${name}`

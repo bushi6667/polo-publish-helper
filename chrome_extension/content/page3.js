@@ -3934,16 +3934,22 @@ function createPage3Panel() {
             </div>
         </div>
         <div id="polo-panel-content" style="padding:12px 16px;">
-            <button id="polo-paste-btn" style="display:block;width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;background:linear-gradient(135deg,#52c41a 0%,#389e0d 100%);color:white;box-shadow:0 2px 8px rgba(82,196,26,0.3);">
+            <div id="polo-product-info" style="background:#f7f8fa;border-radius:8px;padding:10px;margin-bottom:10px;">
+                <div style="color:#666;font-size:12px;margin-bottom:4px;">暂无产品数据</div>
+                <div style="font-weight:500;color:#333;font-size:12px;">点击下方绿色按钮加载</div>
+            </div>
+            <button id="polo-paste-btn" style="display:block;width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px;background:linear-gradient(135deg,#52c41a 0%,#389e0d 100%);color:white;box-shadow:0 2px 8px rgba(82,196,26,0.3);">
                 📥 从剪贴板加载产品数据
             </button>
-            <div id="polo-product-info" style="background:#f7f8fa;border-radius:8px;padding:10px;margin-bottom:12px;">
-                <div style="color:#666;font-size:12px;margin-bottom:4px;">暂无产品数据</div>
-                <div style="font-weight:500;color:#333;font-size:12px;">点击上方绿色按钮加载</div>
+            <div id="polo-autofill-split" style="position:relative;display:flex;margin-bottom:8px;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
+                <button id="polo-autofill-btn" disabled style="flex:1;padding:10px 12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;opacity:0.5;cursor:not-allowed;border-radius:8px 0 0 8px;">
+                    ⚡ 一键填入
+                </button>
+                <button id="polo-autofill-dropdown-btn" disabled style="width:36px;border:none;border-left:1px solid rgba(255,255,255,0.3);font-size:12px;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;opacity:0.5;cursor:not-allowed;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;">
+                    ▾
+                </button>
+                <div id="polo-action-menu" style="position:absolute;top:100%;left:0;right:0;z-index:100000;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);padding:6px;display:none;margin-top:4px;"></div>
             </div>
-            <button id="polo-autofill-btn" disabled style="display:block;width:100%;padding:10px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:8px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;opacity:0.5;cursor:not-allowed;">
-                ⚡ 一键填入
-            </button>
             <div id="polo-mode-container" style="position:relative;display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
                 <div style="position:absolute;top:4px;left:4px;height:28px;border-radius:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);box-shadow:0 2px 8px rgba(102,126,234,0.3);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),width 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:1;pointer-events:none;" id="polo-mode-glider"></div>
                 <button id="polo-mode-overwrite" class="mode-tab active" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
@@ -3965,13 +3971,6 @@ function createPage3Panel() {
                     PNG
                 </button>
             </div>
-            <div style="position:relative;margin-bottom:8px;">
-                <div id="polo-action-dropdown-btn" style="background:#475569;color:white;text-align:center;padding:10px 0;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;user-select:none;">
-                    📋 填入消息属性 ▾
-                </div>
-                <div id="polo-action-menu" style="position:absolute;top:100%;left:0;right:0;z-index:100000;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);padding:6px;display:none;margin-top:4px;">
-                </div>
-            </div>
             <div id="polo-log" style="background:#1e1e2e;color:#a6e3a1;padding:10px;border-radius:6px;font-family:monospace;font-size:11px;line-height:1.5;max-height:200px;overflow-y:auto;margin-top:8px;">
                 <div style="color:#a6e3a1;">[系统] 发品助手已加载</div>
             </div>
@@ -3985,8 +3984,8 @@ function createPage3Panel() {
     const collapseBtn = document.getElementById('polo-collapse');
     const pasteBtn = document.getElementById('polo-paste-btn');
     const autofillBtn = document.getElementById('polo-autofill-btn');
+    const autofillDropdownBtn = document.getElementById('polo-autofill-dropdown-btn');
     const productInfo = document.getElementById('polo-product-info');
-    const dropdownBtn = document.getElementById('polo-action-dropdown-btn');
     const logArea = document.getElementById('polo-log');
     const actionMenu = document.getElementById('polo-action-menu');
     const modeOverwriteBtn = document.getElementById('polo-mode-overwrite');
@@ -4013,7 +4012,7 @@ function createPage3Panel() {
             collapseBtn.textContent = '+';
             pasteBtn.style.display = 'none';
             autofillBtn.style.display = 'none';
-            dropdownBtn.style.display = 'none';
+            autofillDropdownBtn.style.display = 'none';
             actionMenu.style.display = 'none';
             logArea.style.display = 'none';
             if (extContainer) extContainer.style.display = 'none';
@@ -4029,7 +4028,7 @@ function createPage3Panel() {
             collapseBtn.textContent = '−';
             pasteBtn.style.display = 'block';
             autofillBtn.style.display = 'block';
-            dropdownBtn.style.display = 'block';
+            autofillDropdownBtn.style.display = 'block';
             logArea.style.display = 'block';
             if (extContainer) extContainer.style.display = 'flex';
             
@@ -4298,9 +4297,10 @@ function createPage3Panel() {
     });
 
     let open = false;
-    const ddBtn = document.getElementById('polo-action-dropdown-btn');
+    const ddBtn = document.getElementById('polo-autofill-dropdown-btn');
     ddBtn.onclick = (e) => {
         e.stopPropagation();
+        if (ddBtn.disabled) return;
         open = !open;
         menu.style.display = open ? 'block' : 'none';
     };
