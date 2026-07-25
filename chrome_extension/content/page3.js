@@ -3901,7 +3901,7 @@ function createPage3Panel() {
     const modeOverwriteBtn = document.getElementById('polo-mode-overwrite');
     const modeAppendBtn = document.getElementById('polo-mode-append');
     const modeGlider = document.getElementById('polo-mode-glider');
-    let isCollapsed = true;
+    let isCollapsed = false;
     window.__polo_fill_mode = 'overwrite';
 
     function updateModeGlider() {

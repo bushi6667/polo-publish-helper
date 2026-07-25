@@ -35,13 +35,14 @@ test('面板默认位置 - left:0', () => {
 });
 
 test('默认折叠状态', () => {
+    // 初始值为 false，由 togglePanel() 翻转为 true 实现默认折叠
     assert(
-        source.match(/let\s+isCollapsed\s*=\s*true/),
-        'isCollapsed 初始值为 true'
+        source.match(/let\s+isCollapsed\s*=\s*false/),
+        'isCollapsed 初始值为 false（由 togglePanel 翻转为 true）'
     );
     assert(
-        !source.match(/let\s+isCollapsed\s*=\s*false/),
-        'isCollapsed 初始值不再是 false'
+        !source.match(/let\s+isCollapsed\s*=\s*true/),
+        'isCollapsed 初始值不为 true（避免 togglePanel 翻转为 false 导致展开）'
     );
 });
 
