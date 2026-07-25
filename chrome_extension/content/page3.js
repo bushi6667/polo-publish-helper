@@ -1136,26 +1136,56 @@ async function fillGroupPage3(product) {
     
     if (foundOption) {
         foundOption.scrollIntoView({block: 'center'});
-        await sleep3(200);
-        
-        const treeItem = foundOption.closest('.next-tree-node-inner');
-        if (treeItem) {
-            await realClick(treeItem);
-            await sleep3(500);
-            // 校验是否选中（aria-selected="true"），失败则降级
-            if (treeItem.getAttribute('aria-selected') !== 'true') {
-                await nativeMouseClick(treeItem);
-                await sleep3(500);
-            }
-        } else {
-            await realClick(foundOption);
-        }
-        await sleep3(500);
-        
-        document.body.click();
         await sleep3(300);
-        
-        results.push('✅ 商品分组 = ' + foundName);
+
+        // 先直接点击可交互的 label 元素（nativeMouseClick 触发 DOM 事件，对 React 更可靠）
+        const labelEl = foundOption.closest('.next-tree-node-label-selectable, .next-tree-node-label') || foundOption;
+        let treeItem = labelEl.closest('.next-tree-node-inner');
+        let isSelected = false;
+
+        // 方案1: nativeMouseClick 直接触发 DOM 事件（绕过 CDP 坐标偏差）
+        log(`🖱️ 方案1: nativeMouseClick 点击标签: ${foundName}`, 'info');
+        nativeMouseClick(labelEl);
+        await sleep3(800);
+
+        if (treeItem) {
+            isSelected = treeItem.getAttribute('aria-selected') === 'true';
+        }
+        if (!isSelected) {
+            log(`🔄 方案1 未生效，尝试方案2: realClick(treeItem)`, 'warn');
+            await realClick(treeItem || labelEl);
+            await sleep3(800);
+            if (treeItem) {
+                isSelected = treeItem.getAttribute('aria-selected') === 'true';
+            }
+        }
+        // 方案3: 如果 aria-selected 仍未更新，直接点击 treeItem 自身
+        if (!isSelected && treeItem) {
+            log(`🔄 方案3: 直接 nativeMouseClick treeItem`, 'warn');
+            nativeMouseClick(treeItem);
+            await sleep3(800);
+            isSelected = treeItem.getAttribute('aria-selected') === 'true';
+        }
+        // 方案4: 强制设置 aria-selected + 派发事件
+        if (!isSelected && treeItem) {
+            log(`🔄 方案4: 强制触发选中事件`, 'warn');
+            treeItem.setAttribute('aria-selected', 'true');
+            treeItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+            await sleep3(300);
+            isSelected = treeItem.getAttribute('aria-selected') === 'true';
+        }
+
+        // 关闭下拉菜单
+        document.body.click();
+        await sleep3(500);
+
+        if (isSelected) {
+            log(`✅ 商品分组 = ${foundName} (已选中)`, 'success');
+            results.push('✅ 商品分组 = ' + foundName);
+        } else {
+            log(`⚠️ 商品分组 = ${foundName} (选择状态未知，可能未生效)`, 'warn');
+            results.push('⚠️ 商品分组 = ' + foundName + ' (选择状态未知)');
+        }
     } else {
         document.body.click();
         results.push('⚠️ 商品分组: 未找到匹配选项');

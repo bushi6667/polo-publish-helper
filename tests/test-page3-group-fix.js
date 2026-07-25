@@ -23,73 +23,96 @@ function test(name, fn) {
 
 const page3Src = fs.readFileSync(PAGE3_PATH, 'utf-8');
 
-test('只点击一次 treeItem', () => {
-    const groupMatch = page3Src.match(/async function fillGroupPage3[\s\S]*?^\}/m);
-    const fnBody = groupMatch ? groupMatch[0] : '';
+// 提取 fillGroupPage3 函数体
+const groupMatch = page3Src.match(/async function fillGroupPage3[\s\S]*?^\}/m);
+const fnBody = groupMatch ? groupMatch[0] : '';
 
-    // 确认只调用一次 realClick(treeItem)
-    const reClickTreeItem = fnBody.match(/realClick\(treeItem\)/g);
+test('方案1: nativeMouseClick 点击 label', () => {
     assert(
-        reClickTreeItem && reClickTreeItem.length === 1,
-        `realClick(treeItem) 只出现 ${reClickTreeItem?.length} 次（应为 1 次）`
+        fnBody.includes('nativeMouseClick(labelEl)'),
+        '方案1 使用 nativeMouseClick 点击 labelEl'
     );
-
-    // 确认没有第二次 realClick(treeItem)
     assert(
-        fnBody.includes('await realClick(treeItem);') && 
-        !fnBody.includes('await realClick(treeItem);\n            await sleep3(500);\n            await realClick(treeItem);'),
-        '没有连续两次 realClick(treeItem)'
+        fnBody.includes("log(`🖱️ 方案1: nativeMouseClick"),
+        '方案1 有日志输出'
     );
 });
 
-test('有点击后的选中校验逻辑', () => {
-    const groupMatch = page3Src.match(/async function fillGroupPage3[\s\S]*?^\}/m);
-    const fnBody = groupMatch ? groupMatch[0] : '';
+test('方案2: realClick 降级', () => {
+    assert(
+        fnBody.includes('realClick(treeItem || labelEl)'),
+        '方案1 失败后尝试 realClick'
+    );
+    assert(
+        fnBody.includes("log(`🔄 方案1 未生效，尝试方案2"),
+        '方案2 有降级日志'
+    );
+});
 
+test('方案3: nativeMouseClick treeItem', () => {
+    assert(
+        fnBody.includes("log(`🔄 方案3"),
+        '方案3 有降级日志'
+    );
+    assert(
+        fnBody.includes('nativeMouseClick(treeItem)'),
+        '方案3 使用 nativeMouseClick 点击 treeItem'
+    );
+});
+
+test('方案4: 强制触发选中事件', () => {
+    assert(
+        fnBody.includes('setAttribute'),
+        '方案4 强制设置 aria-selected'
+    );
+    assert(
+        fnBody.includes("log(`🔄 方案4"),
+        '方案4 有降级日志'
+    );
+});
+
+test('aria-selected 选中校验', () => {
     assert(
         fnBody.includes("getAttribute('aria-selected')"),
         '校验 aria-selected 属性判断是否选中'
     );
     assert(
-        fnBody.includes("'true'"),
+        fnBody.includes("=== 'true'"),
         '判断 aria-selected 是否为 "true"'
     );
 });
 
-test('有降级机制', () => {
-    const groupMatch = page3Src.match(/async function fillGroupPage3[\s\S]*?^\}/m);
-    const fnBody = groupMatch ? groupMatch[0] : '';
-
+test('选中后有差异化日志', () => {
     assert(
-        fnBody.includes('nativeMouseClick(treeItem)'),
-        'aria-selected 不为 true 时使用 nativeMouseClick 降级'
+        fnBody.includes('✅ 商品分组 ='),
+        '选中后输出成功日志'
     );
     assert(
-        fnBody.includes('sleep3(500)'),
-        '降级后也等待 500ms'
+        fnBody.includes('⚠️ 商品分组 ='),
+        '未确认选中时输出警告日志'
     );
 });
 
-test('else 分支保持不变', () => {
-    const page3Src = fs.readFileSync(PAGE3_PATH, 'utf-8');
-    assert(
-        page3Src.includes("} else {\n            await realClick(foundOption);\n        }\n        await sleep3(500);"),
-        '找不到 treeItem 时仍点击 foundOption'
-    );
+test('始终关闭下拉菜单', () => {
+    const afterClick = fnBody.includes('document.body.click()');
+    assert(afterClick, '最终调用 document.body.click() 关闭下拉菜单');
 });
 
-test('不影响现有流程', () => {
-    assert(
-        page3Src.includes("results.push('✅ 商品分组 = ' + foundName)"),
-        '选中后仍输出成功日志'
-    );
+test('未找到选项时保持原逻辑', () => {
     assert(
         page3Src.includes("results.push('⚠️ 商品分组: 未找到匹配选项')"),
         '未找到时仍输出警告日志'
     );
+});
+
+test('不影响 buildGroupCandidates', () => {
     assert(
-        page3Src.includes("document.body.click()"),
-        '最终仍关闭弹窗'
+        page3Src.includes('buildGroupCandidates(product.category)'),
+        '仍然调用 buildGroupCandidates'
+    );
+    assert(
+        page3Src.includes('candidates.join'),
+        '仍然输出候选词日志'
     );
 });
 
