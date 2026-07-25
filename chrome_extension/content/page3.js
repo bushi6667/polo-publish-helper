@@ -3945,7 +3945,7 @@ function createPage3Panel() {
                 <button id="polo-autofill-btn" disabled style="flex:1;padding:10px 12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;opacity:0.5;cursor:not-allowed;border-radius:8px 0 0 8px;">
                     ⚡ 一键填入
                 </button>
-                <button id="polo-autofill-dropdown-btn" disabled style="width:36px;border:none;border-left:1px solid rgba(255,255,255,0.3);font-size:12px;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;opacity:0.5;cursor:not-allowed;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;">
+                <button id="polo-autofill-dropdown-btn" style="width:36px;border:none;border-left:1px solid rgba(255,255,255,0.3);font-size:12px;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;">
                     ▾
                 </button>
                 <div id="polo-action-menu" style="position:absolute;top:100%;left:0;right:0;z-index:100000;background:#fff;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);padding:6px;display:none;margin-top:4px;"></div>
@@ -4302,7 +4302,6 @@ function createPage3Panel() {
     const ddBtn = document.getElementById('polo-autofill-dropdown-btn');
     ddBtn.onclick = (e) => {
         e.stopPropagation();
-        if (ddBtn.disabled) return;
         open = !open;
         menu.style.display = open ? 'block' : 'none';
     };

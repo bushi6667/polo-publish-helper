@@ -520,12 +520,6 @@ function updateProductInfo(product) {
         btn.style.opacity = '1';
         btn.style.cursor = 'pointer';
     }
-    const dropdownBtn = document.getElementById('polo-autofill-dropdown-btn');
-    if (dropdownBtn) {
-        dropdownBtn.disabled = false;
-        dropdownBtn.style.opacity = '1';
-        dropdownBtn.style.cursor = 'pointer';
-    }
     const uploadBtn = document.getElementById('polo-upload-img-btn');
     if (uploadBtn) uploadBtn.disabled = false;
 }
