@@ -3958,7 +3958,7 @@ function createPage3Panel() {
                 <button id="polo-mode-append" class="mode-tab" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
                     追加填入
                 </button>
-            <div id="polo-mode-fill-split" style="display:none;position:relative;display:flex;margin-bottom:8px;border-radius:10px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.05);border:1px solid #e2e8f0;">
+            <div id="polo-mode-fill-split" style="display:none;width:100%;position:relative;margin-bottom:8px;border-radius:10px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.05);border:1px solid #e2e8f0;">
                 <button id="polo-mode-fill-btn" style="flex:1;padding:10px 12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:#f8fafc;color:#64748b;border-radius:10px 0 0 10px;transition:all 0.2s ease;user-select:none;">
                     ⚡ 一键填入
                 </button>
@@ -4027,7 +4027,7 @@ function createPage3Panel() {
             if (modeOverwriteBtn) modeOverwriteBtn.style.display = 'none';
             if (modeAppendBtn) modeAppendBtn.style.display = 'none';
             if (modeGlider) modeGlider.style.display = 'none';
-            if (modeFillSplit) modeFillSplit.style.display = 'flex';
+            if (modeFillSplit) { modeFillSplit.style.display = 'flex'; modeFillSplit.style.width = '100%'; }
             
             panel.style.width = '260px';
             panel.style.maxHeight = 'auto';
