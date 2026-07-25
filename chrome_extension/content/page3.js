@@ -138,7 +138,7 @@ function buildAttributeFields(product) {
             { lbl: '印花方法', val: printingVal, forceMode: 'direct' },
             { lbl: '图案类型', val: product.pattern_en || '', forceMode: 'direct' },
             { lbl: '衬衫类型', val: shirtTypeVal },
-            { lbl: '产品特性', val: product.features_en || '' },
+            { lbl: '产品特性', val: product.features_en || '', forceMode: 'tag' },
             { lbl: '原产地', val: 'China', forceMode: 'direct' },
         ];
         optionalFields = [
@@ -167,7 +167,7 @@ function buildAttributeFields(product) {
             { lbl: '长度', val: product.length_en || '', forceMode: 'direct' },
             { lbl: '图案类型', val: product.pattern_en || '', forceMode: 'direct' },
             { lbl: '样式', val: styleTshirtVal },
-            { lbl: '产品特性', val: product.features_en || '' },
+            { lbl: '产品特性', val: product.features_en || '', forceMode: 'tag' },
             { lbl: '原产地', val: 'China', forceMode: 'direct' },
         ];
         optionalFields = [
@@ -191,7 +191,7 @@ function buildAttributeFields(product) {
             { lbl: '长度', val: hasVal(product.length_en) ? product.length_en : '', forceMode: 'direct' },
             { lbl: '图案类型', val: product.pattern_en || '', forceMode: 'direct' },
             { lbl: '样式', val: stylePoloVal, fallback: 'Formal', forceMode: 'select' },
-            { lbl: '产品特性', val: product.features_en || '', forceMode: 'direct' },
+            { lbl: '产品特性', val: product.features_en || '', forceMode: 'tag' },
             { lbl: '原产地', val: 'China', forceMode: 'direct' },
         ];
         optionalFields = [
@@ -232,7 +232,7 @@ function buildAttributeFields(product) {
             { lbl: '材质', val: product.material_en || '' },
             { lbl: '工艺', val: product.technics_en || '' },
             { lbl: '设计', val: product.design_en || '' },
-            { lbl: '产品特性', val: product.features_en || '' },
+            { lbl: '产品特性', val: product.features_en || '', forceMode: 'tag' },
             { lbl: '原产地', val: 'China' },
         ];
         optionalFields = [
