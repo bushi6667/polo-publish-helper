@@ -62,12 +62,20 @@ test('格式选择 UI 存在', () => {
         '面板有 PNG 格式按钮 id'
     );
     assert(
-        page3Src.includes('图片格式:'),
-        '面板有格式标签'
+        page3Src.includes('polo-ext-glider'),
+        '面板有图片格式滑块 glider'
+    );
+    assert(
+        page3Src.includes('polo-ext-container'),
+        '面板有图片格式容器'
     );
     assert(
         page3Src.includes('updateImgExtButtons()'),
         '有 updateImgExtButtons 更新按钮样式'
+    );
+    assert(
+        page3Src.includes('updateExtGlider()'),
+        '有 updateExtGlider 更新滑块位置'
     );
 });
 
@@ -81,16 +89,31 @@ test('格式切换逻辑', () => {
         '点击 PNG 按钮调用 saveImgExt'
     );
     assert(
-        page3Src.includes('IMG_EXT === \'jpg\''),
-        'updateImgExtButtons 检查 IMG_EXT 值'
-    );
-    assert(
         page3Src.includes("log('📷 图片格式切换为: JPG'"),
         '切换 JPG 有日志'
     );
     assert(
         page3Src.includes("log('📷 图片格式切换为: PNG'"),
         '切换 PNG 有日志'
+    );
+});
+
+test('滑块更新逻辑', () => {
+    assert(
+        page3Src.includes('function updateExtGlider()'),
+        '有 updateExtGlider 函数'
+    );
+    assert(
+        page3Src.includes('extGlider.style.transform'),
+        '滑块使用 transform 移动'
+    );
+    assert(
+        page3Src.includes('extGlider.style.width'),
+        '滑块宽度动态调整'
+    );
+    assert(
+        page3Src.includes('activeBtn.style.color'),
+        '激活按钮文字变白'
     );
 });
 
@@ -118,11 +141,11 @@ test('togglePanel 包含格式选择器', () => {
     const toggleBody = toggleMatch ? toggleMatch[0] : '';
 
     assert(
-        toggleBody.includes("extRow.style.display = 'none'"),
+        toggleBody.includes("extContainer.style.display = 'none'"),
         '折叠时隐藏格式选择器'
     );
     assert(
-        toggleBody.includes("extRow.style.display = 'flex'"),
+        toggleBody.includes("extContainer.style.display = 'flex'"),
         '展开时显示格式选择器'
     );
 });

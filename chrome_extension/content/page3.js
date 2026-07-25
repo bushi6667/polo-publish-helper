@@ -3941,11 +3941,6 @@ function createPage3Panel() {
                 <div style="color:#666;font-size:12px;margin-bottom:4px;">暂无产品数据</div>
                 <div style="font-weight:500;color:#333;font-size:12px;">点击上方绿色按钮加载</div>
             </div>
-            <div style="display:flex;gap:6px;margin-bottom:8px;">
-                <div style="flex:1;font-size:12px;color:#666;line-height:28px;">图片格式:</div>
-                <button id="polo-ext-jpg" style="flex:1;padding:6px 8px;border:1px solid #52c41a;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;background:#52c41a;color:white;">JPG</button>
-                <button id="polo-ext-png" style="flex:1;padding:6px 8px;border:1px solid #d9d9d9;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;background:white;color:#666;">PNG</button>
-            </div>
             <button id="polo-autofill-btn" disabled style="display:block;width:100%;padding:10px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:8px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;opacity:0.5;cursor:not-allowed;">
                 ⚡ 一键填入
             </button>
@@ -3959,6 +3954,15 @@ function createPage3Panel() {
                 </button>
                 <button id="polo-mode-fill-btn" style="display:none;width:100%;padding:8px 12px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
                     ⚡ 一键填入
+                </button>
+            </div>
+            <div id="polo-ext-container" style="position:relative;display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
+                <div style="position:absolute;top:4px;left:4px;height:28px;border-radius:10px;background:linear-gradient(135deg,#52c41a 0%,#389e0d 100%);box-shadow:0 2px 8px rgba(82,196,26,0.3);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),width 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:1;pointer-events:none;" id="polo-ext-glider"></div>
+                <button id="polo-ext-jpg" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
+                    JPG
+                </button>
+                <button id="polo-ext-png" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
+                    PNG
                 </button>
             </div>
             <div style="position:relative;margin-bottom:8px;">
@@ -4012,7 +4016,7 @@ function createPage3Panel() {
             dropdownBtn.style.display = 'none';
             actionMenu.style.display = 'none';
             logArea.style.display = 'none';
-            if (extRow) extRow.style.display = 'none';
+            if (extContainer) extContainer.style.display = 'none';
             
             if (modeOverwriteBtn) modeOverwriteBtn.style.display = 'none';
             if (modeAppendBtn) modeAppendBtn.style.display = 'none';
@@ -4027,7 +4031,7 @@ function createPage3Panel() {
             autofillBtn.style.display = 'block';
             dropdownBtn.style.display = 'block';
             logArea.style.display = 'block';
-            if (extRow) extRow.style.display = 'flex';
+            if (extContainer) extContainer.style.display = 'flex';
             
             if (modeOverwriteBtn) modeOverwriteBtn.style.display = 'flex';
             if (modeAppendBtn) modeAppendBtn.style.display = 'flex';
@@ -4074,25 +4078,26 @@ function createPage3Panel() {
 
     const extJpgBtn = document.getElementById('polo-ext-jpg');
     const extPngBtn = document.getElementById('polo-ext-png');
-    const extRow = extJpgBtn?.parentElement;
+    const extGlider = document.getElementById('polo-ext-glider');
+    const extContainer = document.getElementById('polo-ext-container');
+
+    function updateExtGlider() {
+        if (!extGlider || !extJpgBtn || !extPngBtn) return;
+        const activeBtn = IMG_EXT === 'jpg' ? extJpgBtn : extPngBtn;
+        if (activeBtn) {
+            const rect = activeBtn.getBoundingClientRect();
+            const containerRect = activeBtn.parentElement.getBoundingClientRect();
+            extGlider.style.transform = `translateX(${rect.left - containerRect.left - 4}px)`;
+            extGlider.style.width = `${rect.width}px`;
+            activeBtn.style.color = '#fff';
+            const inactiveBtn = IMG_EXT === 'jpg' ? extPngBtn : extJpgBtn;
+            inactiveBtn.style.color = '#64748b';
+        }
+    }
 
     function updateImgExtButtons() {
         if (!extJpgBtn || !extPngBtn) return;
-        if (IMG_EXT === 'jpg') {
-            extJpgBtn.style.border = '1px solid #52c41a';
-            extJpgBtn.style.background = '#52c41a';
-            extJpgBtn.style.color = 'white';
-            extPngBtn.style.border = '1px solid #d9d9d9';
-            extPngBtn.style.background = 'white';
-            extPngBtn.style.color = '#666';
-        } else {
-            extPngBtn.style.border = '1px solid #52c41a';
-            extPngBtn.style.background = '#52c41a';
-            extPngBtn.style.color = 'white';
-            extJpgBtn.style.border = '1px solid #d9d9d9';
-            extJpgBtn.style.background = 'white';
-            extJpgBtn.style.color = '#666';
-        }
+        updateExtGlider();
     }
 
     extJpgBtn?.addEventListener('click', (e) => {
