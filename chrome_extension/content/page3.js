@@ -3958,9 +3958,14 @@ function createPage3Panel() {
                 <button id="polo-mode-append" class="mode-tab" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
                     追加填入
                 </button>
-                <button id="polo-mode-fill-btn" style="display:none;width:100%;padding:8px 12px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
+            <div id="polo-mode-fill-split" style="display:none;position:relative;display:flex;margin-bottom:8px;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
+                <button id="polo-mode-fill-btn" style="flex:1;padding:10px 12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:8px 0 0 8px;">
                     ⚡ 一键填入
                 </button>
+                <button id="polo-mode-fill-dropdown-btn" style="width:36px;border:none;border-left:1px solid rgba(255,255,255,0.3);font-size:12px;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;">
+                    ▾
+                </button>
+            </div>
             </div>
             <div id="polo-ext-container" style="position:relative;display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
                 <div style="position:absolute;top:4px;left:4px;height:28px;border-radius:10px;background:linear-gradient(135deg,#52c41a 0%,#389e0d 100%);box-shadow:0 2px 8px rgba(82,196,26,0.3);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),width 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:1;pointer-events:none;" id="polo-ext-glider"></div>
@@ -3992,6 +3997,8 @@ function createPage3Panel() {
     const modeAppendBtn = document.getElementById('polo-mode-append');
     const modeGlider = document.getElementById('polo-mode-glider');
     const modeFillBtn = document.getElementById('polo-mode-fill-btn');
+    const modeFillSplit = document.getElementById('polo-mode-fill-split');
+    const modeFillDropdownBtn = document.getElementById('polo-mode-fill-dropdown-btn');
     let isCollapsed = false;
     window.__polo_fill_mode = 'overwrite';
 
@@ -4020,7 +4027,7 @@ function createPage3Panel() {
             if (modeOverwriteBtn) modeOverwriteBtn.style.display = 'none';
             if (modeAppendBtn) modeAppendBtn.style.display = 'none';
             if (modeGlider) modeGlider.style.display = 'none';
-            if (modeFillBtn) modeFillBtn.style.display = 'block';
+            if (modeFillSplit) modeFillSplit.style.display = 'flex';
             
             panel.style.width = '260px';
             panel.style.maxHeight = 'auto';
@@ -4035,7 +4042,7 @@ function createPage3Panel() {
             if (modeOverwriteBtn) modeOverwriteBtn.style.display = 'flex';
             if (modeAppendBtn) modeAppendBtn.style.display = 'flex';
             if (modeGlider) modeGlider.style.display = 'block';
-            if (modeFillBtn) modeFillBtn.style.display = 'none';
+            if (modeFillSplit) modeFillSplit.style.display = 'none';
             
             panel.style.width = '380px';
             panel.style.maxHeight = '85vh';
@@ -4210,6 +4217,23 @@ function createPage3Panel() {
             if (autofillBtn) {
                 autofillBtn.click();
             }
+        };
+    }
+
+    if (modeFillDropdownBtn) {
+        modeFillDropdownBtn.onclick = (e) => {
+            e.stopPropagation();
+            // 动态计算菜单位置：定位到 modeFillSplit 容器下方
+            const splitRect = document.getElementById('polo-mode-fill-split').getBoundingClientRect();
+            menu.style.top = (splitRect.bottom + 4) + 'px';
+            menu.style.left = splitRect.left + 'px';
+            menu.style.width = splitRect.width + 'px';
+            const maxH = window.innerHeight - splitRect.bottom - 16;
+            menu.style.maxHeight = Math.max(160, maxH) + 'px';
+            
+            // 关闭另一个下拉按钮的菜单状态（可选，这里直接切换显示）
+            const isDisplayed = menu.style.display === 'block';
+            menu.style.display = isDisplayed ? 'none' : 'block';
         };
     }
 

@@ -82,10 +82,17 @@
 ### 5. 折叠状态一键填入
 **文件**：[page3.js](file:///d:/1/doubao_tool/测试文件/xlsx发品/chrome_extension/content/page3.js)
 
-折叠时模式切换区变为单个"⚡ 一键填入"按钮：
+折叠时模式切换区变为 Split Button（主按钮 + 下拉按钮）：
 - 隐藏 `modeOverwriteBtn`、`modeAppendBtn`、`modeGlider`
-- 显示 `modeFillBtn`
-- 点击触发 `autofillBtn.click()`
+- 显示 `modeFillSplit`（原 `modeFillBtn` 升级为 Split Button）
+- 主按钮点击触发 `autofillBtn.click()`
+- 下拉按钮点击打开 `actionMenu`，定位到 `modeFillSplit` 下方
+
+### 6. 下拉菜单定位与滚动
+**文件**：[page3.js](file:///d:/1/doubao_tool/测试文件/xlsx发品/chrome_extension/content/page3.js)
+
+- 父容器 `overflow:hidden` 裁剪问题：菜单改用 `position:fixed` + `getBoundingClientRect()` 动态定位
+- 滚动问题：菜单加 `overflow-y:auto`，onclick 动态计算 `maxHeight = 视口高度 - 菜单顶部位置 - 16px`，最小 160px 兜底
 
 ## 新布局顺序（展开状态）
 

@@ -96,8 +96,8 @@ test('折叠时模式切换区变为一键填入按钮', () => {
         '折叠时隐藏模式滑动指示器'
     );
     assert(
-        fnBody.includes('modeFillBtn.style.display = \'block\''),
-        '折叠时显示一键填入按钮'
+        fnBody.includes('modeFillSplit.style.display = \'flex\''),
+        '折叠时显示一键填入 Split 容器'
     );
 });
 
@@ -114,8 +114,8 @@ test('展开时恢复模式切换区', () => {
         '展开时显示追加填入按钮'
     );
     assert(
-        fnBody.includes('modeFillBtn.style.display = \'none\''),
-        '展开时隐藏一键填入按钮'
+        fnBody.includes('modeFillSplit.style.display = \'none\''),
+        '展开时隐藏一键填入 Split 容器'
     );
 });
 
@@ -138,6 +138,25 @@ test('新模式按钮点击事件', () => {
     assert(
         source.includes('autofillBtn.click()'),
         'modeFillBtn 点击时触发原 autofillBtn 的点击事件'
+    );
+});
+
+test('折叠态一键填入下拉框', () => {
+    assert(
+        source.includes('id="polo-mode-fill-dropdown-btn"'),
+        'HTML 中存在 polo-mode-fill-dropdown-btn 下拉按钮'
+    );
+    assert(
+        source.includes('const modeFillDropdownBtn = document.getElementById'),
+        'JS 中获取了 modeFillDropdownBtn 引用'
+    );
+    assert(
+        source.includes('modeFillDropdownBtn.onclick'),
+        'modeFillDropdownBtn 绑定了 onclick 事件'
+    );
+    assert(
+        source.includes('polo-mode-fill-split'),
+        '下拉按钮定位使用 polo-mode-fill-split 容器'
     );
 });
 
