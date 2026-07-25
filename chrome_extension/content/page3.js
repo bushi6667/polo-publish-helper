@@ -1,3 +1,19 @@
+let IMG_EXT = 'jpg';
+
+function loadImgExt() {
+    return new Promise((resolve) => {
+        chrome.storage.local.get('img_ext', (result) => {
+            IMG_EXT = result.img_ext || 'jpg';
+            resolve(IMG_EXT);
+        });
+    });
+}
+
+function saveImgExt(ext) {
+    IMG_EXT = ext;
+    chrome.storage.local.set({ img_ext: ext });
+}
+
 function nativeKeyPress(key) {
     const keyCode = key === 'Enter' ? 13 : key === 'Tab' ? 9 : key === 'Escape' ? 27 : key === 'ArrowDown' ? 40 : key === 'ArrowUp' ? 38 : 0;
     document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', {key, code: key, keyCode, which: keyCode, bubbles: true}));
@@ -964,9 +980,18 @@ async function fillImagesPage3(product) {
         imgSection.scrollIntoView({block: 'center'});
         await sleep3(300);
     }
-    if (product.imagePath) {
+
+    let imagePath;
+    if (IMAGE_DIR && product.row) {
+        const sep = IMAGE_DIR.includes('/') ? '/' : '\\';
+        imagePath = IMAGE_DIR + sep + 'row' + product.row + '_main.' + IMG_EXT;
+    } else {
+        imagePath = product.imagePath;
+    }
+
+    if (imagePath) {
         results.push('⏳ 主图上传中，请稍候...');
-        chrome.runtime.sendMessage({ action: 'uploadMainImage', imagePath: product.imagePath, pageType: 'page3' }, () => {});
+        chrome.runtime.sendMessage({ action: 'uploadMainImage', imagePath, pageType: 'page3' }, () => {});
 
         const uploadResult = await new Promise((resolve) => {
             const listener = (request) => {
@@ -3880,6 +3905,11 @@ function createPage3Panel() {
                 <div style="color:#666;font-size:12px;margin-bottom:4px;">暂无产品数据</div>
                 <div style="font-weight:500;color:#333;font-size:12px;">点击上方绿色按钮加载</div>
             </div>
+            <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <div style="flex:1;font-size:12px;color:#666;line-height:28px;">图片格式:</div>
+                <button id="polo-ext-jpg" style="flex:1;padding:6px 8px;border:1px solid #52c41a;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;background:#52c41a;color:white;">JPG</button>
+                <button id="polo-ext-png" style="flex:1;padding:6px 8px;border:1px solid #d9d9d9;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;background:white;color:#666;">PNG</button>
+            </div>
             <button id="polo-autofill-btn" disabled style="display:block;width:100%;padding:10px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:8px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;opacity:0.5;cursor:not-allowed;">
                 ⚡ 一键填入
             </button>
@@ -3942,6 +3972,7 @@ function createPage3Panel() {
             dropdownBtn.style.display = 'none';
             actionMenu.style.display = 'none';
             logArea.style.display = 'none';
+            if (extRow) extRow.style.display = 'none';
             panel.style.width = '260px';
             panel.style.maxHeight = 'auto';
         } else {
@@ -3950,6 +3981,7 @@ function createPage3Panel() {
             autofillBtn.style.display = 'block';
             dropdownBtn.style.display = 'block';
             logArea.style.display = 'block';
+            if (extRow) extRow.style.display = 'flex';
             panel.style.width = '380px';
             panel.style.maxHeight = '85vh';
         }
@@ -3987,9 +4019,50 @@ function createPage3Panel() {
         log('📌 模式切换为：追加填入', 'info');
     };
 
+    const extJpgBtn = document.getElementById('polo-ext-jpg');
+    const extPngBtn = document.getElementById('polo-ext-png');
+    const extRow = extJpgBtn?.parentElement;
+
+    function updateImgExtButtons() {
+        if (!extJpgBtn || !extPngBtn) return;
+        if (IMG_EXT === 'jpg') {
+            extJpgBtn.style.border = '1px solid #52c41a';
+            extJpgBtn.style.background = '#52c41a';
+            extJpgBtn.style.color = 'white';
+            extPngBtn.style.border = '1px solid #d9d9d9';
+            extPngBtn.style.background = 'white';
+            extPngBtn.style.color = '#666';
+        } else {
+            extPngBtn.style.border = '1px solid #52c41a';
+            extPngBtn.style.background = '#52c41a';
+            extPngBtn.style.color = 'white';
+            extJpgBtn.style.border = '1px solid #d9d9d9';
+            extJpgBtn.style.background = 'white';
+            extJpgBtn.style.color = '#666';
+        }
+    }
+
+    extJpgBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        saveImgExt('jpg');
+        updateImgExtButtons();
+        log('📷 图片格式切换为: JPG', 'info');
+    });
+
+    extPngBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        saveImgExt('png');
+        updateImgExtButtons();
+        log('📷 图片格式切换为: PNG', 'info');
+    });
+
     setTimeout(updateModeGlider, 100);
 
     togglePanel();
+
+    loadImgExt().then(() => {
+        updateImgExtButtons();
+    });
 
     let isDragging = false;
     let dragStartX = 0, dragStartY = 0;
