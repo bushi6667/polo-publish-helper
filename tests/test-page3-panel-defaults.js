@@ -77,9 +77,67 @@ test('折叠时保留的元素', () => {
         !fnBody.includes('productInfo.style.display'),
         '折叠时不隐藏产品信息区'
     );
+});
+
+test('折叠时模式切换区变为一键填入按钮', () => {
+    const toggleFnMatch = source.match(/function togglePanel\(\)\s*\{[\s\S]*?^\}/m);
+    const fnBody = toggleFnMatch ? toggleFnMatch[0] : '';
+
     assert(
-        !fnBody.includes('modeOverwriteBtn.style.display'),
-        '折叠时不隐藏模式切换按钮'
+        fnBody.includes('modeOverwriteBtn.style.display = \'none\''),
+        '折叠时隐藏覆盖填入按钮'
+    );
+    assert(
+        fnBody.includes('modeAppendBtn.style.display = \'none\''),
+        '折叠时隐藏追加填入按钮'
+    );
+    assert(
+        fnBody.includes('modeGlider.style.display = \'none\''),
+        '折叠时隐藏模式滑动指示器'
+    );
+    assert(
+        fnBody.includes('modeFillBtn.style.display = \'block\''),
+        '折叠时显示一键填入按钮'
+    );
+});
+
+test('展开时恢复模式切换区', () => {
+    const toggleFnMatch = source.match(/function togglePanel\(\)\s*\{[\s\S]*?^\}/m);
+    const fnBody = toggleFnMatch ? toggleFnMatch[0] : '';
+
+    assert(
+        fnBody.includes('modeOverwriteBtn.style.display = \'flex\''),
+        '展开时显示覆盖填入按钮'
+    );
+    assert(
+        fnBody.includes('modeAppendBtn.style.display = \'flex\''),
+        '展开时显示追加填入按钮'
+    );
+    assert(
+        fnBody.includes('modeFillBtn.style.display = \'none\''),
+        '展开时隐藏一键填入按钮'
+    );
+});
+
+test('新模式按钮 HTML 存在', () => {
+    assert(
+        source.includes('id="polo-mode-fill-btn"'),
+        'HTML 中存在 polo-mode-fill-btn 按钮'
+    );
+    assert(
+        source.includes('const modeFillBtn = document.getElementById'),
+        'JS 中获取了 modeFillBtn 引用'
+    );
+});
+
+test('新模式按钮点击事件', () => {
+    assert(
+        source.includes('modeFillBtn.onclick'),
+        'modeFillBtn 绑定了 onclick 事件'
+    );
+    assert(
+        source.includes('autofillBtn.click()'),
+        'modeFillBtn 点击时触发原 autofillBtn 的点击事件'
     );
 });
 

@@ -3947,13 +3947,16 @@ function createPage3Panel() {
             <button id="polo-autofill-btn" disabled style="display:block;width:100%;padding:10px;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:8px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;opacity:0.5;cursor:not-allowed;">
                 ⚡ 一键填入
             </button>
-            <div style="position:relative;display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
+            <div id="polo-mode-container" style="position:relative;display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
                 <div style="position:absolute;top:4px;left:4px;height:28px;border-radius:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);box-shadow:0 2px 8px rgba(102,126,234,0.3);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),width 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:1;pointer-events:none;" id="polo-mode-glider"></div>
                 <button id="polo-mode-overwrite" class="mode-tab active" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
                     覆盖填入
                 </button>
                 <button id="polo-mode-append" class="mode-tab" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
                     追加填入
+                </button>
+                <button id="polo-mode-fill-btn" style="display:none;width:100%;padding:8px 12px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
+                    ⚡ 一键填入
                 </button>
             </div>
             <div style="position:relative;margin-bottom:8px;">
@@ -3983,6 +3986,7 @@ function createPage3Panel() {
     const modeOverwriteBtn = document.getElementById('polo-mode-overwrite');
     const modeAppendBtn = document.getElementById('polo-mode-append');
     const modeGlider = document.getElementById('polo-mode-glider');
+    const modeFillBtn = document.getElementById('polo-mode-fill-btn');
     let isCollapsed = false;
     window.__polo_fill_mode = 'overwrite';
 
@@ -4007,6 +4011,12 @@ function createPage3Panel() {
             actionMenu.style.display = 'none';
             logArea.style.display = 'none';
             if (extRow) extRow.style.display = 'none';
+            
+            if (modeOverwriteBtn) modeOverwriteBtn.style.display = 'none';
+            if (modeAppendBtn) modeAppendBtn.style.display = 'none';
+            if (modeGlider) modeGlider.style.display = 'none';
+            if (modeFillBtn) modeFillBtn.style.display = 'block';
+            
             panel.style.width = '260px';
             panel.style.maxHeight = 'auto';
         } else {
@@ -4016,8 +4026,15 @@ function createPage3Panel() {
             dropdownBtn.style.display = 'block';
             logArea.style.display = 'block';
             if (extRow) extRow.style.display = 'flex';
+            
+            if (modeOverwriteBtn) modeOverwriteBtn.style.display = 'flex';
+            if (modeAppendBtn) modeAppendBtn.style.display = 'flex';
+            if (modeGlider) modeGlider.style.display = 'block';
+            if (modeFillBtn) modeFillBtn.style.display = 'none';
+            
             panel.style.width = '380px';
             panel.style.maxHeight = '85vh';
+            updateModeGlider();
         }
     }
 
@@ -4178,6 +4195,15 @@ function createPage3Panel() {
         btn.disabled = false;
         btn.style.opacity = '1';
     };
+
+    if (modeFillBtn) {
+        modeFillBtn.onclick = () => {
+            const autofillBtn = document.getElementById('polo-autofill-btn');
+            if (autofillBtn) {
+                autofillBtn.click();
+            }
+        };
+    }
 
     const items = [
         { icon: '🖼️', label: '上传主图', act: 'fill_images' },
