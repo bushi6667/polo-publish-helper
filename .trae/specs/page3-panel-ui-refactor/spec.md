@@ -44,6 +44,10 @@
 - 菜单若用 `position:absolute; top:100%` 会被父容器裁剪，表现为"点击下拉无反应"
 - 修复：菜单改用 `position:fixed`，点击时用 `getBoundingClientRect()` 动态计算 `top/left/width`，脱离父容器裁剪
 
+**菜单滚动修复**：
+- 菜单共 19 项约 665px 高，向下展开可能超出视口底部，用户无法点击下方项
+- 修复：菜单样式加 `overflow-y:auto`，onclick 中动态计算 `maxHeight = 视口高度 - 菜单顶部位置 - 16px`，并设 160px 最小兜底
+
 ### 2. 图片格式滑块样式
 **文件**：[page3.js](file:///d:/1/doubao_tool/测试文件/xlsx发品/chrome_extension/content/page3.js)
 

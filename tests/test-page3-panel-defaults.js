@@ -187,6 +187,26 @@ test('下拉菜单避免被父容器 overflow:hidden 裁剪', () => {
     );
 });
 
+test('下拉菜单支持滚动避免超出视口', () => {
+    // 菜单 19 项约 665px，向下展开可能超出视口底部，需 max-height + overflow-y:auto
+    assert(
+        source.includes('overflow-y:auto'),
+        '菜单样式包含 overflow-y:auto 支持内部滚动'
+    );
+    assert(
+        source.includes('max-height:60vh') || source.includes('maxHeight'),
+        '菜单有 max-height 限制'
+    );
+    assert(
+        source.includes('window.innerHeight - splitRect.bottom'),
+        '动态计算视口剩余空间作为 max-height'
+    );
+    assert(
+        source.includes('Math.max(160, maxH)'),
+        'max-height 有最小值兜底（160px）避免极小视口'
+    );
+});
+
 console.log('\n' + '='.repeat(50));
 console.log(`通过: ${passed}  失败: ${failed}  总计: ${passed + failed}`);
 
