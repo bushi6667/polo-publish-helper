@@ -1142,7 +1142,11 @@ async function fillGroupPage3(product) {
         if (treeItem) {
             await realClick(treeItem);
             await sleep3(500);
-            await realClick(treeItem);
+            // 校验是否选中（aria-selected="true"），失败则降级
+            if (treeItem.getAttribute('aria-selected') !== 'true') {
+                await nativeMouseClick(treeItem);
+                await sleep3(500);
+            }
         } else {
             await realClick(foundOption);
         }
