@@ -4040,6 +4040,7 @@ function createPage3Panel() {
             panel.style.width = '380px';
             panel.style.maxHeight = '85vh';
             updateModeGlider();
+            updateExtGlider();
         }
     }
 
