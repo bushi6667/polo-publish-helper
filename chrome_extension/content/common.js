@@ -520,6 +520,20 @@ function updateProductInfo(product) {
         btn.style.opacity = '1';
         btn.style.cursor = 'pointer';
     }
+    
+    // 同步激活折叠态的 Split Button
+    const modeFillBtn = document.getElementById('polo-mode-fill-btn');
+    if (modeFillBtn) {
+        modeFillBtn.style.background = 'linear-gradient(135deg,#667eea 0%,#764ba2 100%)';
+        modeFillBtn.style.color = '#ffffff';
+    }
+    const modeFillDdBtn = document.getElementById('polo-mode-fill-dropdown-btn');
+    if (modeFillDdBtn) {
+        modeFillDdBtn.style.background = 'linear-gradient(135deg,#667eea 0%,#764ba2 100%)';
+        modeFillDdBtn.style.color = '#ffffff';
+        modeFillDdBtn.style.borderLeftColor = 'rgba(255,255,255,0.2)';
+    }
+
     const uploadBtn = document.getElementById('polo-upload-img-btn');
     if (uploadBtn) uploadBtn.disabled = false;
 }

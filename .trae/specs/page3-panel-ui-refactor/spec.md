@@ -80,13 +80,16 @@
 **原因**：先展示当前状态（是否有数据），再提供操作入口，符合用户认知。
 
 ### 5. 折叠状态一键填入
-**文件**：[page3.js](file:///d:/1/doubao_tool/测试文件/xlsx发品/chrome_extension/content/page3.js)
+**文件**：[page3.js](file:///d:/1/doubao_tool/测试文件/xlsx发品/chrome_extension/content/page3.js) + [common.js](file:///d:/1/doubao_tool/测试文件/xlsx发品/chrome_extension/content/common.js)
 
 折叠时模式切换区变为 Split Button（主按钮 + 下拉按钮）：
-- 隐藏 `modeOverwriteBtn`、`modeAppendBtn`、`modeGlider`
-- 显示 `modeFillSplit`（原 `modeFillBtn` 升级为 Split Button）
-- 主按钮点击触发 `autofillBtn.click()`
-- 下拉按钮点击打开 `actionMenu`，定位到 `modeFillSplit` 下方
+- **默认状态（无数据）**：灰色背景（`#f8fafc`）、深灰色文字，表示未激活，视觉上不抢戏。
+- **激活状态（有数据）**：紫色渐变背景（`#667eea -> #764ba2`）、白色文字，与主面板风格统一。
+- **状态联动**：在 `common.js` 的 `updateProductInfo` 函数中同步更新样式，与 `autofillBtn` 状态同步。
+
+交互：
+- 主按钮点击触发 `autofillBtn.click()`。
+- 下拉按钮点击打开 `actionMenu`，定位到 `modeFillSplit` 下方。
 
 ### 6. 下拉菜单定位与滚动
 **文件**：[page3.js](file:///d:/1/doubao_tool/测试文件/xlsx发品/chrome_extension/content/page3.js)

@@ -3958,11 +3958,11 @@ function createPage3Panel() {
                 <button id="polo-mode-append" class="mode-tab" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
                     追加填入
                 </button>
-            <div id="polo-mode-fill-split" style="display:none;position:relative;display:flex;margin-bottom:8px;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
-                <button id="polo-mode-fill-btn" style="flex:1;padding:10px 12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:8px 0 0 8px;">
+            <div id="polo-mode-fill-split" style="display:none;position:relative;display:flex;margin-bottom:8px;border-radius:10px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.05);border:1px solid #e2e8f0;">
+                <button id="polo-mode-fill-btn" style="flex:1;padding:10px 12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:#f8fafc;color:#64748b;border-radius:10px 0 0 10px;transition:all 0.2s ease;user-select:none;">
                     ⚡ 一键填入
                 </button>
-                <button id="polo-mode-fill-dropdown-btn" style="width:36px;border:none;border-left:1px solid rgba(255,255,255,0.3);font-size:12px;cursor:pointer;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;">
+                <button id="polo-mode-fill-dropdown-btn" style="width:32px;border:none;border-left:1px solid #e2e8f0;font-size:12px;cursor:pointer;background:#f8fafc;color:#64748b;border-radius:0 10px 10px 0;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;">
                     ▾
                 </button>
             </div>
