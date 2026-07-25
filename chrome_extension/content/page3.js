@@ -494,7 +494,9 @@ async function fillAttributeField(field, product) {
                 await sleep3(100);
                 inp.focus();
                 
-                const values = Array.isArray(field.val) ? field.val : [field.val];
+                const values = Array.isArray(field.val) 
+                    ? field.val 
+                    : String(field.val).split(/[,，]/).map(s => s.trim()).filter(Boolean);
                 const addedVals = [];
                 
                 for (const val of values) {

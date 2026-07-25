@@ -89,6 +89,23 @@ test('tag 模式支持多值循环输入', () => {
     );
 });
 
+test('tag 模式按逗号拆分多值', () => {
+    const fillAttrMatch = page3Src.match(/else if \(actualMode === 'tag'\)[\s\S]*?^\s{8}\}/m);
+    const tagSection = fillAttrMatch ? fillAttrMatch[0] : '';
+    assert(
+        tagSection.includes(".split(/[,，]/)"),
+        'tag 模式按逗号（中英文）分隔字符串'
+    );
+    assert(
+        tagSection.includes('.trim()'),
+        'tag 模式对拆分后的值进行 trim 处理'
+    );
+    assert(
+        tagSection.includes('.filter(Boolean)'),
+        'tag 模式过滤空值'
+    );
+});
+
 test('tag 模式支持搜索匹配选项', () => {
     const fillAttrMatch = page3Src.match(/else if \(actualMode === 'tag'\)[\s\S]*?^\s{8}\}/m);
     const tagSection = fillAttrMatch ? fillAttrMatch[0] : '';
