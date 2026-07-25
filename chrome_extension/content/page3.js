@@ -937,11 +937,13 @@ async function waitForProvinceField() {
 //   1. 页面有隐藏的file input，直接选容易选错
 //   2. 换电脑后本地文件路径失效
 //   3. React文件上传组件需要正确触发change事件
+//   4. 上传是异步操作，菜单项同步判断会误判"未完成"
 // 解决方案:
 //   1. 通过 background.js 调用 Chrome DevTools Protocol
 //   2. 使用 DOM.getDocument + DOM.querySelector 精确定位 nodeId
 //   3. 三种降级路径: CDP本地路径 → Blob+DataTransfer → 直接URL上传
 //   4. 上传后等待2-3秒检测结果
+//   5. 监听 uploadResult 消息等待最终结果，菜单项可正确判断成功/失败
 // ============================================================
 async function fillImagesPage3(product) {
     const results = [];
@@ -963,8 +965,24 @@ async function fillImagesPage3(product) {
         await sleep3(300);
     }
     if (product.imagePath) {
-        chrome.runtime.sendMessage({ action: 'uploadMainImage', imagePath: product.imagePath, pageType: 'page3' }, () => {});
         results.push('⏳ 主图上传中，请稍候...');
+        chrome.runtime.sendMessage({ action: 'uploadMainImage', imagePath: product.imagePath, pageType: 'page3' }, () => {});
+
+        const uploadResult = await new Promise((resolve) => {
+            const listener = (request) => {
+                if (request.action === 'uploadResult') {
+                    chrome.runtime.onMessage.removeListener(listener);
+                    resolve(request.result);
+                }
+            };
+            chrome.runtime.onMessage.addListener(listener);
+        });
+
+        if (uploadResult && uploadResult.ok) {
+            results.push('✅ 主图上传成功');
+        } else {
+            results.push('❌ 主图上传失败: ' + (uploadResult?.error || '未知错误'));
+        }
     } else {
         results.push('⚠️ 主图: 无图片路径');
     }
