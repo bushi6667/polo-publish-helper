@@ -14,6 +14,7 @@ const PUBLISH_QUEUE_KEY = 'polo_publish_queue';
 const PENDING_COLOR_TASK_KEY = 'polo_pending_color_task';
 const DOUBAO_TAB_ID_KEY = 'polo_doubao_tab_id';
 const HELPER_PATH_KEY = 'polo_helper_path'; // popup.js 中配置的发品助手.html 路径（存在 chrome.storage.local）
+const TOKEN_KEY = 'polo_access_token'; // H1 第2层：发品助手.html 访问令牌（首次 ping 发放，后续消息必须携带）
 
 let IMAGE_DIR = '';
 let COLOR_IMG_DIR = '';
@@ -80,6 +81,19 @@ function isValidDir(v) {
     const segs = v.split(/[\\/]+/).filter(Boolean);
     if (segs.some(s => s === '..' || s === '.')) return false; // 防目录逃逸
     return true; // 单字符目录（如「图」）合法
+}
+
+// H1 第2层：读取/生成访问令牌（32 位随机 hex 存 storage；首次由 ping 发放给发品助手.html）
+async function getOrCreateToken() {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(TOKEN_KEY, (result) => {
+            if (result[TOKEN_KEY]) return resolve(result[TOKEN_KEY]);
+            const arr = new Uint8Array(16);
+            crypto.getRandomValues(arr);
+            const token = Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
+            chrome.storage.local.set({ [TOKEN_KEY]: token }, () => resolve(token));
+        });
+    });
 }
 
 let downloadFilenameMap = new Map(); // downloadId -> { filename, relativePath, url }
@@ -647,16 +661,27 @@ async function handleSharedAction(request, sendResponse) {
 
 chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
     // H1 第1层：先校验来源，不通过则拒绝（外层 return true 保持异步通道）
-    isTrustedSender(sender).then((ok) => {
+    isTrustedSender(sender).then(async (ok) => {
         if (!ok) {
             console.warn(`⛔ [onMessageExternal] 拒绝未授权外部消息: action=${request.action}, senderUrl=${sender?.url || 'unknown'}`);
             sendResponse({ ok: false, error: '未授权来源' });
             return;
         }
+        // H1 第2层：token 校验（'ping' 首次免 token 用于换取令牌，其余消息必须携带）
+        if (request.action !== 'ping') {
+            const token = await getOrCreateToken();
+            if (!request.token || request.token !== token) {
+                console.warn('⛔ [onMessageExternal] token 校验失败:', request.action);
+                sendResponse({ ok: false, error: '未授权来源' });
+                return;
+            }
+        }
         console.log(`🔍 [onMessageExternal] 收到消息: action=${request.action}, senderUrl=${sender?.url || 'unknown'}, senderId=${sender?.id || 'unknown'}`);
         if (request.action === 'ping') {
             assistantTabId = sender.tab?.id || null;
-            sendResponse({ ok: true, version: '1.0.0' });
+            // ping 响应附带令牌，供发品助手.html 存 localStorage 后随后续消息携带
+            const token = await getOrCreateToken();
+            sendResponse({ ok: true, version: '1.0.0', token });
             return true;
         }
         if (request.action === 'clearAllColorImages') {
