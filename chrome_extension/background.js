@@ -1,11 +1,13 @@
 importScripts('upload/page2_upload.js', 'upload/page3_upload.js');
 
 const STORAGE_KEY = 'polo_product_data';
+const DEFAULT_FILE_FOLDER = '默认'; // 颜色图默认子目录名（CURRENT_FILENAME 为空时使用）；历史路径一直是 '默认'，勿改 'default'（buildColorImagePath 读盘同源）
 const IMAGE_DIR_KEY = 'polo_image_dir';
 const COLOR_IMG_DIR_KEY = 'polo_color_img_dir';
 const PUBLISH_QUEUE_KEY = 'polo_publish_queue';
 const PENDING_COLOR_TASK_KEY = 'polo_pending_color_task';
 const DOUBAO_TAB_ID_KEY = 'polo_doubao_tab_id';
+const HELPER_PATH_KEY = 'polo_helper_path'; // popup.js 中配置的发品助手.html 路径（存在 chrome.storage.local）
 
 let IMAGE_DIR = '';
 let COLOR_IMG_DIR = '';
@@ -31,6 +33,59 @@ async function ensureConfigLoaded() {
         });
     });
 }
+
+// H1 第1层：外部消息来源校验（Chrome 提供的 sender.url 不可伪造）
+async function isTrustedSender(sender) {
+    const url = sender?.url || '';
+    // 注意：扩展自身页面走 onMessage（内部消息），不会进入 onMessageExternal；
+    // 此处出现的 chrome-extension:// 来源只可能是其他扩展，一律拒绝（review blocking 修复）
+    if (!url.startsWith('file://')) return false;
+    let path;
+    try {
+        path = decodeURIComponent(url.replace(/^file:\/\/\//, '').replace(/^file:\/\//, '')).replace(/\//g, '\\');
+    } catch (e) {
+        console.warn('[isTrustedSender] 非法 file:// URL，拒绝:', url);
+        return false;
+    }
+    // 优先精确匹配 popup 已配置的 helperPath（发品助手.html 的本地路径）
+    const helper = await new Promise(r => chrome.storage.local.get(HELPER_PATH_KEY, v => r(v[HELPER_PATH_KEY] || '')));
+    if (helper) {
+        const helperNorm = helper.replace(/\//g, '\\').toLowerCase();
+        const pathLower = path.toLowerCase();
+        if (pathLower === helperNorm) return true; // 绝对路径：完整相等
+        if (!helperNorm.includes('\\') && !helperNorm.includes(':')) {
+            // 相对路径（仅文件名）：结尾匹配
+            return pathLower.endsWith('\\' + helperNorm) || pathLower.endsWith('/' + helperNorm);
+        }
+        return false;
+    }
+    // 未配置 helperPath 时兜底：文件名包含"发品助手"
+    return path.includes('发品助手');
+}
+
+let downloadFilenameMap = new Map(); // downloadId -> { filename, relativePath, url }
+
+chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
+    let mapping = downloadFilenameMap.get(downloadItem.id);
+    // 兜底：download() 回调与 onDeterminingFilename 的触发顺序无硬性保证，
+    // id 未命中时按下载 URL 匹配（data: 或原始 URL 均与传入 downloadUrl 一致）
+    if (!mapping && downloadItem.url) {
+        for (const m of downloadFilenameMap.values()) {
+            if (m.url === downloadItem.url) {
+                mapping = m;
+                break;
+            }
+        }
+    }
+    if (mapping) {
+        console.log(`[download] 强制文件名: id=${downloadItem.id} -> ${mapping.relativePath}`);
+        suggest({ filename: mapping.relativePath, conflictAction: 'overwrite' });
+        // 删除匹配条目：url 兜底命中时 key 不是 downloadItem.id，需按映射对象删除
+        for (const [k, v] of downloadFilenameMap) {
+            if (v === mapping) { downloadFilenameMap.delete(k); break; }
+        }
+    }
+});
 
 async function savePublishQueue() {
     return new Promise((resolve) => {
@@ -196,7 +251,7 @@ async function getColorImageFromIDB(key) {
 }
 
 function colorImageIDBKey(filename, rowNum, color) {
-    const safeFn = (filename || '').replace(/[^a-zA-Z0-9]/g, '_');
+    const safeFn = (filename || '').replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g, '_');
     return safeFn + '__row' + rowNum + '__' + color;
 }
 
@@ -208,7 +263,7 @@ chrome.storage.local.get([IMAGE_DIR_KEY, COLOR_IMG_DIR_KEY, 'current_filename'],
 });
 
 function getFilePrefix() {
-    const prefix = CURRENT_FILENAME ? CURRENT_FILENAME.replace(/[^a-zA-Z0-9]/g, '_') + '__' : '';
+    const prefix = CURRENT_FILENAME ? CURRENT_FILENAME.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g, '_') + '__' : '';
     console.log(`🔍 [getFilePrefix] CURRENT_FILENAME=${CURRENT_FILENAME}, prefix=${prefix}`);
     return prefix;
 }
@@ -237,7 +292,7 @@ function buildColorImagePath(rowNum, color) {
         ? base.slice(0, -1)
         : base;
     const hasSubDir = dir.includes('Polo发品_颜色图');
-    const fileFolder = CURRENT_FILENAME || '默认';
+    const fileFolder = CURRENT_FILENAME || DEFAULT_FILE_FOLDER; // 与 downloadDoubaoImage 下载侧保持一致
     let path;
     if (hasSubDir) {
         path = dir + sep + fileFolder + sep + 'row' + rowNum + sep + 'row' + rowNum + '_' + color + '.png';
@@ -549,8 +604,15 @@ async function handleSharedAction(request, sendResponse) {
 }
 
 chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
-    console.log(`🔍 [onMessageExternal] 收到消息: action=${request.action}, senderUrl=${sender?.url || 'unknown'}, senderId=${sender?.id || 'unknown'}`);
-    if (request.action === 'ping') {
+    // H1 第1层：先校验来源，不通过则拒绝（外层 return true 保持异步通道）
+    isTrustedSender(sender).then((ok) => {
+        if (!ok) {
+            console.warn(`⛔ [onMessageExternal] 拒绝未授权外部消息: action=${request.action}, senderUrl=${sender?.url || 'unknown'}`);
+            sendResponse({ ok: false, error: '未授权来源' });
+            return;
+        }
+        console.log(`🔍 [onMessageExternal] 收到消息: action=${request.action}, senderUrl=${sender?.url || 'unknown'}, senderId=${sender?.id || 'unknown'}`);
+        if (request.action === 'ping') {
         assistantTabId = sender.tab?.id || null;
         sendResponse({ ok: true, version: '1.0.0' });
         return true;
@@ -580,8 +642,18 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
     }
     if (request.action === 'clearAllOnNewFile') {
         const prefix = getFilePrefix();
+        if (!prefix) {
+            // H3 空前缀保护：无当前文件名时拒绝清理，避免 startsWith('') 命中全部键（含配置）
+            console.warn('⛔ [clearAllOnNewFile] 未设置当前文件名，已跳过清理');
+            sendResponse({ ok: false, error: '未设置当前文件名，已跳过清理' });
+            return true;
+        }
         chrome.storage.local.get(null, (result) => {
-            const keys = Object.keys(result).filter(k => k.startsWith(prefix));
+            const keys = Object.keys(result).filter(k =>
+                k.startsWith(prefix) ||
+                k === STORAGE_KEY
+                // 注意：color_images_row_* 是 legacy 迁移键（跨文件共享、迁移后即删），清理收益低，不再删除
+            );
             chrome.storage.local.remove(keys, () => {
                 console.log(`🧹 新文件加载，清理当前文件数据: ${keys.length}项`);
                 sendResponse({ ok: true, cleared: keys.length });
@@ -611,24 +683,40 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
         }
         return true;
     }
-    handleSharedAction(request, sendResponse);
+        handleSharedAction(request, sendResponse);
+        return true;
+    }).catch((err) => {
+        console.warn('[onMessageExternal] 来源校验异常，拒绝:', err.message);
+        sendResponse({ ok: false, error: '来源校验异常' });
+    });
     return true;
 });
 
 chrome.runtime.onConnectExternal.addListener((port) => {
-    console.log('🔌 [onConnectExternal] 收到外部连接:', port.name, port.sender?.url || 'unknown');
-    if (port.name === 'assistant-channel') {
-        assistantPort = port;
-        assistantTabId = port.sender?.tab?.id || null;
-        console.log('✅ [onConnectExternal] 发品助手长连接已建立, tabId=', assistantTabId);
-        port.onDisconnect.addListener(() => {
-            console.log('🔌 [onConnectExternal] 发品助手长连接已断开');
-            assistantPort = null;
-        });
-        port.onMessage.addListener((msg) => {
-            console.log('🔍 [onConnectExternal] 收到消息:', msg.action);
-        });
-    }
+    // H1 第1层：长连接同样校验来源，不通过则断开
+    isTrustedSender(port.sender).then((ok) => {
+        if (!ok) {
+            console.warn('⛔ [onConnectExternal] 拒绝未授权连接:', port.sender?.url || 'unknown');
+            port.disconnect();
+            return;
+        }
+        console.log('🔌 [onConnectExternal] 收到外部连接:', port.name, port.sender?.url || 'unknown');
+        if (port.name === 'assistant-channel') {
+            assistantPort = port;
+            assistantTabId = port.sender?.tab?.id || null;
+            console.log('✅ [onConnectExternal] 发品助手长连接已建立, tabId=', assistantTabId);
+            port.onDisconnect.addListener(() => {
+                console.log('🔌 [onConnectExternal] 发品助手长连接已断开');
+                assistantPort = null;
+            });
+            port.onMessage.addListener((msg) => {
+                console.log('🔍 [onConnectExternal] 收到消息:', msg.action);
+            });
+        }
+    }).catch((err) => {
+        console.warn('[onConnectExternal] 来源校验异常，断开连接:', err.message);
+        port.disconnect();
+    });
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -1458,36 +1546,58 @@ async function uploadDoubaoImage(tabId, imagePath) {
 async function downloadDoubaoImage(url, filename, rowNum) {
     return new Promise(async (resolve) => {
         try {
-            const fileFolder = CURRENT_FILENAME || '默认';
-            const relativePath = 'Polo发品_颜色图\\' + fileFolder + '\\row' + rowNum + '\\' + filename;
+            const fileFolder = CURRENT_FILENAME || DEFAULT_FILE_FOLDER; // 与 buildColorImagePath 读盘侧保持一致
+            const relativePath = 'Polo发品_颜色图/' + fileFolder + '/row' + rowNum + '/' + filename;
 
             const colorMatch = filename.match(/_(white|black|gray|navy)\./);
+            let dataUrl = null;
             if (colorMatch) {
                 try {
                     const resp = await fetch(url, { headers: { 'Referer': 'https://www.doubao.com/' } });
                     if (resp.ok) {
                         const blob = await resp.blob();
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                            const color = colorMatch[1];
-                            const idbKey = colorImageIDBKey(CURRENT_FILENAME, rowNum, color);
-                            saveColorImageToIDB(idbKey, reader.result).then(() => {
-                                console.log(`💾 颜色图已存 IndexedDB(预取): ${idbKey}`);
+                        // M2-②：非图片响应（登录墙/劫持的 HTML）不生成 data URL，
+                        // 回退原始 URL 下载以保留 Chrome 对 text/html 等危险类型的防护
+                        if (blob.type && blob.type.startsWith('image/')) {
+                            // MV3 Service Worker 没有 URL.createObjectURL，用 data URL 替代
+                            dataUrl = await new Promise((r) => {
+                                const reader = new FileReader();
+                                reader.onloadend = () => r(reader.result);
+                                reader.onerror = () => r(null);
+                                reader.readAsDataURL(blob);
                             });
-                        };
-                        reader.readAsDataURL(blob);
+                            console.log(`[download] dataUrl created: ${dataUrl ? dataUrl.slice(0, 60) + '...' : 'null'}`);
+                            // 同时存 IndexedDB
+                            if (dataUrl) {
+                                const color = colorMatch[1];
+                                const idbKey = colorImageIDBKey(CURRENT_FILENAME, rowNum, color);
+                                saveColorImageToIDB(idbKey, dataUrl).then(() => {
+                                    console.log(`💾 颜色图已存 IndexedDB(预取): ${idbKey}`);
+                                });
+                            }
+                        } else {
+                            console.warn(`[download] 响应非图片类型（${blob.type || 'unknown'}），跳过 data URL，回退原始 URL 下载`);
+                        }
                     }
                 } catch (e) {
                     console.warn('预取图片存 IndexedDB 失败:', e.message);
                 }
             }
 
+            const downloadUrl = dataUrl || url;
+            console.log(`[download] using url type: ${dataUrl ? 'data' : 'original'}, filename: ${relativePath}`);
+            
             chrome.downloads.download({
-                url: url,
+                url: downloadUrl,
                 filename: relativePath,
                 conflictAction: 'overwrite',
                 saveAs: false
             }, (downloadId) => {
+                // 在回调里存储映射，onDeterminingFilename 会用 downloadId 匹配
+                if (downloadId !== undefined) {
+                    downloadFilenameMap.set(downloadId, { filename, relativePath, url: downloadUrl });
+                }
+                
                 if (chrome.runtime.lastError) {
                     console.warn(`⚠️ chrome.downloads 失败，改用 fetch 方式: ${chrome.runtime.lastError.message}`);
                     downloadViaFetch(url, filename, rowNum, relativePath).then(resolve);
@@ -1497,6 +1607,10 @@ async function downloadDoubaoImage(url, filename, rowNum) {
 
                 const onChanged = (delta) => {
                     if (delta.id !== downloadId) return;
+                    if (delta.state && (delta.state.current === 'complete' || delta.state.current === 'interrupted')) {
+                        // 下载结束/中断时清理文件名映射，避免泄漏（命中后 onDeterminingFilename 也会删除）
+                        downloadFilenameMap.delete(downloadId);
+                    }
                     if (delta.state && delta.state.current === 'complete') {
                         chrome.downloads.search({ id: downloadId }, (items) => {
                             if (items && items[0]) {
@@ -1771,7 +1885,9 @@ let psEditState = null;
 
 async function startPsEdit(task) {
     const { imageDataUrl, fileName, rowNum, imageDir } = task;
-    const baseFileName = fileName.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '');
+    const baseFileName = fileName
+        .replace(/\.(jpg|jpeg|png|gif|webp)$/i, '')
+        .replace(/[^a-zA-Z0-9\u4e00-\u9fff._-]/g, '_'); // H2 白名单清洗：字母/数字/中文/._-，防注入 Photopea 脚本
     console.log('🖌️ 启动PS编辑:', { fileName, baseFileName, rowNum });
 
     const config = {
@@ -1781,7 +1897,7 @@ async function startPsEdit(task) {
             url: PS_SAVE_MARKER,
             formats: ['png']
         },
-        script: `app.activeDocument.name = "${baseFileName}";`
+        script: `app.activeDocument.name = ${JSON.stringify(baseFileName)};` // H2：JSON 转义防引号注入
     };
     const hash = encodeURIComponent(JSON.stringify(config));
     const url = `https://www.photopea.com#${hash}`;
@@ -2060,17 +2176,19 @@ function injectFetchInterceptor(markerUrl, fileName) {
 
 function injectMessageBridge() {
     console.log('[PS拦截] 消息桥已注册');
+    // 注入到 Photopea ISOLATED world：chrome.runtime.id 仍是发起注入的扩展 ID
+    const EXT_ID = chrome.runtime.id;
     window.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'PS_EDIT_SAVE') {
             console.log('[PS拦截] 收到 PS_EDIT_SAVE 消息');
-            chrome.runtime.sendMessage('oeddlfchihjeajlacggmnldilalpbcmi', {
+            chrome.runtime.sendMessage(EXT_ID, {
                 action: 'psEditSave',
                 data: event.data.data
             });
         }
         if (event.data && event.data.type === 'PS_EDIT_SAVE_FSA') {
             console.log('[PS拦截] 收到 PS_EDIT_SAVE_FSA 消息，format:', event.data.format, 'rowNum:', event.data.rowNum, 'fileName:', event.data.fileName);
-            chrome.runtime.sendMessage('oeddlfchihjeajlacggmnldilalpbcmi', {
+            chrome.runtime.sendMessage(EXT_ID, {
                 action: 'psEditSaveFsa',
                 data: event.data.data,
                 format: event.data.format,
@@ -2137,7 +2255,8 @@ async function handlePsEditSave(arrayBuffer) {
     }).catch(() => {});
 }
 
-const EXTENSION_ID = 'oeddlfchihjeajlacggmnldilalpbcmi';
+// 扩展自身 ID：动态获取，避免换电脑/重新加载扩展时 ID 变化导致失效
+const EXTENSION_ID = chrome.runtime.id;
 
 const PS_EDIT_RESULT_KEY = 'ps_edit_result';
 
