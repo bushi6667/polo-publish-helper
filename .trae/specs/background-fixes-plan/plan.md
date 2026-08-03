@@ -287,8 +287,8 @@ function isValidDir(v) {
 | P0-2 | H1 第1层 + H3（sender.url 校验含 helperPath 匹配、空前缀保护、去掉 color_images_row_ 清理） | ✅ 已实施（commit 6be477c），恶意本地 html 被拒 + 正常发品助手流程冒烟 |
 | P0-3 | H2（baseFileName 白名单 + JSON.stringify）+ M2-②（blob.type 图片校验） | ✅ 已实施（commit 6be477c），转义/图片类型断言单测 |
 | P1 | M1 + M2-① + M3（eval 改 executeScript、filename 白名单含 typeof 防护、目录校验；顺带恢复 onMessageExternal 缩进） | ✅ 已实施（本次），node --check + 非法输入单测（文件名/URL/目录）+ 全量 205 断言 |
-| P2-a | L1 + L2 + L3 + L4 + I1（psEditSave 来源/大小、消息桥 origin、保留设备名、downloadViaFetch data URL、路径收敛知悉） | ⏳ 本轮实施：node --check + 新增单测 + 全量回归 |
-| P2-b | H1 第2层（token 握手：background 生成/校验 + 发品助手.html 携带） | ⏳ 本轮实施：全量回归 + 冒烟 |
+| P2-a | L1 + L2 + L3 + L4 + I1（psEditSave 来源/大小、消息桥 origin、保留设备名、downloadViaFetch data URL、路径收敛知悉） | ✅ 已实施（3def0aa + 6559982 + 1b29cdc），node --check + 新增单测 + 全量 254 断言 |
+| P2-b | H1 第2层（token 握手：background 生成/校验 + 发品助手.html 携带） | ✅ 已实施（d5b44bb + 6559982），monkey-patch 单点包装 + 写后读回原子性，全量回归 |
 | P2-c（遗留） | H1 第3层（长连接收紧）+ F2 时序实测 + _server.js 'null' Origin 令牌 | ⏳ 待定：需运行时实测或产品决策 |
 
 现有测试（tests/ 下 6 个文件，137 项断言）与 `node --check` 为全量回归基线；H1/H3/M2 的纯逻辑（isTrustedSender / isValidDir / SAFE_FILENAME_RE / blob 类型判断）抽成独立函数并补充 node 单元测试，便于直接纳入 tests/。
