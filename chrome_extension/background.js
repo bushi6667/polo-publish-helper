@@ -1932,7 +1932,7 @@ async function downloadViaFetch(url, filename, rowNum, relativePath) {
                 chrome.downloads.onChanged.addListener(onChanged);
 
                 setTimeout(() => {
-                    URL.revokeObjectURL(blobUrl);
+                    // data URL 无需 revoke（L4 已移除 blobUrl）；超时清理监听并返回
                     chrome.downloads.onChanged.removeListener(onChanged);
                     resolve({ ok: false, error: '下载超时' });
                 }, 60000);
