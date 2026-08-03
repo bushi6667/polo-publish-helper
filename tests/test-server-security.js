@@ -25,7 +25,10 @@ assert.strictEqual(buildSafeFilePath('/%2e%2e/secret.txt'), null, 'URL 编码 ..
 assert.strictEqual(buildSafeFilePath('/../../etc/passwd'), null, '多级穿越拒绝');
 assert.strictEqual(buildSafeFilePath('/%E0%A4%A'), null, '畸形 URL 编码拒绝（不抛异常）');
 assert.strictEqual(buildSafeFilePath('..\\..\\evil.txt'), null, '反斜杠穿越拒绝');
-console.log('  ✅ 7/7');
+// 兄弟目录同名前缀绕过（security_review 复核发现的残留 HIGH）：..\xlsx发品-副本-xx\ 不得放行
+const siblingPath = '/../' + path.basename(BASE_DIR) + '-sibling/evil.txt';
+assert.strictEqual(buildSafeFilePath(siblingPath), null, '兄弟目录同名前缀绕过拒绝');
+console.log('  ✅ 8/8');
 
 console.log('[sanitizeFileName 任意文件写防护]');
 assert.strictEqual(sanitizeFileName('local,10,row10_main.jpg'), 'row10_main.jpg', '正常 source 格式');
@@ -38,4 +41,4 @@ assert.strictEqual(sanitizeFileName(undefined), 'image.png', 'undefined 兜底')
 console.log('  ✅ 7/7');
 
 console.log('\n----------------------------------------');
-console.log('通过 19 / 失败 0');
+console.log('通过 20 / 失败 0');

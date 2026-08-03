@@ -40,6 +40,7 @@ function resolveCorsOrigin(req) {
 }
 
 // 静态文件安全路径：URL 解码异常返回 null；路径归一化后强制在 BASE_DIR 内（防 ../ 穿越），否则 null
+// 注意：前缀比较需带 path.sep 边界，防止「兄弟目录同名前缀」绕过（如 ..\xlsx发品-备份\x）
 function buildSafeFilePath(urlPath) {
   let decoded;
   try {
@@ -48,7 +49,7 @@ function buildSafeFilePath(urlPath) {
     return null;
   }
   const p = path.normalize(path.join(BASE_DIR, decoded));
-  if (!p.startsWith(BASE_DIR)) return null;
+  if (p !== BASE_DIR && !p.startsWith(BASE_DIR + path.sep)) return null;
   return p;
 }
 
