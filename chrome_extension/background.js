@@ -3,6 +3,11 @@ importScripts('upload/page2_upload.js', 'upload/page3_upload.js');
 const STORAGE_KEY = 'polo_product_data';
 const DEFAULT_FILE_FOLDER = '默认'; // 颜色图默认子目录名（CURRENT_FILENAME 为空时使用）；历史路径一直是 '默认'，勿改 'default'（buildColorImagePath 读盘同源）
 const SAFE_FILENAME_RE = /^[a-zA-Z0-9\u4e00-\u9fff._-]+$/; // M2-① 下载文件名白名单（禁路径分隔符/绝对路径/..）
+// L3：Windows 保留设备名（CON/PRN/AUX/NUL/COM1-9/LPT1-9，含带扩展名形式）下载会失败/改名
+const RESERVED_WIN_NAME_RE = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
+function isReservedWindowsName(filename) {
+    return RESERVED_WIN_NAME_RE.test(String(filename || '').split('.')[0]);
+}
 const IMAGE_DIR_KEY = 'polo_image_dir';
 const COLOR_IMG_DIR_KEY = 'polo_color_img_dir';
 const PUBLISH_QUEUE_KEY = 'polo_publish_queue';
@@ -893,6 +898,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
     if (request.action === 'psEditSave') {
+        // L1：仅接受本次 startPsEdit 打开的 Photopea 标签页消息 + 数据大小上限（防伪造/超大占用）
+        if (sender.tab?.id !== psEditState?.tabId) {
+            console.warn('⛔ [PS编辑] 拒绝非 Photopea 来源的 psEditSave');
+            sendResponse({ ok: false, error: '来源不符' });
+            return true;
+        }
+        if ((request.data?.byteLength || 0) > 100 * 1024 * 1024) {
+            console.warn('⛔ [PS编辑] psEditSave 数据过大拒绝:', request.data?.byteLength);
+            sendResponse({ ok: false, error: '数据过大' });
+            return true;
+        }
         console.log('[PS编辑] background 收到 psEditSave 消息');
         handlePsEditSave(request.data);
         sendResponse({ ok: true });
@@ -900,6 +916,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
     if (request.action === 'psEditSaveFsa') {
+        // L1：来源与大小校验（同 psEditSave）
+        if (sender.tab?.id !== psEditState?.tabId) {
+            console.warn('⛔ [PS编辑] 拒绝非 Photopea 来源的 psEditSaveFsa');
+            sendResponse({ ok: false, error: '来源不符' });
+            return true;
+        }
+        if ((request.data?.byteLength || 0) > 100 * 1024 * 1024) {
+            console.warn('⛔ [PS编辑] psEditSaveFsa 数据过大拒绝:', request.data?.byteLength);
+            sendResponse({ ok: false, error: '数据过大' });
+            return true;
+        }
         console.log('[PS编辑] background 收到 psEditSaveFsa 消息，fileName:', request.fileName, 'data length:', request.data?.byteLength);
         handlePsEditSaveFsa(request.data, request.fileName);
         sendResponse({ ok: true });
@@ -1606,7 +1633,8 @@ async function downloadDoubaoImage(url, filename, rowNum) {
         try {
             // M2-①：filename 白名单校验，拒绝路径分隔符/绝对路径/..（防覆盖下载目录外文件）
             // 注意：RegExp.test(null) 会把 null 转 "null"（全在白名单内返回 true），必须先 typeof 检查
-            if (typeof filename !== 'string' || !SAFE_FILENAME_RE.test(filename) || filename.includes('..')) {
+            // L3：额外拒绝 Windows 保留设备名（CON/NUL/COM1 等）
+            if (typeof filename !== 'string' || !SAFE_FILENAME_RE.test(filename) || filename.includes('..') || isReservedWindowsName(filename)) {
                 console.warn('⛔ 非法下载文件名:', filename);
                 return resolve({ ok: false, error: '非法文件名' });
             }
@@ -1805,31 +1833,31 @@ async function downloadViaFetch(url, filename, rowNum, relativePath) {
         if (!response.ok) throw new Error('HTTP ' + response.status);
 
         const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
+        // L4：MV3 Service Worker 无 URL.createObjectURL，改用 data URL（与 downloadDoubaoImage 主路径一致）
+        const dataUrl = await new Promise((resolveData, rejectData) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolveData(reader.result);
+            reader.onerror = () => rejectData(new Error('读取 blob 失败'));
+            reader.readAsDataURL(blob);
+        });
 
         const colorMatch = filename.match(/_(white|black|gray|navy)\./);
         if (colorMatch) {
             const color = colorMatch[1];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const dataUrl = reader.result;
-                const idbKey = colorImageIDBKey(CURRENT_FILENAME, rowNum, color);
-                saveColorImageToIDB(idbKey, dataUrl).then(() => {
-                    console.log(`💾 颜色图已存 IndexedDB: ${idbKey}`);
-                });
-            };
-            reader.readAsDataURL(blob);
+            const idbKey = colorImageIDBKey(CURRENT_FILENAME, rowNum, color);
+            saveColorImageToIDB(idbKey, dataUrl).then(() => {
+                console.log(`💾 颜色图已存 IndexedDB: ${idbKey}`);
+            });
         }
 
         return new Promise((resolve) => {
             chrome.downloads.download({
-                url: blobUrl,
+                url: dataUrl,
                 filename: relativePath,
                 conflictAction: 'overwrite',
                 saveAs: false
             }, (downloadId) => {
                 if (chrome.runtime.lastError) {
-                    URL.revokeObjectURL(blobUrl);
                     resolve({ ok: false, error: chrome.runtime.lastError.message });
                     return;
                 }
@@ -1838,7 +1866,6 @@ async function downloadViaFetch(url, filename, rowNum, relativePath) {
                     if (delta.id !== downloadId) return;
                     if (delta.state && delta.state.current === 'complete') {
                         chrome.downloads.search({ id: downloadId }, (items) => {
-                            URL.revokeObjectURL(blobUrl);
                             if (items && items[0]) {
                                 const fullPath = items[0].filename;
                                 const storageKey = colorKey(rowNum);
@@ -1864,7 +1891,6 @@ async function downloadViaFetch(url, filename, rowNum, relativePath) {
                         });
                     }
                     if (delta.error) {
-                        URL.revokeObjectURL(blobUrl);
                         chrome.downloads.onChanged.removeListener(onChanged);
                         resolve({ ok: false, error: delta.error.current });
                     }
@@ -2246,6 +2272,8 @@ function injectMessageBridge() {
     // 注入到 Photopea ISOLATED world：chrome.runtime.id 仍是发起注入的扩展 ID
     const EXT_ID = chrome.runtime.id;
     window.addEventListener('message', (event) => {
+        // L2：仅接受本窗口内 Photopea 页面自身的消息（防其他页面/扩展伪造 PS_EDIT_SAVE）
+        if (event.source !== window || event.origin !== 'https://www.photopea.com') return;
         if (event.data && event.data.type === 'PS_EDIT_SAVE') {
             console.log('[PS拦截] 收到 PS_EDIT_SAVE 消息');
             chrome.runtime.sendMessage(EXT_ID, {

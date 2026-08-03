@@ -1,6 +1,6 @@
 # background.js 修复方案文档
 
-> 状态：方案已定稿，P0 批次已实施（commit 6be477c），P1 批次已实施（M1/M2-①/M3，见下）
+> 状态：方案已定稿，P0/P1 已实施（6be477c/988c5f5/a4abfee），P2 批次实施中
 > 审查依据：review 子代理（功能 F1-F4）+ security_review 子代理（安全 H1-H3 / M1-M3 / L1-L2 / I1）+ 二次 review/security_review 复核
 > 关键结论补充（复核后确认）：
 > - **data URL 下载主路径动机成立**：MV3 Service Worker 无 `URL.createObjectURL`（downloadViaFetch :1661 的 blob fallback 必然失败），data URL 是必要方案；但必须加 `blob.type` 图片校验（M2）
@@ -254,23 +254,28 @@ function isValidDir(v) {
 ## 三、低危/健壮性（P2 可选）
 
 ### L1. psEditSave / psEditSaveFsa 无来源与大小校验
-- **位置**：`background.js:770-782, 2147-2225`
-- **修复**：校验 `sender.tab?.id === psEditState?.tabId`；对 `imgData` 长度设上限（如 100MB）拒绝超限。
+- **位置**：`background.js` onMessage 的 psEditSave/psEditSaveFsa 处理 + `handlePsEditSave`/`handlePsEditSaveFsa`
+- **修复**：
+  1. 来源校验：`sender.tab?.id === psEditState?.tabId`（仅接受本次 startPsEdit 打开的 Photopea 标签页）
+  2. 大小上限：imgData 长度 > 100MB 拒绝
+  3. FSA 分支：`sender.tab?.id === psEditState?.tabId` 同样校验
 
 ### L2. injectMessageBridge 不校验 event.origin
-- **位置**：`background.js:2096-2114`
-- **修复**：
-
-```js
-window.addEventListener('message', (event) => {
-    if (event.origin !== 'https://www.photopea.com' || event.source !== window) return;
-    if (event.data && (event.data.type === 'PS_EDIT_SAVE' || event.data.type === 'PS_EDIT_SAVE_FSA')) { ... }
-});
-```
+- **位置**：`background.js` injectMessageBridge（注入 Photopea ISOLATED world 的消息桥）
+- **修复**：监听事件时校验 `event.origin === 'https://www.photopea.com'` 且 `event.source === window`，非 Photopea 页面来源的消息直接丢弃
 
 ### I1. getColorImagePath 泄露本地路径
-- **位置**：`background.js:523-538`
-- **修复**：H1 鉴权落地后自然缓解；如仍需收紧，可仅对 `sender.url` 为发品助手页面的请求返回 `path` 字段。
+- **位置**：`background.js` getColorImagePath（handleSharedAction 内的 action）
+- **修复**：仅当 H1 已通过（外部消息已鉴权）时返回 `path` 字段；该 action 仅经 onMessageExternal 到达，H1 第1层已过滤非法来源，第2层 token 落地后路径泄露面进一步收敛（作为知悉项，无需额外代码——H1 已覆盖）
+
+### L3. Windows 保留设备名文件名校验（security_review LOW）
+- **位置**：`background.js` SAFE_FILENAME_RE 使用处（downloadDoubaoImage）
+- **修复**：SAFE_FILENAME_RE 通过后，再拒绝 Windows 保留设备名（CON/PRN/AUX/NUL/COM1-9/LPT1-9，含带扩展名形式）——避免下载失败/改名
+
+### L4. downloadViaFetch 的 createObjectURL MV3 不可用问题（security_review 确认的固有 bug）
+- **位置**：`background.js` downloadViaFetch（:1652 附近，blob fallback）
+- **问题**：`URL.createObjectURL` 在 MV3 Service Worker 不可用，该 fallback 必失败
+- **修复**：与 downloadDoubaoImage 主路径一致，改用 FileReader 生成 data URL 再 downloads.download；data URL 大小时注意 downloads API 限制（>5MB 回退原始 URL 直下）
 
 ---
 
@@ -282,7 +287,9 @@ window.addEventListener('message', (event) => {
 | P0-2 | H1 第1层 + H3（sender.url 校验含 helperPath 匹配、空前缀保护、去掉 color_images_row_ 清理） | ✅ 已实施（commit 6be477c），恶意本地 html 被拒 + 正常发品助手流程冒烟 |
 | P0-3 | H2（baseFileName 白名单 + JSON.stringify）+ M2-②（blob.type 图片校验） | ✅ 已实施（commit 6be477c），转义/图片类型断言单测 |
 | P1 | M1 + M2-① + M3（eval 改 executeScript、filename 白名单含 typeof 防护、目录校验；顺带恢复 onMessageExternal 缩进） | ✅ 已实施（本次），node --check + 非法输入单测（文件名/URL/目录）+ 全量 205 断言 |
-| P2 | L1 + L2 + I1 + H1 第2/3层（token/长连接）+ F2 遗留项实测 + downloadViaFetch 的 createObjectURL 问题 | ⏳ 待实施：全量回归 |
+| P2-a | L1 + L2 + L3 + L4 + I1（psEditSave 来源/大小、消息桥 origin、保留设备名、downloadViaFetch data URL、路径收敛知悉） | ⏳ 本轮实施：node --check + 新增单测 + 全量回归 |
+| P2-b | H1 第2层（token 握手：background 生成/校验 + 发品助手.html 携带） | ⏳ 本轮实施：全量回归 + 冒烟 |
+| P2-c（遗留） | H1 第3层（长连接收紧）+ F2 时序实测 + _server.js 'null' Origin 令牌 | ⏳ 待定：需运行时实测或产品决策 |
 
 现有测试（tests/ 下 6 个文件，137 项断言）与 `node --check` 为全量回归基线；H1/H3/M2 的纯逻辑（isTrustedSender / isValidDir / SAFE_FILENAME_RE / blob 类型判断）抽成独立函数并补充 node 单元测试，便于直接纳入 tests/。
 
