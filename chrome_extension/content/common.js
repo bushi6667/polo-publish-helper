@@ -1,9 +1,16 @@
+// ============================================================
+// common.js —— content scripts 公共工具库（注入 1688 发品页与豆包页）
+// 提供：消息重试、心跳保活、DOM 模拟输入/点击、字段容器查找、
+//       下拉/标签多值选择、类目选择、关键词生成、产品信息展示等
+// 依赖：selectors.js（配置）、smartFind.js（智能查找）
+// ============================================================
 const STORAGE_KEY = 'polo_product_data';
 const IMAGE_DIR_KEY = 'polo_image_dir';
 
 let IMAGE_DIR = '';
 let currentProduct = null;
 
+// 带重试与指数退避的 chrome.runtime.sendMessage 封装（MV3 SW 偶发休眠时更稳）
 async function sendMessageRetry(message, maxRetries = 2, delayMs = 500) {
     let lastError = null;
     for (let i = 0; i <= maxRetries; i++) {
@@ -28,6 +35,8 @@ async function sendMessageRetry(message, maxRetries = 2, delayMs = 500) {
     throw lastError || new Error('消息发送失败');
 }
 
+// 周期性心跳，防止 MV3 Service Worker 因空闲被回收导致长任务通知丢失；
+// 返回停止函数
 function startHeartbeat(intervalMs = 15000) {
     const timer = setInterval(() => {
         try {
@@ -41,6 +50,7 @@ function startHeartbeat(intervalMs = 15000) {
     return () => clearInterval(timer);
 }
 
+// 从 storage 加载图片目录配置到内存
 function loadImageDir() {
     return new Promise((resolve) => {
         chrome.storage.local.get(IMAGE_DIR_KEY, (result) => {
@@ -52,6 +62,7 @@ function loadImageDir() {
     });
 }
 
+// 页面浮动面板日志输出（按类型着色 success/error/warn/info）
 function log(msg, type = 'info') {
     const logArea = document.getElementById('polo-log');
     if (!logArea) return;
@@ -66,6 +77,7 @@ function log(msg, type = 'info') {
     logArea.scrollTop = logArea.scrollHeight;
 }
 
+// 设置输入框值：走原生 value setter（绕过 React 受控组件）+ input/change 事件
 function setInputValue(el, val) {
     if (!el) return false;
     const proto = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value');
@@ -80,6 +92,7 @@ function setInputValue(el, val) {
     return true;
 }
 
+// 在输入框上派发点击事件，确认输入（配合受控组件）
 function confirmInput(el) {
     if (!el) return;
     el.dispatchEvent(new MouseEvent('mousedown', {bubbles:true, cancelable:true}));
@@ -87,6 +100,7 @@ function confirmInput(el) {
     el.dispatchEvent(new MouseEvent('click', {bubbles:true, cancelable:true}));
 }
 
+// 在元素上派发 Enter 键事件序列（下拉确认/提交）
 function pressEnter(el) {
     if (!el) return;
     el.focus();
@@ -96,6 +110,7 @@ function pressEnter(el) {
     confirmInput(el);
 }
 
+// 点击元素右侧空白处（用于收起弹出层/失焦）
 function clickBlankNear(el) {
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -107,6 +122,7 @@ function clickBlankNear(el) {
     }
 }
 
+// 原生鼠标事件序列点击（坐标中心 + mousedown/mouseup/click），模拟真人操作
 function nativeMouseClick(el) {
     if (!el) return false;
     const rect = el.getBoundingClientRect();
@@ -119,6 +135,8 @@ function nativeMouseClick(el) {
     return true;
 }
 
+// 真实坐标点击：优先经 background 用 CDP（Input.dispatchMouseEvent）触发系统级点击，
+// 失败则降级 nativeMouseClick
 async function realClick(el) {
     if (!el) return false;
     const rect = el.getBoundingClientRect();
@@ -132,6 +150,8 @@ async function realClick(el) {
     return true;
 }
 
+// 查找字段容器：优先按 containerId，其次按 label 文本三级匹配（精确/前缀/包含），
+// 走 smartFind 与 selectors 配置；返回表单容器元素（用于后续控件定位）
 function findFieldContainer(containerId, labelHint) {
     let c = document.getElementById(containerId);
     if (c) return c;
@@ -188,6 +208,8 @@ function findFieldContainer(containerId, labelHint) {
     return null;
 }
 
+// 自动补全下拉：模拟逐字输入（execCommand insertText），在候选菜单中按文本匹配并点击，
+// 找不到匹配时轮询等待最多 20 次；输入完毕失焦
 async function setAutoComplete(containerId, val, labelHint) {
     const c = findFieldContainer(containerId, labelHint);
     if (!c) return false;
@@ -239,6 +261,7 @@ async function setAutoComplete(containerId, val, labelHint) {
     return true;
 }
 
+// 关闭页面残留的浮层/下拉（Esc 键 + 隐藏可见 overlay），避免遮挡后续操作
 async function closeOverlays() {
     document.body.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', keyCode: 27, bubbles: true}));
     await new Promise(r => setTimeout(r, 80));
@@ -252,6 +275,8 @@ async function closeOverlays() {
     }
 }
 
+// 下拉搜索选择：打开下拉 → 在搜索框逐字输入 → 在选项列表中匹配点击；
+// 3s 内轮询，成功后关闭浮层
 async function setSearchDropdown(containerId, val, labelHint) {
     if (!val) return false;
     await closeOverlays();
@@ -319,6 +344,7 @@ async function setSearchDropdown(containerId, val, labelHint) {
     return false;
 }
 
+// 标签多值选择：逐个输入值并在下拉中匹配点击；找不到匹配时按回车确认自定义值
 async function setTagClick(containerId, values, labelHint) {
     await closeOverlays();
     const c = findFieldContainer(containerId, labelHint);
@@ -373,6 +399,7 @@ async function setTagClick(containerId, values, labelHint) {
     return true;
 }
 
+// 根据类目生成中文+英文搜索关键词列表（Polo/T恤/衬衫/卫衣识别）
 function getCategoryKeywords(category) {
     if (!category) return [];
     const cat = category.toLowerCase();
@@ -397,6 +424,7 @@ function getCategoryKeywords(category) {
     return keywords;
 }
 
+// 在发品页选择类目：切到「您经常使用的类目」tab → 按关键词逐级匹配类目项并点击
 async function selectCategory(category) {
     try {
         const keywords = getCategoryKeywords(category);
@@ -470,6 +498,7 @@ async function selectCategory(category) {
     }
 }
 
+// 由产品数据生成发品搜索关键词串（类目+材质+工艺+特性等英文词，去重，最多 10 个）
 function generateKwFromProduct(p) {
     const words = [];
     const seen = new Set();
@@ -501,6 +530,7 @@ function generateKwFromProduct(p) {
     return words.slice(0, 10).join(',');
 }
 
+// 更新页面顶部「当前产品」信息条 + 激活填表/上传按钮
 function updateProductInfo(product) {
     const info = document.getElementById('polo-product-info');
     if (!info) return;
@@ -538,6 +568,7 @@ function updateProductInfo(product) {
     if (uploadBtn) uploadBtn.disabled = false;
 }
 
+// 从剪贴板读取产品数据 JSON 并加载（发品助手.html 复制数据后的粘贴通道）
 async function loadFromClipboard() {
     try {
         const text = await navigator.clipboard.readText();
@@ -558,6 +589,7 @@ async function loadFromClipboard() {
     }
 }
 
+// 初始化：加载已保存的产品数据与图片目录；监听 storage 变化实时同步图片目录
 function initStorageListener(isBatchMode = false) {
     chrome.storage.local.get([STORAGE_KEY, IMAGE_DIR_KEY], (result) => {
         if (!isBatchMode && result[STORAGE_KEY]) {
