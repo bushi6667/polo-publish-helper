@@ -66,12 +66,14 @@ async function isTrustedSender(sender) {
 
 // M3：目录配置值校验
 // 空串/空值 = 显式清空目录（popup.js:191 与 发品助手.html:1985 支持清空），放行；
-// 非空值校验格式：拒绝盘符根/控制字符
+// 非空值校验格式：拒绝盘符根/控制字符/路径穿越段（.. / .）
 function isValidDir(v) {
     if (v === '' || v === null || v === undefined) return true; // 显式清空
     if (typeof v !== 'string' || !v.trim()) return false;
     if (/^[a-zA-Z]:[\\/]?$/.test(v.trim())) return false; // 盘符根
     if (v.includes('\0') || v.includes('\n') || v.includes('\r')) return false;
+    const segs = v.split(/[\\/]+/).filter(Boolean);
+    if (segs.some(s => s === '..' || s === '.')) return false; // 防目录逃逸
     return true; // 单字符目录（如「图」）合法
 }
 
@@ -414,14 +416,22 @@ async function handleSharedAction(request, sendResponse) {
             sendResponse({ ok: true });
         });
         if (request.imageDir) {
-            IMAGE_DIR = request.imageDir;
-            chrome.storage.local.set({ [IMAGE_DIR_KEY]: request.imageDir });
-            console.log('📂 图片目录已更新:', request.imageDir);
+            if (!isValidDir(request.imageDir)) {
+                console.warn('⛔ 非法图片目录，忽略:', request.imageDir);
+            } else {
+                IMAGE_DIR = request.imageDir;
+                chrome.storage.local.set({ [IMAGE_DIR_KEY]: request.imageDir });
+                console.log('📂 图片目录已更新:', request.imageDir);
+            }
         }
         if (request.colorImgDir && !COLOR_IMG_DIR) {
-            COLOR_IMG_DIR = request.colorImgDir;
-            chrome.storage.local.set({ [COLOR_IMG_DIR_KEY]: request.colorImgDir });
-            console.log('🖼️ 颜色图目录已初始化（来自页1）:', request.colorImgDir);
+            if (!isValidDir(request.colorImgDir)) {
+                console.warn('⛔ 非法颜色图目录，忽略:', request.colorImgDir);
+            } else {
+                COLOR_IMG_DIR = request.colorImgDir;
+                chrome.storage.local.set({ [COLOR_IMG_DIR_KEY]: request.colorImgDir });
+                console.log('🖼️ 颜色图目录已初始化（来自页1）:', request.colorImgDir);
+            }
         } else if (request.colorImgDir && COLOR_IMG_DIR) {
             console.log('🖼️ 颜色图目录已由popup设置，忽略页1传入值。当前:', COLOR_IMG_DIR, '，页1传入:', request.colorImgDir);
         } else if (IMAGE_DIR && !COLOR_IMG_DIR) {
@@ -445,14 +455,22 @@ async function handleSharedAction(request, sendResponse) {
             }
         }
         if (request.imageDir) {
-            IMAGE_DIR = request.imageDir;
-            setObj[IMAGE_DIR_KEY] = request.imageDir;
-            console.log('📂 图片目录已更新:', request.imageDir);
+            if (!isValidDir(request.imageDir)) {
+                console.warn('⛔ 非法图片目录，忽略:', request.imageDir);
+            } else {
+                IMAGE_DIR = request.imageDir;
+                setObj[IMAGE_DIR_KEY] = request.imageDir;
+                console.log('📂 图片目录已更新:', request.imageDir);
+            }
         }
         if (request.colorImgDir && !COLOR_IMG_DIR) {
-            COLOR_IMG_DIR = request.colorImgDir;
-            setObj[COLOR_IMG_DIR_KEY] = request.colorImgDir;
-            console.log('🖼️ 颜色图目录已初始化（来自批量发品）:', request.colorImgDir);
+            if (!isValidDir(request.colorImgDir)) {
+                console.warn('⛔ 非法颜色图目录，忽略:', request.colorImgDir);
+            } else {
+                COLOR_IMG_DIR = request.colorImgDir;
+                setObj[COLOR_IMG_DIR_KEY] = request.colorImgDir;
+                console.log('🖼️ 颜色图目录已初始化（来自批量发品）:', request.colorImgDir);
+            }
         } else if (request.colorImgDir && COLOR_IMG_DIR) {
             console.log('🖼️ 颜色图目录已由popup设置，忽略批量发品传入值。当前:', COLOR_IMG_DIR, '，批量传入:', request.colorImgDir);
         }

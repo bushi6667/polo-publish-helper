@@ -18,12 +18,14 @@ function isValidDownloadFilename(filename) {
 
 // M3：目录配置值校验
 // 空串/空值 = 显式清空目录（popup.js 与 发品助手.html 支持清空），放行；
-// 非空值校验格式：拒绝盘符根/控制字符
+// 非空值校验格式：拒绝盘符根/控制字符/路径穿越段（.. / .）
 function isValidDir(v) {
     if (v === '' || v === null || v === undefined) return true; // 显式清空
     if (typeof v !== 'string' || !v.trim()) return false;
     if (/^[a-zA-Z]:[\\/]?$/.test(v.trim())) return false; // 盘符根
     if (v.includes('\0') || v.includes('\n') || v.includes('\r')) return false;
+    const segs = v.split(/[\\/]+/).filter(Boolean);
+    if (segs.some(s => s === '..' || s === '.')) return false; // 防目录逃逸
     return true; // 单字符目录（如「图」）合法
 }
 
@@ -68,5 +70,13 @@ assert.strictEqual(isValidDir('a\0b'), false, '含空字符');
 assert.strictEqual(isValidDir(123), false, '非字符串');
 console.log('  ✅ 7/7');
 
+console.log('[isValidDir 路径穿越段（M3 拒绝）]');
+assert.strictEqual(isValidDir('..\\..\\foo'), false, '纯穿越 ..\\..\\foo');
+assert.strictEqual(isValidDir('D:\\a\\..\\..\\Windows'), false, '中缀穿越 D:\\a\\..\\..\\Windows');
+assert.strictEqual(isValidDir('C:/Users/../evil'), false, '正斜杠穿越 C:/Users/../evil');
+assert.strictEqual(isValidDir('.\\dir'), false, '点段 .\\dir');
+assert.strictEqual(isValidDir('D:\\正常\\目录'), true, '正常目录不受影响');
+console.log('  ✅ 5/5');
+
 console.log('\n----------------------------------------');
-console.log('通过 24 / 失败 0');
+console.log('通过 29 / 失败 0');
