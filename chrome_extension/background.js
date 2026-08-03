@@ -91,7 +91,10 @@ async function getOrCreateToken() {
             const arr = new Uint8Array(16);
             crypto.getRandomValues(arr);
             const token = Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
-            chrome.storage.local.set({ [TOKEN_KEY]: token }, () => resolve(token));
+            // 写入后读回：并发首次 ping 时以 storage 最终值为准（防后写覆盖先写导致先发方令牌失效）
+            chrome.storage.local.set({ [TOKEN_KEY]: token }, () => {
+                chrome.storage.local.get(TOKEN_KEY, (r) => resolve(r[TOKEN_KEY] || token));
+            });
         });
     });
 }
@@ -1859,15 +1862,21 @@ async function downloadViaFetch(url, filename, rowNum, relativePath) {
 
         const blob = await response.blob();
         // L4：MV3 Service Worker 无 URL.createObjectURL，改用 data URL（与 downloadDoubaoImage 主路径一致）
-        const dataUrl = await new Promise((resolveData, rejectData) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolveData(reader.result);
-            reader.onerror = () => rejectData(new Error('读取 blob 失败'));
-            reader.readAsDataURL(blob);
-        });
+        // 安全：非图片响应不生成 data URL（保持 Chrome 对危险 MIME 的防护），回退原始 URL 直下
+        let dataUrl = null;
+        if (blob.type && blob.type.startsWith('image/')) {
+            dataUrl = await new Promise((resolveData, rejectData) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolveData(reader.result);
+                reader.onerror = () => rejectData(new Error('读取 blob 失败'));
+                reader.readAsDataURL(blob);
+            });
+        } else {
+            console.warn('[download] fetch 响应非图片类型，回退原始 URL 下载:', blob.type || 'unknown');
+        }
 
         const colorMatch = filename.match(/_(white|black|gray|navy)\./);
-        if (colorMatch) {
+        if (colorMatch && dataUrl) {
             const color = colorMatch[1];
             const idbKey = colorImageIDBKey(CURRENT_FILENAME, rowNum, color);
             saveColorImageToIDB(idbKey, dataUrl).then(() => {
@@ -1877,7 +1886,7 @@ async function downloadViaFetch(url, filename, rowNum, relativePath) {
 
         return new Promise((resolve) => {
             chrome.downloads.download({
-                url: dataUrl,
+                url: dataUrl || url,
                 filename: relativePath,
                 conflictAction: 'overwrite',
                 saveAs: false
