@@ -69,4 +69,4 @@ assert.strictEqual(isValidDir(123), false, '非字符串');
 console.log('  ✅ 7/7');
 
 console.log('\n----------------------------------------');
-console.log('通过 26 / 失败 0');
+console.log('通过 24 / 失败 0');
