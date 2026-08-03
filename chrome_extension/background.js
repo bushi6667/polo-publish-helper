@@ -2,6 +2,7 @@ importScripts('upload/page2_upload.js', 'upload/page3_upload.js');
 
 const STORAGE_KEY = 'polo_product_data';
 const DEFAULT_FILE_FOLDER = '默认'; // 颜色图默认子目录名（CURRENT_FILENAME 为空时使用）；历史路径一直是 '默认'，勿改 'default'（buildColorImagePath 读盘同源）
+const SAFE_FILENAME_RE = /^[a-zA-Z0-9\u4e00-\u9fff._-]+$/; // M2-① 下载文件名白名单（禁路径分隔符/绝对路径/..）
 const IMAGE_DIR_KEY = 'polo_image_dir';
 const COLOR_IMG_DIR_KEY = 'polo_color_img_dir';
 const PUBLISH_QUEUE_KEY = 'polo_publish_queue';
@@ -61,6 +62,17 @@ async function isTrustedSender(sender) {
     }
     // 未配置 helperPath 时兜底：文件名包含"发品助手"
     return path.includes('发品助手');
+}
+
+// M3：目录配置值校验
+// 空串/空值 = 显式清空目录（popup.js:191 与 发品助手.html:1985 支持清空），放行；
+// 非空值校验格式：拒绝盘符根/控制字符
+function isValidDir(v) {
+    if (v === '' || v === null || v === undefined) return true; // 显式清空
+    if (typeof v !== 'string' || !v.trim()) return false;
+    if (/^[a-zA-Z]:[\\/]?$/.test(v.trim())) return false; // 盘符根
+    if (v.includes('\0') || v.includes('\n') || v.includes('\r')) return false;
+    return true; // 单字符目录（如「图」）合法
 }
 
 let downloadFilenameMap = new Map(); // downloadId -> { filename, relativePath, url }
@@ -613,76 +625,84 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
         }
         console.log(`🔍 [onMessageExternal] 收到消息: action=${request.action}, senderUrl=${sender?.url || 'unknown'}, senderId=${sender?.id || 'unknown'}`);
         if (request.action === 'ping') {
-        assistantTabId = sender.tab?.id || null;
-        sendResponse({ ok: true, version: '1.0.0' });
-        return true;
-    }
-    if (request.action === 'clearAllColorImages') {
-        const prefix = getFilePrefix();
-        chrome.storage.local.get(null, (result) => {
-            const keys = Object.keys(result).filter(k => k.startsWith(prefix + 'color__'));
-            if (keys.length > 0) {
-                chrome.storage.local.remove(keys, () => {
-                    console.log(`🧹 已清理 ${keys.length} 个颜色图数据`);
-                    sendResponse({ ok: true, cleared: keys.length });
-                });
-            } else {
-                sendResponse({ ok: true, cleared: 0 });
-            }
-        });
-        return true;
-    }
-    if (request.action === 'clearUploadedRows') {
-        const key = uploadedKey();
-        chrome.storage.local.remove(key, () => {
-            console.log('🧹 已清理已上传状态');
-            sendResponse({ ok: true });
-        });
-        return true;
-    }
-    if (request.action === 'clearAllOnNewFile') {
-        const prefix = getFilePrefix();
-        if (!prefix) {
-            // H3 空前缀保护：无当前文件名时拒绝清理，避免 startsWith('') 命中全部键（含配置）
-            console.warn('⛔ [clearAllOnNewFile] 未设置当前文件名，已跳过清理');
-            sendResponse({ ok: false, error: '未设置当前文件名，已跳过清理' });
+            assistantTabId = sender.tab?.id || null;
+            sendResponse({ ok: true, version: '1.0.0' });
             return true;
         }
-        chrome.storage.local.get(null, (result) => {
-            const keys = Object.keys(result).filter(k =>
-                k.startsWith(prefix) ||
-                k === STORAGE_KEY
-                // 注意：color_images_row_* 是 legacy 迁移键（跨文件共享、迁移后即删），清理收益低，不再删除
-            );
-            chrome.storage.local.remove(keys, () => {
-                console.log(`🧹 新文件加载，清理当前文件数据: ${keys.length}项`);
-                sendResponse({ ok: true, cleared: keys.length });
+        if (request.action === 'clearAllColorImages') {
+            const prefix = getFilePrefix();
+            chrome.storage.local.get(null, (result) => {
+                const keys = Object.keys(result).filter(k => k.startsWith(prefix + 'color__'));
+                if (keys.length > 0) {
+                    chrome.storage.local.remove(keys, () => {
+                        console.log(`🧹 已清理 ${keys.length} 个颜色图数据`);
+                        sendResponse({ ok: true, cleared: keys.length });
+                    });
+                } else {
+                    sendResponse({ ok: true, cleared: 0 });
+                }
             });
-        });
-        return true;
-    }
-    if (request.action === 'getConfig') {
-        sendResponse({ ok: true, config: { imageDir: IMAGE_DIR, colorImgDir: COLOR_IMG_DIR } });
-        return true;
-    }
-    if (request.action === 'updateConfig') {
-        if (request.config) {
-            if (request.config.imageDir !== undefined) {
-                IMAGE_DIR = request.config.imageDir;
-                chrome.storage.local.set({ [IMAGE_DIR_KEY]: request.config.imageDir });
-                console.log('📂 图片目录已更新为:', IMAGE_DIR);
-            }
-            if (request.config.colorImgDir !== undefined) {
-                COLOR_IMG_DIR = request.config.colorImgDir;
-                chrome.storage.local.set({ [COLOR_IMG_DIR_KEY]: request.config.colorImgDir });
-                console.log('🖼️ 颜色图目录已更新为:', COLOR_IMG_DIR);
-            }
-            sendResponse({ ok: true, imageDir: IMAGE_DIR, colorImgDir: COLOR_IMG_DIR });
-        } else {
-            sendResponse({ ok: false, error: '缺少配置参数' });
+            return true;
         }
-        return true;
-    }
+        if (request.action === 'clearUploadedRows') {
+            const key = uploadedKey();
+            chrome.storage.local.remove(key, () => {
+                console.log('🧹 已清理已上传状态');
+                sendResponse({ ok: true });
+            });
+            return true;
+        }
+        if (request.action === 'clearAllOnNewFile') {
+            const prefix = getFilePrefix();
+            if (!prefix) {
+                // H3 空前缀保护：无当前文件名时拒绝清理，避免 startsWith('') 命中全部键（含配置）
+                console.warn('⛔ [clearAllOnNewFile] 未设置当前文件名，已跳过清理');
+                sendResponse({ ok: false, error: '未设置当前文件名，已跳过清理' });
+                return true;
+            }
+            chrome.storage.local.get(null, (result) => {
+                const keys = Object.keys(result).filter(k =>
+                    k.startsWith(prefix) ||
+                    k === STORAGE_KEY
+                    // 注意：color_images_row_* 是 legacy 迁移键（跨文件共享、迁移后即删），清理收益低，不再删除
+                );
+                chrome.storage.local.remove(keys, () => {
+                    console.log(`🧹 新文件加载，清理当前文件数据: ${keys.length}项`);
+                    sendResponse({ ok: true, cleared: keys.length });
+                });
+            });
+            return true;
+        }
+        if (request.action === 'getConfig') {
+            sendResponse({ ok: true, config: { imageDir: IMAGE_DIR, colorImgDir: COLOR_IMG_DIR } });
+            return true;
+        }
+        if (request.action === 'updateConfig') {
+            if (request.config) {
+                // M3：目录值校验（外部消息通道同样校验）
+                const invalid = [];
+                if (request.config.imageDir !== undefined && !isValidDir(request.config.imageDir)) invalid.push('imageDir');
+                if (request.config.colorImgDir !== undefined && !isValidDir(request.config.colorImgDir)) invalid.push('colorImgDir');
+                if (invalid.length > 0) {
+                    sendResponse({ ok: false, error: '非法目录: ' + invalid.join(', ') });
+                    return true;
+                }
+                if (request.config.imageDir !== undefined) {
+                    IMAGE_DIR = request.config.imageDir;
+                    chrome.storage.local.set({ [IMAGE_DIR_KEY]: request.config.imageDir });
+                    console.log('📂 图片目录已更新为:', IMAGE_DIR);
+                }
+                if (request.config.colorImgDir !== undefined) {
+                    COLOR_IMG_DIR = request.config.colorImgDir;
+                    chrome.storage.local.set({ [COLOR_IMG_DIR_KEY]: request.config.colorImgDir });
+                    console.log('🖼️ 颜色图目录已更新为:', COLOR_IMG_DIR);
+                }
+                sendResponse({ ok: true, imageDir: IMAGE_DIR, colorImgDir: COLOR_IMG_DIR });
+            } else {
+                sendResponse({ ok: false, error: '缺少配置参数' });
+            }
+            return true;
+        }
         handleSharedAction(request, sendResponse);
         return true;
     }).catch((err) => {
@@ -731,6 +751,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     if (request.action === 'updateConfig') {
         if (request.config) {
+            // M3：目录值校验（onMessage 内部消息同样校验，防误配置）
+            const invalid = [];
+            if (request.config.imageDir !== undefined && !isValidDir(request.config.imageDir)) invalid.push('imageDir');
+            if (request.config.colorImgDir !== undefined && !isValidDir(request.config.colorImgDir)) invalid.push('colorImgDir');
+            if (invalid.length > 0) {
+                sendResponse({ ok: false, error: '非法目录: ' + invalid.join(', ') });
+                return true;
+            }
             if (request.config.imageDir !== undefined) {
                 IMAGE_DIR = request.config.imageDir;
                 chrome.storage.local.set({ [IMAGE_DIR_KEY]: request.config.imageDir });
@@ -791,22 +819,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return false;
         }
         const { selector } = request;
-        const expr = `(function() {
-            const el = document.querySelector('${selector}');
-            if (!el) return { ok: false, msg: '元素未找到' };
-            const rect = el.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-            el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: x, clientY: y }));
-            el.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: x, clientY: y }));
-            el.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: x, clientY: y }));
-            return { ok: true, msg: '点击完成', rect: { width: rect.width, height: rect.height } };
-        })()`;
-        
+        // M1：不再拼接字符串 eval，selector 作为参数传入 executeScript，页面侧用 querySelector（防注入）
         chrome.scripting.executeScript({
             target: { tabId },
-            func: (expression) => eval(expression),
-            args: [expr]
+            func: (sel) => {
+                const el = document.querySelector(sel);
+                if (!el) return { ok: false, msg: '元素未找到' };
+                const rect = el.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: x, clientY: y }));
+                el.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: x, clientY: y }));
+                el.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: x, clientY: y }));
+                return { ok: true, msg: '点击完成', rect: { width: rect.width, height: rect.height } };
+            },
+            args: [selector]
         }).then(results => {
             if (results && results[0] && results[0].result) {
                 sendResponse(results[0].result);
@@ -1546,6 +1573,12 @@ async function uploadDoubaoImage(tabId, imagePath) {
 async function downloadDoubaoImage(url, filename, rowNum) {
     return new Promise(async (resolve) => {
         try {
+            // M2-①：filename 白名单校验，拒绝路径分隔符/绝对路径/..（防覆盖下载目录外文件）
+            // 注意：RegExp.test(null) 会把 null 转 "null"（全在白名单内返回 true），必须先 typeof 检查
+            if (typeof filename !== 'string' || !SAFE_FILENAME_RE.test(filename) || filename.includes('..')) {
+                console.warn('⛔ 非法下载文件名:', filename);
+                return resolve({ ok: false, error: '非法文件名' });
+            }
             const fileFolder = CURRENT_FILENAME || DEFAULT_FILE_FOLDER; // 与 buildColorImagePath 读盘侧保持一致
             const relativePath = 'Polo发品_颜色图/' + fileFolder + '/row' + rowNum + '/' + filename;
 

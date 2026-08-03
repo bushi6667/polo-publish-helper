@@ -1,6 +1,6 @@
 # background.js 修复方案文档
 
-> 状态：方案已定稿（多轮 review + security_review 交叉审查后），待实施
+> 状态：方案已定稿，P0 批次已实施（commit 6be477c），P1 批次已实施（M1/M2-①/M3，见下）
 > 审查依据：review 子代理（功能 F1-F4）+ security_review 子代理（安全 H1-H3 / M1-M3 / L1-L2 / I1）+ 二次 review/security_review 复核
 > 关键结论补充（复核后确认）：
 > - **data URL 下载主路径动机成立**：MV3 Service Worker 无 `URL.createObjectURL`（downloadViaFetch :1661 的 blob fallback 必然失败），data URL 是必要方案；但必须加 `blob.type` 图片校验（M2）
@@ -278,11 +278,11 @@ window.addEventListener('message', (event) => {
 
 | 批次 | 内容 | 回归验证 |
 |---|---|---|
-| P0-1 | F1 + F2（目录默认值统一、downloadFilenameMap url 兜底 + interrupted 清理） | `node --check background.js` + 全量测试 + 手动换色下载核对落盘 |
-| P0-2 | H1 第1层 + H3（sender.url 校验含 helperPath 匹配、空前缀保护、去掉 color_images_row_ 清理） | 恶意本地 html 被拒 + 正常发品助手流程冒烟 |
-| P0-3 | H2（baseFileName 白名单 + JSON.stringify）+ M2-②（blob.type 图片校验） | `node --check` + 转义/图片类型断言单测 |
-| P1 | M1 + M2-① + M3（eval 改 executeScript、filename/url 校验、目录校验） | `node --check` + 非法输入单测（文件名/URL/目录） |
-| P2 | L1 + L2 + I1 + H1 第2/3层（token/长连接）+ F2 遗留项实测 | 全量回归：`tests/` 6 文件 137 断言全绿 |
+| P0-1 | F1 + F2（目录默认值统一、downloadFilenameMap url 兜底 + interrupted 清理） | ✅ 已实施（commit 6be477c），node --check + 全量测试 + 手动换色下载核对落盘 |
+| P0-2 | H1 第1层 + H3（sender.url 校验含 helperPath 匹配、空前缀保护、去掉 color_images_row_ 清理） | ✅ 已实施（commit 6be477c），恶意本地 html 被拒 + 正常发品助手流程冒烟 |
+| P0-3 | H2（baseFileName 白名单 + JSON.stringify）+ M2-②（blob.type 图片校验） | ✅ 已实施（commit 6be477c），转义/图片类型断言单测 |
+| P1 | M1 + M2-① + M3（eval 改 executeScript、filename 白名单含 typeof 防护、目录校验；顺带恢复 onMessageExternal 缩进） | ✅ 已实施（本次），node --check + 非法输入单测（文件名/URL/目录）+ 全量 205 断言 |
+| P2 | L1 + L2 + I1 + H1 第2/3层（token/长连接）+ F2 遗留项实测 + downloadViaFetch 的 createObjectURL 问题 | ⏳ 待实施：全量回归 |
 
 现有测试（tests/ 下 6 个文件，137 项断言）与 `node --check` 为全量回归基线；H1/H3/M2 的纯逻辑（isTrustedSender / isValidDir / SAFE_FILENAME_RE / blob 类型判断）抽成独立函数并补充 node 单元测试，便于直接纳入 tests/。
 
