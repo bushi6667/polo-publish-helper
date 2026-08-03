@@ -67,6 +67,32 @@ function buildGroupCandidates(category) {
     return [...new Set(cands)];
 }
 
+// 分组选项匹配（group-match-fix）：防短候选词误命中更具体类目
+// 背景：原实现用包含匹配，"Shirts" 会误命中 "T-Shirts"/"Polo Shirts"（选错分组）
+// 规则：
+//   1. 精确相等 → 命中
+//   2. 选项以"候选词+空格"开头 → 命中（Shirts → Shirts Long Sleeve；Polo → Polo Shirts）
+//   3. 选项包含候选词 → 若选项的"候选词之前部分"是类目修饰前缀（t-/polo- 等）→ 拒绝（误命中），否则命中
+//      （"Men's Vest" 的 "men's " 是性别修饰，放行；"T-Shirts" 的 "t-" 是类目修饰，拒绝）
+function matchGroupOption(optText, target) {
+    const t = String(optText || '').trim();
+    const tar = String(target || '').trim();
+    if (!t || !tar) return false;
+    const tLower = t.toLowerCase();
+    const tarLower = tar.toLowerCase();
+    if (tLower === tarLower) return true;                    // 精确
+    if (tLower.startsWith(tarLower + ' ')) return true;      // 开头+空格边界
+    if (tLower.includes(tarLower)) {
+        // 候选词不在开头：检查其前缀是否"类目修饰"（改变类目含义，如 T-/Polo-）
+        const prefix = tLower.slice(0, tLower.indexOf(tarLower)).trim();
+        // 类目修饰前缀：t-/polo-（含 trim 后的裸 t/polo），或带性别修饰的 Men's t-/polo-
+        const CATEGORY_PREFIX_RE = /^(t[- ]?|polo[- ]?|men'?s[- ]?(t[- ]?|polo[- ]?))$/;
+        if (CATEGORY_PREFIX_RE.test(prefix)) return false;   // 更具体类目（T-Shirts / Polo Shirts）→ 误命中
+        return true;                                         // 合理包含（Men's Vest 等）
+    }
+    return false;
+}
+
 function buildAttributeFields(product) {
     const hasVal = (v) => v && String(v).trim() && String(v).toLowerCase() !== 'none';
 
@@ -1124,7 +1150,8 @@ async function fillGroupPage3(product) {
                 if (opt.offsetHeight === 0) continue;
                 const t = (opt.textContent || '').trim();
                 if (!t) continue;
-                if (t.toLowerCase() === tLower || t.toLowerCase().includes(tLower)) {
+                // group-match-fix：用 matchGroupOption 防 "Shirts" 误命中 "T-Shirts"/"Polo Shirts"
+                if (matchGroupOption(t, target)) {
                     foundOption = opt;
                     foundName = t;
                     log(`🔍 匹配到分组选项: "${t}" (通过"${target}")`, 'info');
