@@ -1884,9 +1884,12 @@ async function downloadViaFetch(url, filename, rowNum, relativePath) {
             });
         }
 
+        // L4：超大 data URL 超出 downloads.download 限制（>5MB 回退原始 URL 直下）
+        const downloadUrl = dataUrl && dataUrl.length <= 5 * 1024 * 1024 ? dataUrl : url;
+
         return new Promise((resolve) => {
             chrome.downloads.download({
-                url: dataUrl || url,
+                url: downloadUrl,
                 filename: relativePath,
                 conflictAction: 'overwrite',
                 saveAs: false
