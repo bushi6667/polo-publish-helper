@@ -71,9 +71,11 @@ function buildGroupCandidates(category) {
 // 背景：原实现用包含匹配，"Shirts" 会误命中 "T-Shirts"/"Polo Shirts"（选错分组）
 // 规则：
 //   1. 精确相等 → 命中
-//   2. 选项以"候选词+空格"开头 → 命中（Shirts → Shirts Long Sleeve；Polo → Polo Shirts）
-//   3. 选项包含候选词 → 若选项的"候选词之前部分"是类目修饰前缀（t-/polo- 等）→ 拒绝（误命中），否则命中
-//      （"Men's Vest" 的 "men's " 是性别修饰，放行；"T-Shirts" 的 "t-" 是类目修饰，拒绝）
+//   2. 选项以"候选词+空格"开头 → 命中（Shirts → Shirts Long Sleeve；Polo → Polo Shirts；
+//      Hoodies → Hoodies & Sweatshirts，并列类目由开头分支覆盖）
+//   3. 选项包含候选词（候选不在开头）→ 若选项含候选词之外的"具体类目关键词"
+//      （t-shirt/polo/hoodie/...）则判定为更具体类目误命中，拒绝；否则命中
+//      （Men's Vest 的 men's 是性别修饰，放行）
 function matchGroupOption(optText, target) {
     const t = String(optText || '').trim();
     const tar = String(target || '').trim();
@@ -81,13 +83,13 @@ function matchGroupOption(optText, target) {
     const tLower = t.toLowerCase();
     const tarLower = tar.toLowerCase();
     if (tLower === tarLower) return true;                    // 精确
-    if (tLower.startsWith(tarLower + ' ')) return true;      // 开头+空格边界
+    if (tLower.startsWith(tarLower + ' ')) return true;      // 候选在选项开头
     if (tLower.includes(tarLower)) {
-        // 候选词不在开头：检查其前缀是否"类目修饰"（改变类目含义，如 T-/Polo-）
-        const prefix = tLower.slice(0, tLower.indexOf(tarLower)).trim();
-        // 类目修饰前缀：t-/polo-（含 trim 后的裸 t/polo），或带性别修饰的 Men's t-/polo-
-        const CATEGORY_PREFIX_RE = /^(t[- ]?|polo[- ]?|men'?s[- ]?(t[- ]?|polo[- ]?))$/;
-        if (CATEGORY_PREFIX_RE.test(prefix)) return false;   // 更具体类目（T-Shirts / Polo Shirts）→ 误命中
+        // 候选不在开头：拒绝含"更具体类目关键词"的选项（New T-Shirts / Women's T-Shirts 等）
+        const SPECIFIC_KWS = ['t-shirt', 't shirts', 'polo', 'hoodie', 'sweatshirt', 'jacket', 'vest', 'pants', 'trouser'];
+        for (const kw of SPECIFIC_KWS) {
+            if (tLower.includes(kw) && !tarLower.includes(kw)) return false;
+        }
         return true;                                         // 合理包含（Men's Vest 等）
     }
     return false;
@@ -1133,7 +1135,6 @@ async function fillGroupPage3(product) {
 
     for (const target of candidates) {
         if (!target) continue;
-        const tLower = String(target).toLowerCase();
         
         const optionSelectors = [
             '.next-tree-node-label-selectable',

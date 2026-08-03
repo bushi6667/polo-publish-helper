@@ -9,7 +9,7 @@ const assert = require('assert');
 
 // ---------- 被测纯函数（与 page3.js 保持行为一致） ----------
 
-// 分组选项匹配：精确优先 + 类目修饰前缀排除
+// 分组选项匹配：精确优先 + 更具体类目排除
 function matchGroupOption(optText, target) {
     const t = String(optText || '').trim();
     const tar = String(target || '').trim();
@@ -17,11 +17,13 @@ function matchGroupOption(optText, target) {
     const tLower = t.toLowerCase();
     const tarLower = tar.toLowerCase();
     if (tLower === tarLower) return true;                    // 精确
-    if (tLower.startsWith(tarLower + ' ')) return true;      // 开头+空格边界
+    if (tLower.startsWith(tarLower + ' ')) return true;      // 候选在选项开头
     if (tLower.includes(tarLower)) {
-        const prefix = tLower.slice(0, tLower.indexOf(tarLower)).trim();
-        const CATEGORY_PREFIX_RE = /^(t[- ]?|polo[- ]?|men'?s[- ]?(t[- ]?|polo[- ]?))$/;
-        if (CATEGORY_PREFIX_RE.test(prefix)) return false;   // 更具体类目（T-Shirts / Polo Shirts）→ 误命中
+        // 候选不在开头：拒绝含"更具体类目关键词"的选项
+        const SPECIFIC_KWS = ['t-shirt', 't shirts', 'polo', 'hoodie', 'sweatshirt', 'jacket', 'vest', 'pants', 'trouser'];
+        for (const kw of SPECIFIC_KWS) {
+            if (tLower.includes(kw) && !tarLower.includes(kw)) return false;
+        }
         return true;
     }
     return false;
@@ -35,7 +37,11 @@ assert.strictEqual(matchGroupOption('T Shirts', 'shirts'), false, 'Shirts 不命
 assert.strictEqual(matchGroupOption('Polo Shirts', 'shirts'), false, 'Shirts 不命中 Polo Shirts');
 assert.strictEqual(matchGroupOption("Men's T-Shirts", 'shirts'), false, 'Shirts 不命中 Men\'s T-Shirts');
 assert.strictEqual(matchGroupOption("Men's Polo Shirts", 'shirts'), false, 'Shirts 不命中 Men\'s Polo Shirts');
-console.log('  ✅ 5/5');
+assert.strictEqual(matchGroupOption('New T-Shirts', 'shirts'), false, 'Shirts 不命中 New T-Shirts（修饰词不在开头）');
+assert.strictEqual(matchGroupOption("Women's T-Shirts", 'shirts'), false, 'Shirts 不命中 Women\'s T-Shirts');
+assert.strictEqual(matchGroupOption('Basic Polo Shirts', 'shirts'), false, 'Shirts 不命中 Basic Polo Shirts');
+assert.strictEqual(matchGroupOption('T-SHIRTS', 'shirts'), false, 'Shirts 不命中 T-SHIRTS（大写混合）');
+console.log('  ✅ 9/9');
 
 console.log('[精确与开头匹配（正常命中）]');
 assert.strictEqual(matchGroupOption('Shirts', 'shirts'), true, '精确命中 Shirts');
@@ -58,4 +64,4 @@ assert.strictEqual(matchGroupOption('Shirts', null), false, 'null 候选');
 console.log('  ✅ 4/4');
 
 console.log('\n----------------------------------------');
-console.log('通过 16 / 失败 0');
+console.log('通过 20 / 失败 0');
