@@ -1,0 +1,417 @@
+# ⚠️ 危险品牌商标黑名单（服装类）
+
+> **最高警戒级别**：以下内容绝对不允许出现在产品文案、标题、卖点、FAQ、图片中
+> **检测原则**：宁杀错，不放过；宁报勿漏；模糊判定一律标记🔴一级风险
+> **处理方式**：必须删除或替换，绝不保留
+
+---
+
+## 🔴 第一级：注册商标材质词（必换）
+
+**这些词是具体公司的注册商标，绝不能用！**
+
+| 原词 / 品牌名 | 所属公司 | 替代词（通用名） | 备注 |
+|--------------|----------|-----------------|------|
+| **Coolmax®** / Coolmax | 英威达 Invista | Cross-Section Polyester / 异型截面涤纶 | 最常见，Polo/T恤高频 |
+| **Tencel™** / Tencel | 兰精 Lenzing | Lyocell / 莱赛尔 | Tencel是品牌名，Lyocell是通用名 |
+| **Lycra®** / Lycra | 英威达 Invista | Spandex / Elastane / 氨纶 | Lycra是氨纶的品牌名 |
+| **Supima®** / Supima | 美国Supima协会 | ~~Pima Cotton / 皮马棉~~ | 🟢 已放行，可保留。Supima Cotton可视为材质描述保留 |
+| **Gore-Tex®** / Gore-Tex | 戈尔 W.L.Gore | Waterproof Breathable / 防水透气 | 最知名防水面料品牌 |
+| **Outlast®** / Outlast | Outlast公司 | Thermoregulating / 恒温面料 / PCM相变 | 恒温面料品牌 |
+| **Kevlar®** / Kevlar | 杜邦 DuPont | Aramid / 芳纶 | 芳纶品牌名 |
+| **Dyneema®** / Dyneema | 帝斯曼 DSM | UHMWPE / 超高分子量聚乙烯 | 高强纤维品牌 |
+| **Teflon®** / Teflon | 杜邦 DuPont | Water Repellent / 防泼水 / PTFE | 特氟龙品牌名 |
+| **Econyl®** / ECONYL | Aquafil公司 | Recycled Nylon / 再生锦纶 | 再生尼龙品牌 |
+| **Repreve®** / REPREVE | Unifi公司 | Recycled Polyester / 再生涤纶 | 再生涤纶品牌 |
+| **Refibra™** / Refibra | 兰精 Lenzing | Recycled Cellulose / 再生纤维素 | 天丝再生版品牌 |
+| **Q-Nova®** / Q-Nova |  Fulgar公司 | Recycled Nylon / 再生锦纶 | 再生尼龙品牌 |
+| **Naia™** / Naia | 伊士曼 Eastman | Acetate / 醋酸纤维 | 醋酸纤维品牌 |
+| **Coolplus®** / Coolplus | 台湾远东 | Cross-Section Polyester / 异型截面涤纶 | 凉感涤纶品牌 |
+| **Dralon®** / Dralon | 德国拜耳/多特纶 | Acrylic / 腈纶 | 腈纶品牌名 |
+| **WholeGarment®** | 岛精机制作所 | Seamless Knit / 一体成型针织 | 全成型针织品牌 |
+| **Polartec®** / Polartec | Polartec公司 | Fleece / 摇粒绒 | 抓绒面料品牌 |
+| **SeaCell™** / SeaCell | 德国SeaCell公司 | Seaweed Fiber / 海藻纤维 | 海藻纤维品牌 |
+| **Ecovero™** / ECOVERO | 兰精 Lenzing | Viscose / 粘胶纤维 | 环保粘胶品牌 |
+| **Posi-UV®** / Posi-UV | 美国Posi-UV | UV Resistant / 抗紫外线 | 抗紫外线面料品牌 |
+
+---
+
+## 🔴 第二级：知名服装品牌名（必删）
+
+### 运动 & 休闲品牌 Sport & Casual
+
+| 品牌名 | 中文名（如有） | 行业 | 检测难度 |
+|--------|--------------|------|---------|
+| Nike / Nike SB | 耐克 | 运动 | ⭐⭐⭐ |
+| Adidas / Yeezy | 阿迪达斯 | 运动 | ⭐⭐⭐ |
+| Uniqlo / Uniqlo U | 优衣库 | 快时尚 | ⭐⭐⭐⭐ |
+| GU | 极优（优衣库副牌）| 快时尚 | ⭐⭐⭐⭐ |
+| Muji / MUJI | 无印良品 | 生活方式 | ⭐⭐⭐ |
+| H&M / H&M Studio | 海恩斯莫里斯 | 快时尚 | ⭐⭐⭐ |
+| Zara / Zara Man | 扎拉 | 快时尚 | ⭐⭐⭐⭐ |
+| Puma | 彪马 | 运动 | ⭐⭐ |
+| Under Armour | 安德玛 | 运动 | ⭐⭐ |
+| Champion | 冠军 | 运动休闲 | ⭐⭐⭐ |
+| New Balance / NB | 新百伦/纽巴伦 | 运动 | ⭐⭐ |
+| Reebok | 锐步 | 运动 | ⭐⭐ |
+| Converse | 匡威 | 帆布鞋 | ⭐⭐ |
+| Vans | 万斯 | 滑板鞋 | ⭐⭐ |
+| Fila | 斐乐 | 运动 | ⭐⭐ |
+| Lululemon | 露露乐蒙 | 瑜伽运动 | ⭐⭐ |
+| Patagonia | 巴塔哥尼亚 | 户外 | ⭐⭐ |
+| The North Face / TNF | 北面/乐斯菲斯 | 户外 | ⭐⭐ |
+| Columbia | 哥伦比亚 | 户外 | ⭐⭐ |
+| Arc'teryx / Arcteryx | 始祖鸟 | 户外 | ⭐⭐ |
+| Anta / ANTA | 安踏 | 运动 | ⭐⭐ |
+| Li-Ning / LiNing | 李宁 | 运动 | ⭐⭐ |
+
+### 高端 & 奢侈品牌 Luxury & Premium
+
+| 品牌名 | 中文名 | 行业 | 检测难度 |
+|--------|-------|------|---------|
+| Polo Ralph Lauren / Ralph Lauren | 拉夫劳伦/保罗 | 高端Polo/男装 | ⭐⭐⭐⭐⭐ Polo类高频 |
+| USPA / U.S. Polo Assn. | 美国马球协会 | Polo品牌 | ⭐⭐⭐⭐ Polo类高频 |
+| Lacoste | 鳄鱼/拉科斯特 | Polo品牌 | ⭐⭐⭐⭐ Polo类高频 |
+| Fred Perry | 佛莱德·派瑞 | Polo品牌 | ⭐⭐⭐⭐ Polo类高频 |
+| Tommy Hilfiger | 汤米·希尔费格 | 美式休闲 | ⭐⭐⭐ |
+| Brooks Brothers | 布克兄弟 | 正装衬衫 | ⭐⭐⭐ |
+| Theory | 希尔瑞/Theory | 高端商务 | ⭐⭐⭐⭐ 衬衫类高频 |
+| COS | Collection of Style | 极简设计 | ⭐⭐⭐⭐⭐ 常被仿 |
+| Reiss | 蕊丝 | 高端男装 | ⭐⭐⭐ |
+| Percival | 珀西瓦尔 | 男装 | ⭐⭐⭐ |
+| Sunspel | 桑斯贝尔 | 高端基础款 | ⭐⭐⭐ |
+| John Smedley | 约翰·斯梅德利 | 高端针织 | ⭐⭐ |
+| Gucci / GG | 古驰 | 奢侈 | ⭐⭐ |
+| Louis Vuitton / LV | 路易威登 | 奢侈 | ⭐⭐ |
+| Hermès / Hermes | 爱马仕 | 奢侈 | ⭐ |
+| Chanel | 香奈儿 | 奢侈 | ⭐ |
+| Dior / Christian Dior | 迪奥 | 奢侈 | ⭐ |
+| Prada | 普拉达 | 奢侈 | ⭐⭐ |
+| Armani / Giorgio Armani | 阿玛尼 | 奢侈 | ⭐⭐ |
+| Versace / Versus | 范思哲 | 奢侈 | ⭐ |
+| Burberry / BBR | 巴宝莉/博柏利 | 奢侈 | ⭐⭐ |
+| Celine | 思琳 | 奢侈 | ⭐ |
+| Fendi | 芬迪 | 奢侈 | ⭐ |
+| Givenchy | 纪梵希 | 奢侈 | ⭐⭐ |
+| Saint Laurent / YSL | 圣罗兰 | 奢侈 | ⭐⭐ |
+| Balenciaga | 巴黎世家 | 奢侈 | ⭐⭐ |
+| Bottega Veneta / BV | 宝缇嘉 | 奢侈 | ⭐ |
+| Valentino | 华伦天奴 | 奢侈 | ⭐ |
+| Alexander McQueen / McQueen | 麦昆 | 奢侈 | ⭐⭐ |
+| Thom Browne / TB | 汤姆布朗 | 高端设计师 | ⭐⭐⭐ |
+| Stone Island | 石头岛 | 机能高端 | ⭐⭐⭐ |
+| CP Company | C.P.公司 | 机能高端 | ⭐⭐ |
+| Moncler | 盟可睐/蒙口 | 高端户外 | ⭐⭐ |
+| Loro Piana | 诺悠翩雅 | 顶级羊绒 | ⭐ |
+| Brunello Cucinelli | 布鲁奈罗·库奇内利 | 顶级羊绒 | ⭐⭐ |
+| Kiton | 基顿 | 顶级男装 | ⭐ |
+| Brioni | 布里奥尼 | 顶级男装 | ⭐ |
+| Isaia | 伊塞亚 | 顶级男装 | ⭐ |
+
+### 设计师品牌 Designer Brands
+
+| 品牌名 | 中文名 | 检测难度 |
+|--------|-------|---------|
+| Comme des Garçons / CDG | 川久保玲 | ⭐⭐ |
+| Yohji Yamamoto | 山本耀司 | ⭐⭐ |
+| Issey Miyake | 三宅一生 | ⭐⭐ |
+| Junya Watanabe | 渡边淳弥 | ⭐ |
+| Undercover | 高桥盾 | ⭐⭐ |
+| BAPE / A Bathing Ape | 安逸猿 | ⭐⭐⭐ |
+| Supreme |  supreme | ⭐⭐⭐ |
+| Off-White / OFF WHITE |  潮牌 | ⭐⭐⭐ |
+| Palace |  英国潮牌 | ⭐⭐ |
+| Stüssy / Stussy | 斯图西 | ⭐⭐ |
+| Carhartt / Carhartt WIP | 卡哈特 | ⭐⭐⭐ |
+| Dickies | 帝客 | ⭐⭐ |
+| Wtaps | 日系潮牌 | ⭐⭐ |
+| Neighborhood |  邻里 | ⭐⭐ |
+| Human Made |  NIGO品牌 | ⭐⭐ |
+| Kenzo | 高田贤三 | ⭐⭐ |
+
+### 国内/亚洲品牌 Asian Brands
+
+| 品牌名 | 中文名 | 检测难度 |
+|--------|-------|---------|
+| 海澜之家 / HLA | HLA | ⭐⭐⭐ |
+| 七匹狼 / Septwolves | Septwolves | ⭐⭐ |
+| 劲霸 / K-boxing | K-boxing | ⭐⭐ |
+| 柒牌 / SEVEN | SEVEN | ⭐⭐ |
+| 才子 / TRIES | TRIES | ⭐ |
+| 利郎 / LILANZ | LILANZ | ⭐⭐ |
+| 九牧王 / Joeone | Joeone | ⭐⭐ |
+| 报喜鸟 / Saint Angelo | Saint Angelo | ⭐ |
+| 杉杉 / FIRS | FIRS | ⭐ |
+| 雅戈尔 / Youngor | Youngor | ⭐⭐ |
+| 罗蒙 / ROMON | ROMON | ⭐⭐ |
+| 红豆 / Hodo | Hodo | ⭐⭐ |
+| 太平鸟 / Peace Bird | Peace Bird | ⭐⭐ |
+| 马克华菲 / Mark Fairwhale | Mark Fairwhale | ⭐⭐ |
+| 卡宾 / Cabbeen | Cabbeen | ⭐⭐ |
+| 杰克琼斯 / Jack & Jones | Jack & Jones | ⭐⭐⭐ |
+| 思莱德 / Selected | Selected | ⭐⭐ |
+| 佐丹奴 / Giordano | Giordano | ⭐⭐ |
+| 班尼路 / Baleno | Baleno | ⭐⭐ |
+| 真维斯 / Jeanswest | Jeanswest | ⭐⭐ |
+| 美特斯邦威 / Metersbonwe | Metersbonwe | ⭐⭐ |
+| 森马 / Semir | Semir | ⭐⭐ |
+| 以纯 / Yishion | Yishion | ⭐⭐ |
+| 凡客 / VANCL | VANCL | ⭐ |
+| 优衣库 / UNIQLO | UNIQLO | ⭐⭐⭐⭐ 重复提醒 |
+| 无印良品 / MUJI | MUJI | ⭐⭐⭐ 重复提醒 |
+| 巨式国际 / GIVH SHYH | GIVH SHYH | ⭐ | 女装品牌 |
+| 哥弟 / GIRDEAR | GIRDEAR | ⭐ |
+| 阿玛施 / AMASS | AMASS | ⭐ |
+
+### 快时尚 & 大众品牌 Fast Fashion
+
+| 品牌名 | 中文名 | 检测难度 |
+|--------|-------|---------|
+| Gap / Old Navy | 盖璞/老海军 | ⭐⭐⭐ |
+| Forever 21 | 永远21 | ⭐⭐ |
+| Topshop / Topman | Topshop | ⭐⭐ |
+| Mango / MNG | 芒果 | ⭐⭐ |
+| Massimo Dutti | 马西莫·杜蒂 | ⭐⭐ |
+| Bershka | 波丝可 | ⭐ |
+| Pull&Bear |  pull&bear | ⭐ |
+| Stradivarius | 斯特拉迪瓦里斯 | ⭐ |
+| Oysho | Oysho | ⭐ |
+| Cotton On |  Cotton On | ⭐⭐ |
+| American Eagle / AE | 美国鹰 | ⭐⭐ |
+| Abercrombie & Fitch / A&F | A&F | ⭐⭐⭐ |
+| Hollister | 霍利斯特/A&F副牌 | ⭐⭐ |
+| Aéropostale / Aero | Aero | ⭐⭐ |
+
+### 衬衫 & Polo专业品牌 Shirt & Polo Specialists
+
+| 品牌名 | 中文名 | 检测难度 | 备注 |
+|--------|-------|---------|------|
+| **Thomas Pink** | 托马斯·品克 | ⭐⭐ | 高端衬衫 |
+| **Charles Tyrwhitt / CT** | CT衬衫 | ⭐⭐⭐ | 衬衫高频 |
+| **Hawes & Curtis** | 霍斯&柯蒂斯 | ⭐⭐ | 衬衫 |
+| **T.M.Lewin** | T.M.卢因 | ⭐⭐ | 衬衫 |
+| **Eton** | 伊顿衬衫 | ⭐⭐ | 高端衬衫 |
+| **Stenströms** | 斯滕斯特伦 | ⭐ | 高端衬衫 |
+| **Albini / Albiate** | 阿尔比尼 | ⭐⭐ | 面料商，常被引用 |
+| **Canclini** | 坎克利尼 | ⭐⭐ | 面料商，常被引用 |
+| **Filmar** | 菲尔玛 | ⭐⭐ | 面料商 |
+| **SIC Tessuti** | SIC面料 | ⭐ | 面料商 |
+| **MONTI** | 蒙蒂 | ⭐ | 面料商 |
+| **Bower Roebuck** | 鲍尔·罗巴克 | ⭐ | 衬衫 |
+| **Gitman Bros** | 吉特曼兄弟 | ⭐⭐ | 衬衫 |
+| **Band of Outsiders** | 局外人 | ⭐ | 衬衫 |
+| **Steven Alan** | 史蒂文·艾伦 | ⭐ | 衬衫 |
+| **Norse Projects** | 挪威计划 | ⭐⭐ | 北欧风 |
+| **A.P.C.** | A.P.C. | ⭐⭐ | 法式极简 |
+| **Ami / Ami Paris** | 巴黎AMI | ⭐⭐⭐ | 爱心标志 |
+| **Sandro** | 桑德罗 | ⭐⭐ | 法式 |
+| **Maje** | Maje | ⭐ | 法式 |
+| **Études Studio / Etudes** | Etudes工作室 | ⭐ | 法式 |
+| **Nanamica** | 七海 | ⭐⭐ | 日本机能 |
+| **Goldwin** | 高得运 | ⭐ | 日本户外 |
+
+---
+
+## 🔴 第三级：品牌暗示/误导性描述（必改）
+
+### 仿牌/同款/同款描述
+- "大牌同款" → ❌ 品牌暗示
+- "设计师同款" → ❌ 模糊品牌暗示
+- "某大牌同厂" → ❌ 暗示
+- "原版打版" → ❌ 暗示仿牌
+- "1:1复刻" → ❌ 仿牌
+- "复刻" → ❌ 仿牌
+- "原单" → ❌ 暗示品牌尾单
+- "尾单" → ❌ 暗示品牌尾单
+- "跟单" → ❌ 暗示品牌
+- "余单" → ❌ 暗示品牌
+- "外贸原单" → ❌ 暗示品牌
+- "出口转内销" → ❌ 可疑
+- "意大利进口面料" → ⚠️ 需确认，可能真实
+- "日本进口面料" → ⚠️ 需确认，可能真实
+- "媲美XX品牌" → ❌ 品牌对比
+- "不输XX" → ❌ 品牌对比
+- "XX平替" → ❌ 品牌对比
+- "XX同款" → ❌ 品牌对比
+- "XX风" / "XX风格" → ⚠️ 需谨慎，可能擦边
+- "XX同款版型" → ❌ 品牌暗示
+- "XX同款设计" → ❌ 品牌暗示
+- "小XX" / "平替XX" → ❌ 品牌暗示
+- "XX同款面料" → ❌ 暗示面料品牌
+
+### 认证标识滥用
+- "GOTS认证" → ⚠️ 有GOTS认证可以说，没有不能乱说
+- "OEKO-TEX认证" → ⚠️ 同上
+- "bluesign认证" → ⚠️ 同上
+- "GRS认证"（全球回收标准）→ ⚠️ 同上
+- "BCI认证"（良好棉花）→ ⚠️ 同上
+- "有机棉" → ⚠️ 无认证不能乱标
+- "公平贸易" → ⚠️ 无认证不能乱标
+
+---
+
+## 🔴 第四级：品牌Logo/图案识别（图片必查）
+
+### 常见品牌标志特征（图片审核重点）
+| 品牌 | 标志性图案/Logo | 出现位置 |
+|------|----------------|---------|
+| Polo Ralph Lauren | 马球运动员（骑马打马球） | 胸口左上方 |
+| Lacoste | 鳄鱼（绿色） | 胸口左上方 |
+| Fred Perry | 月桂叶/麦穗 | 胸口左上方 |
+| USPA | 双马球手/USPA字母 | 胸口 |
+| Nike | Swoosh勾 | 任何位置 |
+| Adidas | 三条纹/三叶草 | 任何位置 |
+| Burberry | 格纹（驼色/黑/白/红） | 全件 |
+| Gucci | 双G / 绿红绿条纹 | 任何位置 |
+| LV | Monogram老花 | 全件 |
+| Fendi | 双F Logo | 任何位置 |
+| Thom Browne | 四道杠（袖子上） | 袖口 |
+| Chanel | 双C | 任何位置 |
+| Dior | CD字母 | 任何位置 |
+| YSL | YSL字母 | 任何位置 |
+| Supreme | Supreme字母 | 任何位置 |
+| BAPE | 猿人头 | 任何位置 |
+| Stone Island | 罗盘徽章 | 袖子 |
+| Moncler | 公鸡徽章 | 胸口 |
+| Lacoste | 鳄鱼 | 胸口 |
+| Tommy Hilfiger | 红白蓝旗帜 | 胸口 |
+| A.P.C. | A.P.C.字母 | 胸口/标签 |
+| AMI | 爱心A | 胸口 |
+| Carhartt | C字母/Carhartt | 胸口/标签 |
+
+### 图片中常见的品牌植入位置
+1. **胸口刺绣/印花** — 最常见，品牌Logo在此
+2. **领口织唛** — 主标，一定有品牌名
+3. **下摆侧标** — 很多品牌的标志性位置
+4. **袖口刺绣** — 部分品牌
+5. **后背印花** — 潮牌常见
+6. **纽扣刻印** — 高端品牌会在纽扣上刻品牌名
+7. **吊牌/水洗标** — 完整品牌信息
+8. **口袋上方** — 常见品牌小Logo
+
+---
+
+## 🟡 第五级：灰色地带/需确认
+
+### 可能是品牌也可能是通用词
+| 词汇 | 风险等级 | 说明 | 建议 |
+|------|---------|------|------|
+| Pima Cotton / 皮马棉 | 🟡 中 | 棉的品种，通用词，Pima为通用品种名，非品牌名，保留但需确认是否误用Supima | 可以保留Pima |
+| Supima Cotton | 🟢 低 | 按第一级放行规则，在报告中注明"Supima为品牌名，已按放行规则保留" | 保留 |
+| Egyptian Cotton / 埃及长绒棉 | 🟡 中 | 产地+品种，通用词 | 可以保留 |
+| Sea Island Cotton / 海岛棉 | 🟡 中 | 品种名，通用词 | 可以保留 |
+| 新疆长绒棉 | 🟡 低 | 产地+品种 | 可以保留 |
+| GOTS认证 | 🟡 中 | 有认证可以说 | 确认是否有 |
+| OEKO-TEX认证 | 🟡 中 | 有认证可以说 | 确认是否有 |
+| 莫代尔 Modal | 🟡 低 | 兰精公司品牌名，但已通用化 | 通常可保留 |
+| 莱卡 Lycra | 🔴 高 | 明确品牌名 | 必须换成"氨纶" |
+| 天丝 Tencel | 🔴 高 | 兰精注册商标，Lyocell是通用名 | 必须换成"莱赛尔/Lyocell" |
+| 冰丝 | 🟢 低 | 通用俗称，指锦纶+氨纶 | 可以保留 |
+| 牛奶丝 | 🟢 低 | 通用俗称，指涤氨 | 可以保留 |
+| 德绒 | 🔴 高 | Dralon是德国拜耳/多特纶注册商标 | 必须换成"腈纶/Acrylic" |
+| 奥羊绒 | 🟢 低 | 仿羊绒的俗称 | 可以保留 |
+| 海岛绒 | 🟡 中 | 容易和海岛棉混淆 | 可以保留 |
+
+### 认证/检测类
+- "通过SGS检测" → ⚠️ 需确认
+- "通过Intertek检测" → ⚠️ 需确认
+- "达到国标GB 18401" → ⚠️ 需确认
+- "婴儿级标准" → ⚠️ 模糊，需确认
+- "食品级" → ⚠️ 夸大，衣服不可能食品级
+- "医疗级" → ⚠️ 夸大
+
+---
+
+## 上下文判断指导
+以下品牌词在特定语境中可能为普通英文词汇，审查时需结合上下文判断：
+- Champion：文案中作形容词（"champion fabric"=优质面料）→ 不标记；作品牌名（"Champion hoodie"）→ 标记
+- Theory/Palace/Supreme/Neighborhood/Selected/Gap/COS/Cotton On：同样规则，作普通英文含义时不标记，作品牌名时标记
+- Gap：出现在"gap between seams"等描述性文本中 → 不标记
+
+---
+
+## ⚠️ 品牌词检测优先级（按风险高低排序）
+
+**文字检测优先级：**
+1. 🔴 产品名称 / Product Title — 最高频
+2. 🔴 SEO Title / SEO标题 — 第二高频
+3. 🔴 卖点 / Highlights — 第三高频
+4. 🔴 FAQ — 第四高频
+5. 🟡 材质 / Material
+6. 🟡 面料类型 / Fabric Type
+7. 🟡 产品特性 / 工艺 / 印花方法 / 设计
+
+**图片检测优先级：**
+1. 🔴 胸口Logo/刺绣 — 最常见
+2. 🔴 领口主标/织唛 — 必有品牌
+3. 🔴 下摆侧标 — 常见
+4. 🟡 袖口刺绣
+5. 🟡 后背印花
+6. 🟡 纽扣刻印
+7. 🟡 吊牌/水洗标
+
+> 注：吊牌/水洗标在 step_04 图片品牌检查中不单独检查，如主图中可见则一并审查。本表保留此项供其他步骤参考。
+
+---
+
+## 🔍 品牌词检测技巧
+
+1. **大小写不敏感** — Nike / nike / NIKE / NiKe 都要识别
+2. **带®/™符号的一定是品牌** — 100%确认
+3. **模糊拼写也要抓** — "耐客"/"奈克"/"Nik e" 等变形
+4. **拆分词也要抓** — "耐 克"/"Ni ke" 等中间有空格
+5. **拼音也要查** — "naike"/"adi" 等拼音缩写
+6. **数字代替字母** — "N1ke"/"Ad1das" 等
+7. **符号代替字母** — "N!ke"/"Ad@das" 等
+8. **中文译名和英文名都要查** — "耐克"和"Nike"都要检测
+9. **子品牌/副牌也要查** — "优衣库"和"GU"都要查
+10. **图案/Logo近似也算** — 很像某个品牌的图案也算擦边
+
+---
+
+## 🚫 绝对禁止事项
+
+1. ❌ **绝对不能保留任何品牌名** — 不管以什么形式
+2. ❌ **绝对不能用"大牌同款"等暗示性描述**
+3. ❌ **绝对不能保留品牌Logo图片**
+4. ❌ **绝对不能保留品牌标签/织唛图片**
+5. ❌ **绝对不能声称是某品牌同厂/同款/同面料**
+6. ❌ **绝对不能在纽扣/拉链等配件上保留品牌刻印**
+7. ❌ **绝对不能用知名品牌的标志性图案（如鳄鱼、马球手）**
+8. ❌ **绝对不能用"意大利进口/日本进口"等模糊高档暗示（除非有证据）**
+9. ❌ **绝对不能使用注册商标材质词（如Coolmax、Lycra等）**
+10. ❌ **绝对不能伪造认证（如GOTS、OEKO-TEX等）**
+
+---
+
+## ✅ 正确处理方式
+
+| 遇到的问题 | 处理方式 |
+|-----------|---------|
+| 文字中有品牌名 | 删除或替换为通用描述 |
+| 图片中有品牌Logo | 标记🔴，建议更换图片或P掉 |
+| 图片中有品牌织唛 | 标记🔴，建议更换图片 |
+| 注册商标材质词 | 替换为通用材质名（见第一级表格） |
+| 品牌暗示性描述 | 删除或改写为客观描述 |
+| 模糊不确定的词 | 标记🟡二级风险，报用户确认 |
+| 纽扣上有品牌刻印 | 标记🔴，建议确认 |
+| 格子/条纹等疑似品牌图案 | 标记🟡，人工确认 |
+
+---
+
+## 📋 快速检测清单
+
+审核时快速过一遍这5项：
+
+- [ ] **产品标题** — 有没有品牌名？
+- [ ] **卖点/FAQ** — 有没有品牌词或暗示？
+- [ ] **材质列** — 有没有注册商标材质词？
+- [ ] **主图胸口** — 有没有品牌Logo/刺绣？
+- [ ] **主图领口** — 有没有品牌织唛/标签？
+
+**以上5项全过 = 品牌风险基本排除**
+
+---
+
+**记住：品牌词是红线，宁杀错不放过！**
+**不确定的一律标记🔴或🟡，绝不能放过任何可疑点！**

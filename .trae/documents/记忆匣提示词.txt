@@ -1,0 +1,56 @@
+# 记忆匣提示词 — 跨境电商发品工具
+
+## 项目概况
+开发一个 Chrome扩展 + 本地HTML页面 的跨境电商发品工具，帮助运营人员在1688/阿里巴巴国际站批量发布Polo/Shirt/T-Shirt类产品。核心功能：解析Excel数据、提取主图/颜色图、AI换色/AI改图、PS编辑、填入商品属性、批量上传。
+
+## 项目文件结构
+- HTML前端页面: D:\1\doubao_tool\测试文件\xlsx发品\发品助手.html — 主界面，上传Excel、展示产品列表、详情面板、AI/AI改图/PS编辑按钮
+- Chrome扩展: D:\1\doubao_tool\测试文件\xlsx发品\chrome_extension\
+  - background.js — 后台脚本，处理PS编辑拦截、豆包AI改图、上传逻辑
+  - content/page3.js — 注入到阿里巴巴发品页面，处理属性自动填入
+- 图片目录: extracted_images/row{行号}_main.jpg（注意是.jpg不是.png）
+
+## 已解决的关键问题
+
+### 1. 图片格式不匹配（最新修复）
+实际图片是 rowX_main.jpg，代码写死 rowX_main.png，导致主图显示"图片未找到"。已在以下位置修复为优先用 .jpg，fallback 到 .png：
+- getMainImagePath() 返回 .jpg
+- 产品卡片缩略图 onerror 做 jpg→png fallback
+- 详情面板主图 onerror 做 jpg→png fallback
+- PS编辑所有加载方式（fetch/FileSystemAccess/Image）都加了 jpg→png fallback
+- PS编辑轮询检测也改为优先 .jpg
+
+### 2. PS编辑保存问题（刚修复）
+问题描述：Photopea现在使用 showSaveFilePicker（File System Access API）保存文件，而不是通过 fetch/XHR 的 server URL 方式。导致拦截器抓不到保存数据。
+
+代码修改位置：background.js 的 injectFetchInterceptor 函数
+- 新增 window.showSaveFilePicker 拦截 — 返回 fake file handle，通过 fake writable 收集所有写入数据
+- 新增 PS_EDIT_SAVE_FSA 消息通道 — MAIN world→ISOLATED world→background
+- 新增 handlePsEditSaveFsa 函数 — 通过文件头 magic bytes 判断 jpg/png 格式，发送 psEditComplete
+- 新增 injectMessageBridge 中的 PS_EDIT_SAVE_FSA 监听分支
+- 新增 background 消息监听中 psEditSaveFsa action 的处理
+- 保存方式：用户编辑完点 "导出为" 或 Ctrl+S，扩展自动拦截并保存到 extracted_images 目录。前提：已在页面上授权 extracted_images 目录。
+
+### 3. 页3属性填入优化
+处理文件：content/page3.js
+- 优化前：每个属性填入后等待搜索下拉框渲染（耗时35秒）
+- 优化后：根据不同字段类型差异化处理（select点选、auto-complete直接输入+回车、input直接输入），总时间约5秒
+- 性别字段：特殊处理，先填后补，dom模式改为 pickFirst
+- 省份字段：先在第一屏查找，找不到则搜索框搜索+关键词输入
+- 产品类型：使用 direct 模式直接输入+回车
+- 每一步输入前重新查找DOM，解决面板展开后字段位置变化问题
+
+### 4. 废弃商品过滤（已实现）
+- Excel中匹配"是否废弃"列（关键词：废弃、是否废弃、状态、Discard等）
+- 值为废弃/是/yes/true/1/discard时跳过，不加入产品列表
+- 废弃商品不显示、不上传、不可操作
+
+### 5. AI改图按钮（已实现）
+- 在详情面板中显示，调用豆包扩展进行AI改图
+- 废弃商品不显示此按钮
+
+## 需注意的代码约定
+- 图片路径优先 .jpg，fallback .png
+- 页面在 file:// 协议下运行，PS编辑时注意 crossOrigin 设置
+- 产品数据存储在 localStorage，已上传状态通过扩展消息获取
+- 颜色图目录：{baseDir}/Polo发品_颜色图/{文件名}/row{行号}/row{行号}_{颜色}.png

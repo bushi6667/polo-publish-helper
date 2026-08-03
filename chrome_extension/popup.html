@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+body {
+    width: 320px;
+    margin: 0;
+    padding: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif;
+    background: #f7f8fa;
+}
+h3 {
+    margin: 0 0 12px 0;
+    color: #333;
+    font-size: 16px;
+}
+.btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+.btn-secondary {
+    background: white;
+    color: #333;
+    border: 1px solid #e5e6eb;
+}
+.btn-secondary:hover {
+    background: #f5f3ff;
+    border-color: #667eea;
+}
+.product-info {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #666;
+}
+.product-info .title {
+    color: #333;
+    font-weight: 500;
+    margin-top: 4px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+.hint {
+    font-size: 11px;
+    color: #999;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+.settings-section {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+.settings-section .label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+.settings-section input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #e5e6eb;
+    border-radius: 6px;
+    font-size: 12px;
+    box-sizing: border-box;
+    outline: none;
+}
+.settings-section input:focus {
+    border-color: #667eea;
+}
+.settings-section .save-btn {
+    padding: 5px 12px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.settings-section .history-select {
+    width: 100%;
+    padding: 0 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    box-sizing: border-box;
+    outline: none;
+    background: #4CAF50;
+    color: white;
+    cursor: pointer;
+    height: auto;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    line-height: normal;
+    text-align: center;
+}
+/* 扩展 ID 卡片 */
+.ext-id-box {
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    border: 1px solid #ddd6fe;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    color: #555;
+}
+.ext-id-box .ext-id-label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 4px;
+}
+.ext-id-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+.ext-id-row code {
+    flex: 1;
+    background: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 10px;
+    color: #6b46c1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ext-id-row button {
+    padding: 4px 10px;
+    border: none;
+    border-radius: 4px;
+    background: #667eea;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.ext-id-row button:hover { background: #5568d3; }
+/* 首次启动向导 */
+.wizard-box {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #78350f;
+    line-height: 1.6;
+}
+.wizard-box .wizard-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #92400e;
+    font-size: 13px;
+}
+.wizard-box ol {
+    margin: 0;
+    padding-left: 20px;
+}
+.wizard-box li { margin-bottom: 4px; }
+.wizard-box .wizard-step-done { color: #16a34a; font-weight: 500; }
+.wizard-box .dismiss-btn {
+    margin-top: 8px;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid #fcd34d;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #92400e;
+    cursor: pointer;
+}
+/* 导入导出按钮组 */
+.io-btns {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+.io-btns button {
+    flex: 1;
+    padding: 7px;
+    border: 1px solid #e5e6eb;
+    border-radius: 6px;
+    background: white;
+    color: #555;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.io-btns button:hover {
+    border-color: #667eea;
+    color: #667eea;
+}
+</style>
+</head>
+<body>
+<h3>📦 Polo发品助手</h3>
+
+<!-- 扩展 ID 显示与复制：换电脑/重装后必须把此 ID 填到发品助手.html 页面 -->
+<div class="ext-id-box">
+    <div class="ext-id-label">🔌 扩展 ID（填到发品助手页面）</div>
+    <div class="ext-id-row">
+        <code id="ext-id-display">加载中...</code>
+        <button id="copy-ext-id" title="复制到剪贴板">复制</button>
+    </div>
+</div>
+
+<!-- 首次启动向导：检测配置为空时显示 -->
+<div id="wizard-box" class="wizard-box" style="display:none;">
+    <div class="wizard-title">🚀 首次使用引导</div>
+    <ol>
+        <li id="step-helper-path">填写下方"发品助手路径"（.html 文件的完整路径）</li>
+        <li id="step-open-helper">点击"打开发品助手"</li>
+        <li id="step-ext-id">在打开的页面右上角点"🔌 扩展设置"，粘贴上方复制的扩展 ID</li>
+        <li id="step-authorize">在页面里授权 extracted_images 目录（用于 PS 编辑保存）</li>
+    </ol>
+    <button class="dismiss-btn" id="wizard-dismiss">我知道了</button>
+</div>
+
+<div id="product-info" class="product-info">
+    暂无产品数据
+</div>
+<div class="settings-section">
+    <div class="label">📊 发品助手路径</div>
+    <input type="text" id="helper-path" placeholder="例如：C:\Users\你的用户名\Desktop\xlsx发品\发品助手.html">
+    <div style="display:flex; gap:4px; margin-top:6px;align-items:stretch;">
+        <button class="save-btn" id="save-helper-path" style="flex:3.5;">保存</button>
+        <select id="helper-path-history" class="history-select" style="flex:6.5;">
+            <option value="">曾经用过...</option>
+        </select>
+    </div>
+    <div class="hint" style="margin-top:4px;">发品助手.html 的本地完整路径（也支持相对路径，见下方说明）</div>
+</div>
+<div class="settings-section">
+    <div class="label">🖼️ 颜色图目录</div>
+    <input type="text" id="color-img-dir" placeholder="例如：D:\下载\颜色图">
+    <div style="display:flex; gap:4px; margin-top:6px;align-items:center;">
+        <button class="save-btn" id="save-color-dir" style="flex:3.5;height:28px;">保存</button>
+        <select id="color-img-dir-history" class="history-select" style="flex:6.5;height:28px;">
+            <option value="">曾经用过...</option>
+        </select>
+    </div>
+    <div class="hint" style="margin-top:4px;">颜色图会保存在此目录下的 Polo发品_颜色图\ 文件夹</div>
+</div>
+
+<!-- 配置导入导出：换电脑时一键迁移所有路径与历史 -->
+<div class="io-btns">
+    <button id="export-config">⬆️ 导出配置</button>
+    <button id="import-config">⬇️ 导入配置</button>
+</div>
+<input type="file" id="import-config-input" accept=".json" style="display:none;">
+
+<button class="btn btn-primary" id="open-helper">📊 打开发品助手</button>
+<button class="btn btn-secondary" id="open-publish">🚀 打开发品页面</button>
+<button class="btn btn-secondary" id="paste-data">📋 从剪贴板粘贴数据</button>
+<div class="hint">
+    💡 使用方法：<br>
+    1. 打开发品助手.html选择产品<br>
+    2. 点击"一键发品"自动跳转并填充<br>
+    3. 或手动复制数据后点"粘贴数据"<br><br>
+    💡 换电脑迁移：在新机打开此弹窗 → 点"导入配置"上传旧机导出的 JSON
+</div>
+<script src="popup.js"></script>
+</body>
+</html>

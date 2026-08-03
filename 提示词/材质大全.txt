@@ -1,0 +1,1041 @@
+# 📚 服装材质大全（Polo & T恤 & 衬衫 & 通用面料）
+
+> 用于对照判断一个词是不是材质、是不是品牌、是不是工艺
+> 不在这个列表里的"材质词"要高度警惕，可能是品牌词
+
+---
+
+## 一、天然植物纤维
+
+### 1. 棉类 Cotton
+- 普梳棉（Carded Cotton）
+- 精梳棉（Combed Cotton）
+- 半精梳棉（Semi-combed Cotton）
+- 长绒棉（Long Staple Cotton）
+- 超长绒棉（Extra Long Staple Cotton）
+- 皮马棉（Pima Cotton）
+- 埃及长绒棉（Egyptian Cotton / Giza Cotton）
+- 海岛棉（Sea Island Cotton）
+- 新疆长绒棉（Xinjiang Long Staple Cotton）
+- 有机棉（Organic Cotton）
+- 生物棉（Bio Cotton）
+- 彩棉（Colored Cotton / Natural Colored Cotton）
+- 回收棉（Recycled Cotton）
+- 废纺棉（Upcycled Cotton）
+- 再生棉（Regenerated Cotton）
+- 丝光棉（Mercerized Cotton）
+- 双丝光棉（Double Mercerized Cotton）
+- 液氨整理棉（Liquid Ammonia Treated Cotton）
+- 碳素磨毛棉（Carbon Brushed Cotton）
+- 砂洗棉（Sand Washed Cotton）
+- 石洗棉（Stone Washed Cotton）
+- 水洗棉（Washed Cotton）
+- 酵素洗棉（Enzyme Washed Cotton）
+- 雪花洗棉（Snow Washed Cotton）
+- 做旧洗棉（Vintage / Acid Washed Cotton）
+- 蜡染棉（Waxed Cotton）
+- 磨毛棉（Brushed Cotton）
+- 抓绒棉（Fleece Cotton）
+- 摇粒绒（Polar Fleece）
+- 竹节棉（Slub Cotton）
+- 重磅棉（Heavyweight Cotton 250g+）
+- 中厚棉（Midweight Cotton 160-220g）
+- 轻薄棉（Lightweight Cotton 100-150g）
+- 超轻薄棉（Ultra-light Cotton ＜100g）
+- 防缩棉（Pre-shrunk Cotton / Sanforized Cotton）
+- 抗皱棉（Wrinkle Resistant Cotton）
+- 免烫棉（Non-iron Cotton / Wrinkle Free Cotton）
+- 高支棉（High Count Cotton：60s/80s/100s/120s/160s/200s）
+- 股线棉（Plied Cotton：双股/三股/多股）
+- 缩皱棉（Crinkled Cotton）
+- 泡泡纱棉（Seersucker Cotton）
+- 烧毛棉（Singed Cotton）
+- 漂白棉（Bleached Cotton）
+- 染色棉（Dyed Cotton）
+- 低捻棉（Low Twist Cotton）
+- 强捻棉（High Twist Cotton）
+- 空气洗棉（Air Washed Cotton）
+- 臭氧洗棉（Ozone Washed Cotton）
+- 碧纹染棉（Pigment Dyed Cotton）
+- 靛蓝染棉（Indigo Dyed Cotton）
+- 植物染棉（Natural Dyed Cotton）
+- 草木染棉（Plant Dyed Cotton）
+
+### 2. 麻类 Linen / Hemp / Bast Fiber
+- 纯亚麻（100% Linen）
+- 雨露麻（Flax / Dew-retted Linen）
+- 温水沤麻（Water-retted Linen）
+- 汉麻/大麻（Hemp）
+- 有机汉麻（Organic Hemp）
+- 黄麻（Jute）
+- 苎麻（Ramie）
+- 剑麻（Sisal）
+- 罗布麻（Kendyr / Apocynum Venetum）
+- 洋麻/红麻（Kenaf）
+- 马尼拉麻（Manila Hemp / Abaca）
+- 西沙尔麻（Sisal Hemp）
+- 亚麻棉混纺（Linen Cotton Blend）
+- 汉麻棉混纺（Hemp Cotton Blend）
+- 苎麻棉混纺（Ramie Cotton Blend）
+- 亚麻粘胶混纺（Linen Viscose Blend）
+- 亚麻天丝混纺（Linen Tencel Blend）
+
+### 3. 再生纤维素纤维 Regenerated Cellulose Fiber
+- 天丝/莱赛尔（Tencel / Lyocell）
+- 莫代尔（Modal）
+- 粘胶纤维/人造棉（Viscose / Rayon）
+- 铜氨丝/铜铵纤维（Cupro / Bemberg）
+- 醋酸纤维/醋酯纤维（Acetate）
+- 三醋酸纤维/三醋酯（Triacetate）
+- 竹纤维（Bamboo Fiber）
+- 竹浆纤维（Bamboo Viscose）
+- 大豆蛋白纤维（Soy Protein Fiber / Soybean Fiber）
+- 牛奶蛋白纤维（Milk Protein Fiber）
+- 玉米纤维/聚乳酸（PLA / Polylactic Acid Fiber）
+- 椰壳纤维（Coconut Coir Fiber）
+- 香蕉纤维（Banana Fiber）
+- 菠萝叶纤维/凤梨麻（Pineapple Fiber / Piña）
+- 甲壳素纤维/壳聚糖纤维（Chitin Fiber / Chitosan Fiber）
+- 海藻纤维（Seaweed Fiber / Alginate Fiber）
+- 富强纤维（Polynosic）
+- 高湿模量粘胶（High Wet Modulus Rayon / HWM）
+- 粘胶长丝（Viscose Filament）
+- 粘胶短纤（Viscose Staple Fiber）
+- 人造丝（Rayon Filament）
+
+---
+
+## 二、天然动物纤维
+
+### 1. 蚕丝类 Silk
+- 桑蚕丝（Mulberry Silk）
+- 柞蚕丝（Tussah Silk）
+- 蓖麻蚕丝（Eri Silk）
+- 天蚕丝（Antheraea Yamamai Silk / Japanese Oak Silk）
+- 双宫丝（Douppion Silk）
+- 绢丝（Spun Silk）
+- 油丝/细丝（Thrown Silk）
+- 真丝/生丝（Raw Silk）
+- 熟丝（Boiled-off Silk）
+- 丝绸/素绉缎（Silk Charmeuse / Satin）
+- 乔其纱（Silk Georgette）
+- 双绉（Silk Crepe de Chine）
+- 斜纹绸（Silk Twill）
+- 电力纺（Habotai Silk）
+- 塔夫绸（Taffeta Silk）
+- 洋纺（Silk Organza）
+- 杭罗（Hangzhou Gauze）
+- 花罗（Figured Gauze）
+- 绫（Damask Silk）
+- 绸（Silk Fabric）
+- 缎（Satin Silk）
+- 锦（Brocade）
+- 绉（Crepe Silk）
+- 绡（Gauze Silk）
+- 葛（Poplin Silk）
+- 呢（Woolen Silk）
+- 绒（Velvet Silk）
+- 绢（Spun Silk Fabric）
+- 绨（Tiffany）
+- 绢纺丝（Schappe Silk）
+- 野生蚕丝（Wild Silk）
+
+### 2. 毛类 Wool / Hair
+- 美利奴羊毛（Merino Wool）
+- 美丽奴超细羊毛（Superfine Merino Wool）
+- 普通羊毛（Wool）
+- 羊羔毛（Lamb's Wool）
+- 山羊绒/开司米（Cashmere）
+- 绵羊绒（Sheep Cashmere）
+- 马海毛/安哥拉山羊毛（Mohair）
+- 羊驼毛/阿尔巴卡（Alpaca）
+- 骆马毛/维库尼亚（Vicuña）
+- 驼毛/骆驼绒（Camel Hair）
+- 兔毛/安哥拉兔毛（Angora Rabbit Hair）
+- 牦牛绒（Yak Wool）
+- 貂绒（Mink Fiber / Mink Fur）
+- 狐狸绒（Fox Fur Fiber）
+- 貉子绒（Raccoon Fur Fiber）
+- 水貂毛（Mink Hair）
+- 驼羊毛（Guanaco Wool）
+- 羊驼绒（Baby Alpaca）
+- 骆马绒（Vicuña Wool）
+- 安哥拉山羊毛（Angora Goat Hair / Mohair）
+- 开司米（Cashmere / Kashmir）
+- 山羊绒细绒（Cashmere Pashmina）
+- 驼绒（Camel Down）
+- 牦牛细绒（Yak Down）
+
+### 3. 羽绒 & 羽毛 Down & Feather
+- 羽绒（Down）
+- 白鹅绒（White Goose Down）
+- 灰鹅绒（Grey Goose Down）
+- 白鸭绒（White Duck Down）
+- 灰鸭绒（Grey Duck Down）
+- 羽毛（Feather）
+- 鹅毛（Goose Feather）
+- 鸭毛（Duck Feather）
+- 绒朵（Down Cluster）
+- 飞丝（Feather Fiber）
+- 马尾毛（Horsehair）
+- 猪鬃（Bristle / Pig Hair）
+
+---
+
+## 三、合成纤维
+
+### 1. 聚酯/涤纶 Polyester / PET
+- 普通涤纶（Regular Polyester）
+- 超细涤纶/微纤维（Microfiber Polyester）
+- 异形涤纶（Hollow / Profiled Polyester）
+- 阳离子涤纶（Cationic Polyester / CDP）
+- 高弹涤纶（High Tenacity Polyester）
+- 低弹丝（DTY / Draw Textured Yarn）
+- 全拉伸丝（FDY / Fully Drawn Yarn）
+- 预取向丝（POY / Partially Oriented Yarn）
+- 再生涤纶（rPET / Recycled Polyester）
+- 海洋回收涤纶（Ocean Plastic Polyester）
+- 可乐瓶回收涤纶（Bottle Recycled Polyester）
+- 生物基涤纶（Bio-based Polyester）
+- 可降解涤纶（Biodegradable Polyester）
+- 涤纶长丝（Polyester Filament）
+- 涤纶短纤（Polyester Staple Fiber）
+- 涤纶高弹丝（Polyester High Stretch Yarn）
+- 涤纶工业丝（Polyester Industrial Yarn）
+- 阻燃涤纶（Flame Retardant Polyester）
+- 抗紫外线涤纶（UV Resistant Polyester）
+- 抗菌涤纶（Antibacterial Polyester）
+- 吸湿排汗涤纶（Moisture Wicking Polyester）
+- 凉感涤纶（Cooling Polyester）
+- 保暖涤纶（Thermal Polyester）
+- PBT纤维（PBT Fiber / Polybutylene Terephthalate）
+- PTT纤维（PTT Fiber / Polytrimethylene Terephthalate）
+- 涤纶异形丝（Profiled Polyester Yarn）
+
+### 2. 锦纶/尼龙 Nylon / Polyamide / PA
+- 锦纶6（Nylon 6 / PA6）
+- 锦纶66（Nylon 66 / PA66）
+- 锦纶1010（Nylon 1010）
+- 锦纶610（Nylon 610）
+- 锦纶612（Nylon 612）
+- 锦纶11（Nylon 11）
+- 锦纶12（Nylon 12）
+- 超细锦纶（Micro Nylon）
+- 再生锦纶（Recycled Nylon）
+- 高弹锦纶（High Stretch Nylon）
+- 凉感锦纶（Cool Nylon）
+- 锦纶长丝（Nylon Filament）
+- 锦纶短纤（Nylon Staple Fiber）
+- 锦纶弹力丝（Nylon Elastic Yarn）
+- 锦纶高弹丝（Nylon High Stretch Yarn）
+- 锦纶工业丝（Nylon Industrial Yarn）
+- 抗菌锦纶（Antibacterial Nylon）
+- 阻燃锦纶（Flame Retardant Nylon）
+
+### 3. 腈纶 Acrylic / PAN
+- 腈纶（Acrylic）
+- 改性腈纶（Modacrylic）
+- 抗起球腈纶（Anti-pilling Acrylic）
+- 腈纶膨体纱（Acrylic Bulky Yarn）
+- 腈纶条（Acrylic Top）
+- 复合腈纶（Composite Acrylic）
+- 阻燃腈纶（Flame Retardant Acrylic）
+- 导电腈纶（Conductive Acrylic）
+
+### 4. 氨纶/弹性纤维 Elastane / Spandex
+- 氨纶/斯潘德克斯（Spandex / Elastane）
+- 冷感氨纶（Cooling Elastane）
+- 耐热氨纶（Heat Resistant Elastane）
+- 抗菌氨纶（Antibacterial Elastane）
+- 高弹氨纶（High Elastic Elastane）
+- 耐氯氨纶（Chlorine Resistant Elastane）
+- 耐光氨纶（UV Resistant Elastane）
+- 包芯氨纶（Core-spun Elastane）
+- 莱卡（Lycra）⚠️ 注意：这是英威达品牌名，仅作识别用。处理：审核时如发现文案含"莱卡/Lycra"，标记为🟡需确认，建议替换为"氨纶/Spandex"。
+
+### 5. 其他合成纤维
+- 维纶/聚乙烯醇（Vinylon / PVA）
+- 氯纶/聚氯乙烯（Polyvinyl Chloride Fiber / PVC）
+- 丙纶/聚丙烯（Polypropylene / PP）
+- 丙纶长丝（PP Filament）
+- 丙纶短纤（PP Staple Fiber）
+- 芳纶（Aramid）
+- 芳纶1313（Nomex / Meta-aramid）
+- 芳纶1414（Kevlar / Para-aramid）
+- 超高分子量聚乙烯（UHMWPE / High Modulus Polyethylene）
+- PTFE纤维/特氟龙（PTFE Fiber / Teflon）⚠️ Teflon为品牌名
+- 碳纤维（Carbon Fiber）
+- 玻璃纤维（Glass Fiber / Fiberglass）
+- 玄武岩纤维（Basalt Fiber）
+- 金属纤维（Metal Fiber）
+- 不锈钢纤维（Stainless Steel Fiber）
+- 银纤维（Silver Fiber）
+- 铜纤维（Copper Fiber）
+- 导电纤维（Conductive Fiber）
+- 抗静电纤维（Anti-static Fiber）
+- 夜光纤维（Luminous Fiber / Glow-in-the-dark Fiber）
+- 光变纤维（Photochromic Fiber）
+- 温变纤维（Thermochromic Fiber）
+- 香味纤维（Scented Fiber / Fragrance Fiber）
+- 负离子纤维（Negative Ion Fiber）
+- 远红外纤维（Far Infrared Fiber）
+- 磁性纤维（Magnetic Fiber）
+- 阻燃纤维（Flame Retardant Fiber）
+- 耐高温纤维（High Temperature Resistant Fiber）
+- 活性炭纤维（Activated Carbon Fiber）
+
+---
+
+## 四、混纺材质 Blends
+
+### 1. 棉+化纤混纺 Cotton + Chemical Fiber
+- 棉氨（Cotton Spandex / Cotton Elastane：95/5, 97/3, 98/2, 92/8）
+- 棉涤/涤棉（Cotton Polyester / CVC / T/C：50/50, 60/40, 65/35, 70/30, 80/20, 90/10）
+- 棉锦/锦棉（Cotton Nylon / N/C：70/30, 80/20）
+- 棉腈（Cotton Acrylic：70/30）
+- 棉涤氨（Cotton Polyester Spandex：75/20/5, 80/15/5, 60/35/5）
+- 棉锦氨（Cotton Nylon Spandex：70/25/5, 65/30/5）
+- 棉腈氨（Cotton Acrylic Spandex）
+- 棉维纶（Cotton Vinylon）
+- 棉丙纶（Cotton Polypropylene）
+
+### 2. 棉+天然纤维混纺 Cotton + Natural Fiber
+- 棉麻（Cotton Linen：90/10, 80/20, 70/30, 60/40, 55/45）
+- 棉亚麻粘胶（Cotton Linen Viscose）
+- 棉天丝（Cotton Tencel：70/30, 80/20, 60/40）
+- 棉莫代尔（Cotton Modal：70/30, 50/50）
+- 棉竹纤维（Cotton Bamboo Fiber：70/30, 50/50）
+- 棉粘胶（Cotton Viscose：80/20, 60/40）
+- 棉蚕丝（Cotton Silk：90/10, 80/20）
+- 棉真丝（Cotton Silk：70/30）
+- 棉羊毛（Cotton Wool：80/20, 70/30）
+- 棉美利奴羊毛（Cotton Merino Wool：80/20）
+- 棉羊绒（Cotton Cashmere：90/10, 85/15）
+- 棉汉麻（Cotton Hemp：90/10, 80/20）
+- 棉苎麻（Cotton Ramie）
+- 棉大豆纤维（Cotton Soy Fiber）
+- 棉牛奶纤维（Cotton Milk Fiber）
+- 棉铜氨丝（Cotton Cupro）
+- 棉醋酸纤维（Cotton Acetate）
+- 棉亚麻桑蚕丝（Cotton Linen Mulberry Silk / 三合一天然）
+- 棉天丝亚麻（Cotton Tencel Linen）
+- 棉莫代尔天丝（Cotton Modal Tencel）
+- 棉羊毛真丝（Cotton Wool Silk）
+- 棉羊绒蚕丝（Cotton Cashmere Silk）
+
+### 3. 天丝/莫代尔/粘胶基混纺 Tencel / Modal / Viscose Blends
+- 天丝棉氨纶（Tencel Cotton Spandex）
+- 天丝莫代尔（Tencel Modal）
+- 天丝莫代尔氨纶（Tencel Modal Spandex）
+- 天丝亚麻（Tencel Linen）
+- 天丝亚麻棉（Tencel Linen Cotton）
+- 天丝羊毛（Tencel Wool）
+- 天丝羊绒（Tencel Cashmere）
+- 天丝真丝（Tencel Silk）
+- 莫代尔棉氨纶（Modal Cotton Spandex）
+- 莫代尔涤氨纶（Modal Polyester Spandex）
+- 莫代尔腈纶（Modal Acrylic）
+- 莫代尔羊毛（Modal Wool）
+- 粘胶棉（Viscose Cotton）
+- 粘胶涤（Viscose Polyester）
+- 粘胶涤氨纶（Viscose Polyester Spandex）
+- 粘胶亚麻（Viscose Linen）
+- 竹纤维棉（Bamboo Fiber Cotton）
+- 竹纤维莫代尔（Bamboo Fiber Modal）
+- 竹纤维涤（Bamboo Fiber Polyester）
+- 铜氨丝棉（Cupro Cotton）
+- 铜氨丝真丝（Cupro Silk）
+- 醋酸棉（Acetate Cotton）
+- 醋酸涤（Acetate Polyester）
+- 三醋酸涤（Triacetate Polyester）
+
+### 4. 毛类混纺 Wool Blends
+- 美利奴羊毛棉（Merino Wool Cotton）
+- 美利奴羊毛涤纶（Merino Wool Polyester）
+- 美利奴羊毛腈纶（Merino Wool Acrylic）
+- 美利奴羊毛天丝（Merino Wool Tencel）
+- 美利奴羊毛氨纶（Merino Wool Elastane）
+- 羊毛腈纶（Wool Acrylic：50/50, 30/70）
+- 羊毛粘胶（Wool Viscose）
+- 羊毛涤纶腈纶（Wool Polyester Acrylic / 三合一）
+- 羊绒棉（Cashmere Cotton）
+- 羊绒羊毛（Cashmere Wool）
+- 羊绒真丝（Cashmere Silk）
+- 羊绒粘胶（Cashmere Viscose）
+- 羊绒锦纶（Cashmere Nylon）
+- 羊绒天丝（Cashmere Tencel）
+- 羊驼毛羊毛（Alpaca Wool）
+- 马海毛羊毛（Mohair Wool）
+- 兔毛羊毛（Angora Wool Blend）
+- 牦牛绒羊毛（Yak Wool Blend）
+
+### 5. 真丝混纺 Silk Blends
+- 真丝棉（Silk Cotton）
+- 真丝亚麻（Silk Linen）
+- 真丝天丝（Silk Tencel）
+- 真丝羊毛（Silk Wool）
+- 真丝羊绒（Silk Cashmere）
+- 真丝粘胶（Silk Viscose）
+- 真丝铜氨丝（Silk Cupro）
+- 真丝涤纶（Silk Polyester）
+- 真丝锦纶（Silk Nylon）
+- 真丝麻（Silk Linen Blend）
+
+### 6. 麻类混纺 Linen / Hemp Blends
+- 亚麻粘胶（Linen Viscose：70/30, 50/50）
+- 亚麻天丝（Linen Tencel）
+- 亚麻莫代尔（Linen Modal）
+- 亚麻真丝（Linen Silk）
+- 亚麻羊毛（Linen Wool）
+- 亚麻涤纶（Linen Polyester）
+- 亚麻锦纶（Linen Nylon）
+- 汉麻有机棉（Hemp Organic Cotton）
+- 汉麻天丝（Hemp Tencel）
+- 苎麻棉（Ramie Cotton）
+- 苎麻粘胶（Ramie Viscose）
+- 亚麻绢丝（Linen Spun Silk）
+
+### 7. 功能型混纺 Functional Blends
+- 棉炭纤维（Cotton Carbon Fiber / 防静电）
+- 棉银纤维（Cotton Silver Fiber / 抗菌）
+- 棉不锈钢纤维（Cotton Stainless Steel Fiber / 防辐射）
+- 涤氨纶牛奶丝（Polyester Spandex Milk Silk）
+- 锦氨纶冰丝（Nylon Spandex Ice Silk）
+- 锦氨纶高弹运动（Nylon Spandex High Stretch Sport）
+- 涤锦氨纶三合一（Polyester Nylon Spandex / 三合一运动）
+- 再生涤再生棉（Recycled Polyester Recycled Cotton）
+- 再生涤有机棉（Recycled Polyester Organic Cotton）
+- 抗菌混纺（Antibacterial Blend）
+- 防紫外线混纺（UV Protection Blend）
+- 速干混纺（Quick Dry Blend）
+- 保暖混纺（Thermal Blend）
+
+---
+
+## 五、功能面料 Functional Fabrics
+
+### 1. 吸湿排汗/速干类 Moisture Wicking / Quick Dry
+- 速干涤纶（Quick Dry Polyester）
+- 速干锦纶（Quick Dry Nylon）
+- 吸湿排汗棉（Moisture Wicking Cotton）
+- 导湿快干面料（Moisture Transport Fabric）
+- 单向导湿面料（One-way Moisture Transport Fabric）
+- 快干功能面料（Quick Dry Functional Fabric）
+- 四管道异形快干（Four-channel Profiled Quick Dry）
+- 吸湿速干（Moisture Absorption Quick Dry）
+- 快干棉（Quick Dry Cotton）
+- 运动速干（Sport Quick Dry）
+- 跑步速干（Running Quick Dry）
+- 登山速干（Hiking Quick Dry）
+
+### 2. 抗菌防臭类 Antibacterial / Anti-odor
+- 银离子抗菌面料（Silver Ion Antibacterial Fabric）
+- 锌离子抗菌面料（Zinc Ion Antibacterial Fabric）
+- 铜离子抗菌面料（Copper Ion Antibacterial Fabric）
+- 竹炭抗菌面料（Bamboo Charcoal Antibacterial Fabric）
+- 竹纤维抗菌（Bamboo Fiber Antibacterial）
+- 甲壳素抗菌（Chitin Antibacterial）
+- 纳米银抗菌（Nano Silver Antibacterial）
+- 有机硅季铵盐抗菌（Organosilicon Quaternary Ammonium Salt）
+- 天然植物抗菌（Natural Plant Antibacterial：艾草/薄荷/茶树）
+- 益生菌抗菌面料（Probiotic Antibacterial Fabric）
+- 抗菌防臭（Antibacterial & Deodorant）
+- 防螨抗菌（Anti-mite & Antibacterial）
+- 防霉抗菌（Anti-mildew & Antibacterial）
+- 防蛀抗菌（Mothproof & Antibacterial）
+
+### 3. 温感/凉感/保暖类 Cooling / Thermal
+- 凉感面料（Cooling Fabric / Cool-to-touch Fabric）
+- 冰丝面料（Ice Silk Fabric）
+- 云母凉感面料（Mica Cooling Fabric）
+- 玉石凉感面料（Jade Cooling Fabric）
+- 薄荷凉感面料（Mint Cooling Fabric）
+- 冷感锦纶（Cool Nylon）
+- 冷感涤纶（Cool Polyester）
+- 恒温面料/相变材料（PCM / Phase Change Material Fabric）
+- 发热面料（Heating Fabric）
+- 石墨烯发热面料（Graphene Heating Fabric）
+- 远红外发热面料（Far Infrared Heating Fabric）
+- 吸湿发热面料（Heat-generating / Moisture Absorption Heating）
+- 摇粒绒（Polar Fleece）
+- 双面绒（Double-sided Fleece）
+- 羊羔绒（Sherpa Fleece / Lamb Fleece）
+- 奥羊绒/仿羊绒（Imitation Cashmere）
+- 不倒绒（Velvet Fleece）
+- 钻石绒（Diamond Fleece）
+- 法兰绒（Flannel）
+- 珊瑚绒（Coral Fleece）
+- 法莱绒（Flannel Fleece）
+- 舒棉绒（Shu Cotton Fleece）
+- 北极绒（Arctic Fleece）
+- 金貂绒（Golden Mink Fleece）
+- 水貂绒（Mink Fleece）
+- 兔毛绒（Rabbit Fleece）
+- 贝贝绒（Beibei Fleece / Baby Fleece）
+- 短毛绒（Short Pile Fleece）
+- 超柔短毛绒（Super Soft Short Pile）
+- 米妮绒（Minnie Fleece）
+- 摇粒绒复合（Polar Fleece Composite）
+- 抓绒（Fleece）
+- 单面绒（One-side Fleece）
+- 双面绒（Double-sided Fleece）
+- 内里绒（Lining Fleece）
+- 德绒（Dralon Fleece / German Fleece）⚠️ 注意：德绒常被误认为德国进口，实际多为腈纶混纺的俗称，Dralon是品牌名。处理：审核时如发现文案含"德绒/Dralon"，标记为🟡需确认。建议替换为"发热腈纶混纺/Heat-retaining Acrylic Blend"。禁用"German Fleece"表述。
+
+### 4. 防护类 Protective
+- 防紫外线面料（UV Protection Fabric / UPF50+）
+- 防晒冰丝面料（Sunscreen Ice Silk Fabric）
+- 防水面料（Waterproof Fabric）
+- 防泼水面料/拒水（Water Repellent Fabric / DWR）
+- 透气防水面料（Waterproof Breathable Fabric）
+- 防风面料（Windproof Fabric）
+- 防风防水（Windproof & Waterproof）
+- 防污面料（Stain Resistant Fabric）
+- 易去污面料（Easy Care / Soil Release Fabric）
+- 防静电面料（Anti-static Fabric）
+- 防辐射面料（Anti-radiation Fabric）
+- 防蚊虫面料（Insect Repellent Fabric / Mosquito Repellent）
+- 抗菌防病毒面料（Anti-viral Fabric）
+- 防过敏面料（Hypoallergenic Fabric）
+- 防蓝光面料（Blue Light Blocking Fabric）
+- 防红外线面料（Infrared Resistant Fabric）
+- 电磁屏蔽面料（EMI Shielding Fabric）
+- 耐磨面料（Abrasion Resistant Fabric）
+- 防撕裂面料（Tear Resistant Fabric）
+- 防切割面料（Cut Resistant Fabric）
+
+### 5. 特殊功能 Special Functions
+- 免烫抗皱（Wrinkle Free / Easy Care / Non-iron）
+- 抗起球（Anti-pilling）
+- 抗勾丝（Snag Resistant）
+- 高弹力（High Stretch）
+- 四面弹（4-Way Stretch）
+- 记忆面料（Memory Fabric）
+- 反光面料（Reflective Fabric）
+- 夜光面料（Glow in the Dark Fabric）
+- 变色面料（Photochromic / Thermochromic Fabric）
+- 光致变色（Photochromic）
+- 热致变色（Thermochromic）
+- 电致变色（Electrochromic）
+- 香味面料（Scented Fabric / Micro-encapsulated Fragrance）
+- 磁疗面料（Magnetic Therapy Fabric）
+- 保健面料（Healthcare Fabric）
+- 负离子面料（Negative Ion Fabric）
+- 维生素面料（Vitamin-infused Fabric）
+- 护肤面料（Skincare Fabric：Aloe Vera / Collagen）
+- 微囊护肤面料（Micro-encapsulated Skincare Fabric）
+- 芦荟护肤（Aloe Vera Skincare）
+- 胶原蛋白护肤（Collagen Skincare）
+- 珍珠粉护肤（Pearl Powder Skincare）
+- 玻尿酸护肤（Hyaluronic Acid Skincare）
+- 烟酰胺护肤（Niacinamide Skincare）
+- 阻燃面料（Flame Retardant Fabric）
+- 耐高温面料（High Temperature Resistant Fabric）
+- 耐低温面料（Low Temperature Resistant Fabric）
+- 耐腐蚀面料（Corrosion Resistant Fabric）
+- 形状记忆面料（Shape Memory Fabric）
+- 智能面料（Smart Fabric / Smart Textile）
+- 可穿戴电子面料（Wearable Electronic Textile）
+- 自清洁面料（Self-cleaning Fabric / Nano）
+- 相变调温（Phase Change Temperature Regulation）
+- 吸湿发热（Moisture Absorption Heating）
+- 远红外保健（Far Infrared Healthcare）
+- 负离子保健（Negative Ion Healthcare）
+- 驱蚊面料（Mosquito Repellent Fabric）
+- 防螨面料（Anti-mite Fabric）
+- 防霉面料（Anti-mildew Fabric）
+- 防蛀面料（Mothproof Fabric）
+- 透湿面料（Moisture Permeable Fabric）
+- 透气面料（Breathable Fabric）
+- 防寒面料（Cold Resistant Fabric）
+- 防暑面料（Heat Resistant Fabric）
+
+### 6. 复合功能 Multi-functional
+- 抗紫外线+速干+抗菌三合一（UV+Quick Dry+Antibacterial）
+- 防晒凉感双功能（Sunscreen + Cooling）
+- 保暖抗菌双功能（Thermal + Antibacterial）
+- 防水透气（Waterproof + Breathable）
+- 防风防水透气（Windproof + Waterproof + Breathable）
+- 抗菌防臭+速干（Antibacterial + Quick Dry）
+- 吸湿排汗+抗菌（Moisture Wicking + Antibacterial）
+- 保暖+排汗（Thermal + Wicking）
+- 凉感+抗菌（Cooling + Antibacterial）
+- 防紫外线+凉感（UV Protection + Cooling）
+
+---
+
+## 六、针织组织 Knit Structures
+
+### 1. 基础组织 Basic Knits
+- 平纹/汗布（Single Jersey）
+- 棉毛布/双面布（Interlock / Double Jersey）
+- 罗纹布（Rib Knit：1x1, 2x2, 3x3, 法式）
+- 珠地网眼/珠地（Pique）
+  - 单珠地（Single Pique）
+  - 双珠地（Double Pique）
+  - 提花珠地（Jacquard Pique）
+  - 丝光珠地（Mercerized Pique）
+  - 弹力珠地（Stretch Pique）
+  - 抽针珠地（Drop Needle Pique）
+- 华夫格（Waffle Knit）
+- 鸟眼布（Bird's Eye Mesh）
+- 网眼布（Mesh：细网眼/粗网眼）
+- 提花布（Jacquard Fabric）
+  - 色织提花（Yarn-dyed Jacquard）
+  - 大提花（Big Jacquard / Brocade）
+  - 小提花（Mini Jacquard / Dobby）
+  - 定位花（Positioning Jacquard）
+- 印花布（Printed Fabric）
+- 法式罗纹（French Rib）
+- 抽条罗纹（Drop Needle Rib）
+- 移圈罗纹（Transfer Stitch Rib）
+- 十字罗纹（Cross Rib）
+- 玉米格（Corn Grid）
+- 树皮皱（Tree Bark Crepe）
+- 牛肚布（Tripe Fabric）
+- 蚂蚁布（Ant Fabric）
+- 乱三路（Random Three Way）
+- 菠斯纶（Bosi Lun）
+
+### 2. 绒布类 Fleece & Velvet Knits
+- 摇粒绒（Polar Fleece）
+- 羊羔绒（Sherpa Fleece）
+- 法兰绒（Flannel）
+- 天鹅绒（Velour / Velvet）
+- 金丝绒（Velvet）
+- 不倒绒（Velvet Fleece）
+- 钻石绒（Diamond Fleece）
+- 珊瑚绒（Coral Fleece）
+- 毛圈布/毛巾布（French Terry / Terry Cloth）
+- 鱼鳞布/卫衣布（French Terry / Sweatshirt Fabric）
+- 抓绒布（Brushed Fleece）
+- 剪毛绒（Sheared Fleece）
+- 短毛绒（Short Pile）
+- 超柔短毛绒（Super Soft Short Pile）
+- 羊羔毛（Lamb Wool）
+- 舒棉绒（Shu Velour）
+- 贝贝绒（Baby Velour）
+- 金貂绒（Golden Mink Velvet）
+- 水貂绒（Mink Velvet）
+- 兔毛绒（Rabbit Velvet）
+- 狐狸绒（Fox Velvet）
+- 貉子绒（Raccoon Velvet）
+- 北极绒（Arctic Velvet）
+- 奥羊绒（Ao Cashmere-like）
+
+### 3. 其他组织 Other Knits
+- 空气层/太空层（Air Layer / Scuba / Spacer Fabric）
+- 罗马布（Rome Fabric / Ponte di Roma）
+- 哥弟纹（Ge Di Texture / Gotti）
+- 楼梯布（Staircase Fabric）
+- 经编布（Warp Knit）
+- 纬编布（Weft Knit）
+- 横机罗纹（Flat Knit Rib）
+- 圆机布（Circular Knit Fabric）
+- 泡泡纱（Seersucker Knit）
+- 双层布（Double Layer Fabric）
+- 三层布（Three Layer Fabric）
+- 夹层布（Padded Fabric）
+- 夹棉（Quilted Fabric）
+- 衍缝布（Quilted Fabric）
+
+---
+
+## 七、梭织面料 Woven Fabrics
+
+### 1. 棉布类 Cotton Wovens
+- 府绸（Poplin）
+- 牛津纺/牛津布（Oxford）
+- 青年布（Chambray）
+- 青年纺（Yarn-dyed Plain）
+- 细布/细纺（Fine Cloth / Lawn）
+- 粗布/粗纺（Coarse Cloth）
+- 帆布（Canvas）
+- 粗帆布/双经布（Duck Canvas）
+- 细帆布（Fine Canvas）
+- 卡其（Khaki / Drill）
+- 斜纹布（Twill / Drill）
+- 哔叽（Serge）
+- 华达呢（Gabardine）
+- 贡缎/直贡/横贡（Satin Drill / Sateen）
+- 缎纹（Satin / Sateen）
+- 灯芯绒（Corduroy）
+- 平绒（Velveteen）
+- 条绒（Corduroy）
+- 泡泡纱（Seersucker）
+- 绉布/树皮绉（Crepe / Bark Crepe）
+- 水洗布（Washed Fabric）
+- 砂洗布（Sand Washed）
+- 石洗布（Stone Washed）
+- 做旧布（Vintage / Aged）
+- 牛仔布（Denim）
+- 劳动布（Dungaree / Denim）
+- 色织布（Yarn-dyed Fabric）
+- 青年布/钱布雷（Chambray）
+- 竹节布（Slub Fabric）
+- 麻纱布（Madapolam）
+- 巴厘纱（Voile）
+- 玻璃纱（Organdy / Organza）
+- 麦尔纱（Muslin）
+- 烂花布（Burn-out Fabric）
+
+### 2. 丝绸类 Silk Wovens
+- 双绉（Crepe de Chine）
+- 乔其纱（Georgette）
+- 素绉缎（Satin Charmeuse）
+- 斜纹绸（Silk Twill）
+- 电力纺（Habotai / Habotai Silk）
+- 塔夫绸（Taffeta）
+- 洋纺（Organza）
+- 杭罗（Hangzhou Gauze / Luo）
+- 花罗（Figured Gauze）
+- 绫子（Damask）
+- 绉缎（Crepe Satin）
+- 碧绉（Kabe Crepe）
+- 香云纱（Gambiered Canton Gauze）
+- 莨绸（Gambiered Silk）
+- 宋锦（Song Brocade）
+- 云锦（Yun Brocade / Cloud Brocade）
+- 蜀锦（Shu Brocade）
+- 壮锦（Zhuang Brocade）
+- 织锦缎（Brocade Satin）
+- 古香缎（Tapestry Satin）
+- 软缎（Soft Satin）
+- 织锦（Brocade）
+- 绢纺（Spun Silk Fabric）
+- 绵绸（Noil Silk Fabric）
+- 柞丝绸（Tussah Silk Fabric）
+- 桑波缎（Sangbo Satin）
+- 建宏绉（Jianhong Crepe）
+
+### 3. 毛呢类 Wool Wovens
+- 粗纺呢绒（Woolen Worsted）
+- 精纺呢绒（Worsted Fabric）
+- 麦尔登（Melton）
+- 大衣呢（Overcoating）
+- 制服呢（Uniform Cloth）
+- 海军呢（Navy Cloth）
+- 学生呢（School Uniform Cloth）
+- 法兰绒（Flannel）
+- 粗花呢（Tweed）
+- 啥味呢（Worsted Flannel / Saxony）
+- 华达呢（Gabardine）
+- 哔叽（Serge）
+- 凡立丁（Valitin）
+- 派力司（Palace）
+- 女衣呢（Dress Fabric）
+- 直贡呢（Venitian）
+- 横贡呢（Satin Back）
+- 驼丝锦（Doeskin）
+- 礼服呢（Dress Suiting）
+- 马裤呢（Cavalry Twill）
+- 巧克丁（Tropical Worsted）
+- 贡呢（Suiting）
+- 花呢（Fancy Suiting）
+- 板司呢（Doeskin）
+- 法司呢（Foxer）
+- 海力蒙（Herringbone）
+- 人字呢（Herringbone）
+- 千鸟格（Houndstooth）
+- 格纹呢（Plaid / Check）
+
+### 4. 麻织类 Linen / Hemp Wovens
+- 亚麻布（Linen Fabric）
+- 纯亚麻（Pure Linen）
+- 雨露麻（Dew-retted Linen）
+- 亚麻棉（Linen Cotton Blend）
+- 亚麻粘胶（Linen Viscose Blend）
+- 汉麻布（Hemp Fabric）
+- 苎麻布（Ramie Fabric）
+- 黄麻布（Jute Fabric）
+- 亚麻色织布（Linen Yarn-dyed）
+- 亚麻印花布（Linen Printed）
+- 亚麻砂洗（Linen Sand Washed）
+- 亚麻石洗（Linen Stone Washed）
+
+### 5. 化纤类 Synthetic Wovens
+- 涤塔夫（Polyester Taffeta）
+- 塔夫绸（Taffeta）
+- 春亚纺（Pongee）
+- 雪纺（Chiffon）
+- 乔其纱（Georgette）
+- 色丁/沙丁（Satin）
+- 贡缎（Satin Drill）
+- 牛津布（Oxford）
+- 涤丝纺（Polyester Filament Fabric）
+- 花瑶（Faille）
+- 双绉（Crepe de Chine）
+- 绉布（Crepe）
+- 记忆布（Memory Fabric）
+- 仿记忆（Imitation Memory）
+- 仿皮（Faux Leather / Vegan Leather）
+- PU皮（Polyurethane Leather）
+- PVC革（PVC Leather）
+- 人造革（Artificial Leather）
+- 合成革（Synthetic Leather）
+- 超纤皮（Microfiber Leather）
+- 漆皮（Patent Leather）
+- 麂皮绒（Suede Fabric / Faux Suede）
+- 仿麂皮（Imitation Suede）
+- 桃皮绒（Peach Skin Fabric）
+- 水洗绒（Washed Velvet）
+- 氨纶布（Spandex Fabric）
+- 莱卡布（Lycra Fabric）⚠️ Lycra为英威达注册商标，应改为氨纶布/Spandex Fabric
+- 锦纶布（Nylon Fabric）
+- 尼丝纺（Nylon Taffeta）
+- 格子布（Plaid / Check Fabric）
+- 条纹布（Stripe Fabric）
+- 迷彩布（Camouflage Fabric）
+
+### 6. 缎纹 & 绒面 Satin & Velvet
+- 缎面（Satin / Sateen）
+- 色丁（Satin）
+- 贡缎（Satin Drill）
+- 八枚缎（8-harness Satin）
+- 五枚缎（5-harness Satin）
+- 丝绒（Velvet）
+- 金丝绒（Velvet）
+- 不倒绒（Velvet Fleece）
+- 天鹅绒（Velour / Velvet）
+- 乔绒（Velvet）
+- 烂花绒（Burn-out Velvet）
+- 提花绒（Jacquard Velvet）
+- 金钻绒（Golden Diamond Velvet）
+- 韩国绒（Korean Velvet）
+- 密丝绒（Velvet）
+
+---
+
+## 八、后整理/特殊工艺 Finishes & Processes
+
+### 1. 染色 Dyeing
+- 活性染（Reactive Dyed）
+- 还原染（Vat Dyed）
+- 硫化染（Sulfur Dyed）
+- 分散染（Disperse Dyed）
+- 涂料染（Pigment Dyed）
+- 酸性染（Acid Dyed）
+- 阳离子染（Cationic Dyed）
+- 直接染（Direct Dyed）
+- 冰染（Ice Dyeing）
+- 扎染（Tie-dye）
+- 蜡染（Batik）
+- 吊染（Dip Dye）
+- 段染（Space Dyed）
+- 双色布/麻灰纱（Heather / Melange）
+- 麻灰纱（Grey Melange）
+- 花灰纱（Heather Yarn）
+- 植物染/草木染（Natural Dye / Plant Dye）
+- 靛蓝染（Indigo Dye）
+- 碧纹染（Pigment Dye）
+- 荧光染（Fluorescent Dye）
+- 染色布（Dyed Fabric）
+- 色织（Yarn-dyed）
+- 原纤染色（Dope Dyed / Spun-dyed）
+- 条染（Top Dyed）
+- 纱染（Yarn Dyed）
+- 匹染（Piece Dyed）
+- 成衣染（Garment Dyed）
+
+### 2. 印花 Printing
+- 印花布（Printed Fabric）
+- 数码印花（Digital Print）
+- 热转印印花（Heat Transfer Print / Sublimation）
+- 丝网印花（Screen Print）
+- 圆网印花（Rotary Screen Print）
+- 平网印花（Flat Screen Print）
+- 滚筒印花（Roller Print）
+- 活性印花（Reactive Print）
+- 涂料印花（Pigment Print）
+- 分散印花（Disperse Print）
+- 酸性印花（Acid Print）
+- 还原印花（Vat Print）
+- 拔染印花（Discharge Print）
+- 防染印花（Resist Print）
+- 转移印花（Transfer Print）
+- 烫金（Gold Foil Print / Hot Stamping）
+- 烫银（Silver Foil Print）
+- 烫画（Heat Transfer Vinyl / HTV）
+- 植绒印花（Flock Print）
+- 发泡印花（Foam Print）
+- 胶浆印花（Plastisol Print）
+- 水浆印花（Water-based Print）
+- 厚板印花（Puff Print / High-density Print）
+- 烂花印花（Burn-out Print）
+- 荧光印花（Fluorescent Print）
+- 夜光印花（Glow-in-the-dark Print）
+- 反光印花（Reflective Print）
+- 变色印花（Photochromic / Thermochromic Print）
+- 香味印花（Scented Print）
+- 定位印花（Placement Print）
+- 满版印花（All-over Print）
+- 定位花（Positioning Print）
+
+### 3. 后整理工艺 Finishing
+- 丝光整理（Mercerizing）
+- 双丝光（Double Mercerizing）
+- 液氨整理（Liquid Ammonia）
+- 预缩整理（Pre-shrinking / Sanforizing）
+- 树脂整理/免烫（Resin Finish / Non-iron）
+- 磨毛整理（Brushing）
+- 砂洗（Sand Washing）
+- 石洗（Stone Washing）
+- 酵素洗（Enzyme Washing）
+- 雪花洗（Snow Washing）
+- 酸洗（Acid Washing）
+- 做旧/复古洗（Vintage Wash）
+- 硅油柔软整理（Silicone Softener）
+- 亲水整理（Hydrophilic Finish）
+- 拒水整理（Water Repellent Finish / DWR）
+- 抗皱整理（Wrinkle Resistant Finish）
+- 抗起球整理（Anti-pilling Finish）
+- 抗菌整理（Anti-bacterial Finish）
+- 防紫外线整理（UV Cut / UV Protection Finish）
+- 凉感整理（Cooling Finish）
+- 香味整理（Fragrance Finish）
+- 铝箔涂层（Aluminum Coating）
+- 涂层整理（Coating）
+- PU涂层（PU Coating）
+- PVC涂层（PVC Coating）
+- 亚克力涂层（Acrylic Coating）
+- 复合面料（Laminated Fabric / Bonded Fabric）
+- 贴膜面料（Film Lamination）
+- TPU贴膜（TPU Film）
+- PTFE贴膜（PTFE Film / Gore-Tex型）
+- 透气膜（Breathable Film）
+- 压光（Calendering）
+- 电光（Chintz / Glazed）
+- 轧光（Calendered）
+- 烫光（Polished）
+- 磨毛（Brushed）
+- 起毛（Raised / Napped）
+- 剪毛（Sheared）
+- 抓毛（Fleeced）
+- 刷毛（Brushed）
+- 烧毛（Singed）
+- 漂白（Bleached）
+- 增白（Optical Whitening）
+- 柔软整理（Softening）
+- 硬挺整理（Stiffening）
+- 增重整理（Weighted）
+- 减量整理（Weight Reduction / Caustic Reduction）
+- 砂洗（Stone Washed）
+- 水洗（Washed）
+- 空气洗（Air Washed）
+- 臭氧洗（Ozone Washed）
+- 生物酶洗（Bio-wash）
+- 退浆（Desizing）
+- 煮练（Scouring）
+- 漂白（Bleaching）
+- 丝光（Mercerization）
+- 热定型（Heat Setting）
+- 预缩（Sanforization / Pre-shrinking）
+- 拉幅定型（Stenter / Tenter Frame）
+
+### 4. 绣花 & 装饰 Embroidery & Decoration
+- 电脑绣花（Computerized Embroidery）
+- 平绣（Flat Embroidery）
+- 立体绣（3D Embroidery / Puff Embroidery）
+- 珠片绣（Sequin Embroidery）
+- 亮片绣（Sequin Embroidery）
+- 珠绣（Bead Embroidery）
+- 贴布绣（Applique）
+- 毛巾绣（Towel Embroidery / Chenille Embroidery）
+- 链目绣（Chain Stitch Embroidery）
+- 金片绣（Gold Sequin Embroidery）
+- 银片绣（Silver Sequin Embroidery）
+- 植绒（Flocking）
+- 烫钻（Hot-fix Rhinestone）
+- 钉珠（Beading）
+- 铆钉（Rivet / Stud）
+- 拉链（Zipper）
+- 纽扣（Button）
+- 按扣（Snap Button / Press Stud）
+- 魔术贴（Velcro / Hook and Loop）
+- 织带（Ribbon / Webbing）
+- 松紧带（Elastic Band）
+
+---
+
+## 九、高端/奢侈/特殊概念面料 Premium & Luxury
+
+- 意大利进口丝光棉（Italian Mercerized Cotton）⚠️ Filmar/Albini/Canclini为面料商品牌名，不可出现在产品文案中
+- 瑞士进口长绒棉（Swiss Long Staple Cotton）⚠️ Schoeller/Mectex为面料商品牌名
+- 日本进口双丝光棉（Japanese Double Mercerized Cotton）⚠️ Kaihara/Komatsu为面料商品牌名
+- 日本进口面料（Japanese Fabric）⚠️ Kurabo/Nihon Menpu为面料商品牌名
+- 英国进口面料（British Fabric）⚠️ Sunspel/John Smedley为品牌名
+- 100支双股精梳棉（100s 2-ply Combed Cotton）
+- 120支双股长绒棉（120s 2-ply Long Staple Cotton）
+- 140支高支棉（140s High Count Cotton）
+- 160支超高支棉（160s Ultra High Count Cotton）
+- 200支顶级长绒棉（200s Top Grade Long Staple Cotton）
+- 300支海岛棉（300s Sea Island Cotton）
+- 真丝珠地（Silk Pique）
+- 羊绒棉珠地（Cashmere Cotton Pique）
+- 亚麻真丝珠地（Linen Silk Pique）
+- 定制混纺（Custom Blend / Exclusive Blend）
+- 智能调温面料（PCM Phase Change Smart Fabric）
+- 可穿戴电子面料（Wearable Electronic Textile / Smart Textile）
+- 自清洁面料（Self-cleaning / Nano Fabric）
+- 纳米面料（Nano Fabric）
+- 顶级海岛棉（Sea Island Cotton / West Indian Sea Island Cotton）
+- 埃及Giza棉（Egyptian Giza Cotton：Giza 45, Giza 70, Giza 86）
+- 美国Pima棉（American Pima Cotton / Supima）⚠️ Supima为品牌名。处理：Supima Cotton 保留（已放行），但需在审核报告中注明"Supima为品牌名，已按放行规则保留"。
+- 新疆长绒棉（Xinjiang Long Staple Cotton）
+- 有机认证棉（GOTS Certified Organic Cotton）
+- 公平贸易棉（Fair Trade Cotton）
+- BC皮马棉（BCI Pima Cotton）
+
+---
+
+## 十、按季节/用途分类速查 Quick Reference
+
+| 季节/用途 | 推荐材质 Top 5 |
+|-----------|---------------|
+| 春夏 Spring Summer | 丝光棉、珠地棉、亚麻混纺、天丝混纺、冰丝锦纶 |
+| 夏秋过渡 Summer-Autumn | 精梳棉、棉麻混纺、天丝+棉、莫代尔、竹纤维 |
+| 秋冬 Autumn Winter | 重磅棉、棉毛布、磨毛棉、抓绒、美利奴羊毛混纺 |
+| 深冬 Deep Winter | 摇粒绒、德绒、羊羔绒、羊绒混纺、发热面料 |
+| 运动/速干 Sport Quick Dry | 速干涤、异形截面速干、锦氨、涤氨、功能涤 |
+| 商务/正装 Business Formal | 丝光棉、双丝光棉、皮马棉、珠地棉、真丝混纺 |
+| 休闲/日常 Casual Daily | 精梳棉、水洗棉、竹节棉、棉涤混纺、棉氨 |
+| 高端/奢侈 Premium Luxury | 海岛棉、埃及长绒棉、真丝珠地、羊绒混纺、高端长绒棉 |
+| 环保/可持续 Eco Sustainable | 有机棉、再生涤、天丝、汉麻、可降解纤维 |
+| 户外/功能 Outdoor Functional | 防水透气、速干抗菌、防紫外线、摇粒绒复合、软壳面料 |
+| 居家/睡衣 Home Pajama | 莫代尔、天丝、棉氨、珊瑚绒、法兰绒 |
+| 内衣/贴身 Underwear | 莫代尔、棉氨、竹纤维、真丝、冰丝 |
+| 防晒/凉感 Sunscreen Cooling | 防晒冰丝、凉感锦纶、防紫外线面料、云母凉感、竹纤维 |
+
+---
+
+## 十一、常见俗称/别名对照表
+
+> 市场上常见的俗称号、营销名，对照真实材质成分，方便审核时快速判断
+
+| 俗称/营销名 | 真实材质/成分 | 风险等级 | 说明 |
+|------------|--------------|---------|------|
+| 冰丝 / 冰丝棉 | 锦纶+氨纶 / 粘胶纤维 | 🟢 低 | 通用俗称，指光滑凉感的面料，多为锦纶氨纶混纺 |
+| 牛奶丝 / 牛奶棉 | 涤纶+氨纶 / 涤氨混纺 | 🟢 低 | 通用俗称，指柔软顺滑的涤氨面料 |
+| 德绒 | 腈纶混纺 / 腈纶+涤纶+氨纶 | 🟡 中 | 常被误认为德国进口，实际多为国产腈纶混纺；Dralon（拜耳/多特纶）是品牌名，非产地 |
+| 奥羊绒 / 仿羊绒 | 腈纶 / 改性腈纶 | 🟢 低 | 仿羊绒手感的腈纶面料，非真羊绒 |
+| 海岛绒 | 涤纶海岛丝 / 聚酯纤维 | 🟡 中 | 容易和"海岛棉"混淆，注意区分，海岛绒是化纤，海岛棉是天然棉 |
+| 钻石绒 | 涤纶有光丝 / 聚酯纤维 | 🟢 低 | 有光泽的涤纶绒布，营销名称 |
+| 金貂绒 / 水貂绒 | 涤纶 / 腈纶混纺 | 🟢 低 | 仿貂毛手感的化纤绒布，非真貂毛 |
+| 兔毛绒 | 涤纶 / 腈纶混纺 | 🟢 低 | 仿兔毛手感的化纤绒布，非真兔毛 |
+| 贝贝绒 / 宝宝绒 | 涤纶超柔短毛绒 | 🟢 低 | 柔软短毛绒的营销名 |
+| 舒棉绒 | 涤纶摇粒绒 / 羊羔绒 | 🟢 低 | 摇粒绒的另一种叫法 |
+| 北极绒 | 涤纶抓绒 / 摇粒绒 | 🟢 低 | 保暖绒布的营销名 |
+| 珊瑚绒 | 涤纶超细纤维 | 🟢 低 | 已通用化的俗称 |
+| 法兰绒 / 法莱绒 | 涤纶 / 毛混纺 | 🟢 低 | 注意区分毛纺法兰绒（羊毛）和化纤法兰绒（涤纶） |
+| 雪花绒 | 涤纶印花摇粒绒 | 🟢 低 | 摇粒绒的一种 |
+| 蚂蚁布 | 涤纶针织布 | 🟢 低 | 表面有颗粒感的针织面料 |
+| 牛肚布 | 涤纶针织布 | 🟢 低 | 凹凸纹理的针织面料 |
+| 太空棉 / 空气层 | 涤纶+棉 / 涤棉空气层 | 🟢 低 | 三层结构的针织面料 |
+| 罗马布 | 涤棉混纺针织布 | 🟢 低 |  Ponte di Roma，双面针织面料 |
+| 哥弟纹 / 哥弟布 | 涤纶针织布 | 🟢 低 | 纹理类似哥弟品牌常用面料的俗称，无品牌关联 |
+| 健康布 | 涤棉双面布 / 空气层 | 🟢 低 | 营销名称，无特殊材质含义 |
+
+---
+
+**记住：不在本列表中的"材质词"要高度警惕，很可能是品牌名或注册商标。**
+**遇到不确定的词，宁报勿漏，标记为🟡二级风险。**

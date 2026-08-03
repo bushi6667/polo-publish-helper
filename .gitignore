@@ -1,0 +1,10 @@
+# 运行时产出：Excel 提取的产品图片（用户工作数据，不入库）
+extracted_images/
+
+# AI 会话元数据（Reasonix/trae 会话记录，不入库）
+.reasonix/
+
+# 常规忽略
+node_modules/
+*.log
+.DS_Store
