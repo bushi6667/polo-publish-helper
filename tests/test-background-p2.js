@@ -43,20 +43,9 @@ assert.strictEqual(isReservedWindowsName(undefined), false, 'undefined');
 console.log('  ✅ 8/8');
 
 console.log('[访问令牌格式（H1 第2层）]');
-// 与 background.js getOrCreateToken 的生成逻辑保持一致：16 字节随机数 → 32 位 hex
-function makeTokenLike() {
-    const arr = new Uint8Array(16);
-    if (typeof crypto !== 'undefined' && crypto.getRandomValues) crypto.getRandomValues(arr);
-    else for (let i = 0; i < 16; i++) arr[i] = Math.floor(Math.random() * 256);
-    return Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
-}
-const t1 = makeTokenLike();
-const t2 = makeTokenLike();
-assert.strictEqual(t1.length, 32, '令牌为 32 位 hex');
-assert.strictEqual(/^[0-9a-f]{32}$/.test(t1), true, '令牌仅含小写 hex');
-assert.notStrictEqual(t1, t2, '两次生成不同（随机性）');
-assert.strictEqual(typeof t1, 'string', '令牌为字符串');
-console.log('  ✅ 4/4');
+// 说明：P2-b token 机制经 security_review 评估（HIGH：ping 免费发放 + file:// 共享 localStorage
+// 可被读取，纵深防御形同虚设）已回退移除，此用例保留占位以说明回退原因
+console.log('  ⏭️ 已回退（token 机制移除，见 plan.md P2-b 记录）');
 
 console.log('\n----------------------------------------');
-console.log('通过 23 / 失败 0');
+console.log('通过 19 / 失败 0');

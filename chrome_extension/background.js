@@ -8,13 +8,16 @@ const RESERVED_WIN_NAME_RE = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
 function isReservedWindowsName(filename) {
     return RESERVED_WIN_NAME_RE.test(String(filename || '').split('.')[0]);
 }
+// M4：仅放行 raster 图片类型（排除 image/svg+xml——含脚本的 SVG 本地打开可在 file:// 上下文执行）
+function isRasterImageType(blobType) {
+    return /^image\/(png|jpe?g|webp|gif|bmp)$/i.test(String(blobType || ''));
+}
 const IMAGE_DIR_KEY = 'polo_image_dir';
 const COLOR_IMG_DIR_KEY = 'polo_color_img_dir';
 const PUBLISH_QUEUE_KEY = 'polo_publish_queue';
 const PENDING_COLOR_TASK_KEY = 'polo_pending_color_task';
 const DOUBAO_TAB_ID_KEY = 'polo_doubao_tab_id';
 const HELPER_PATH_KEY = 'polo_helper_path'; // popup.js 中配置的发品助手.html 路径（存在 chrome.storage.local）
-const TOKEN_KEY = 'polo_access_token'; // H1 第2层：发品助手.html 访问令牌（首次 ping 发放，后续消息必须携带）
 
 let IMAGE_DIR = '';
 let COLOR_IMG_DIR = '';
@@ -81,22 +84,6 @@ function isValidDir(v) {
     const segs = v.split(/[\\/]+/).filter(Boolean);
     if (segs.some(s => s === '..' || s === '.')) return false; // 防目录逃逸
     return true; // 单字符目录（如「图」）合法
-}
-
-// H1 第2层：读取/生成访问令牌（32 位随机 hex 存 storage；首次由 ping 发放给发品助手.html）
-async function getOrCreateToken() {
-    return new Promise((resolve) => {
-        chrome.storage.local.get(TOKEN_KEY, (result) => {
-            if (result[TOKEN_KEY]) return resolve(result[TOKEN_KEY]);
-            const arr = new Uint8Array(16);
-            crypto.getRandomValues(arr);
-            const token = Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
-            // 写入后读回：并发首次 ping 时以 storage 最终值为准（防后写覆盖先写导致先发方令牌失效）
-            chrome.storage.local.set({ [TOKEN_KEY]: token }, () => {
-                chrome.storage.local.get(TOKEN_KEY, (r) => resolve(r[TOKEN_KEY] || token));
-            });
-        });
-    });
 }
 
 let downloadFilenameMap = new Map(); // downloadId -> { filename, relativePath, url }
@@ -664,27 +651,16 @@ async function handleSharedAction(request, sendResponse) {
 
 chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
     // H1 第1层：先校验来源，不通过则拒绝（外层 return true 保持异步通道）
-    isTrustedSender(sender).then(async (ok) => {
+    isTrustedSender(sender).then((ok) => {
         if (!ok) {
             console.warn(`⛔ [onMessageExternal] 拒绝未授权外部消息: action=${request.action}, senderUrl=${sender?.url || 'unknown'}`);
             sendResponse({ ok: false, error: '未授权来源' });
             return;
         }
-        // H1 第2层：token 校验（'ping' 首次免 token 用于换取令牌，其余消息必须携带）
-        if (request.action !== 'ping') {
-            const token = await getOrCreateToken();
-            if (!request.token || request.token !== token) {
-                console.warn('⛔ [onMessageExternal] token 校验失败:', request.action);
-                sendResponse({ ok: false, error: '未授权来源' });
-                return;
-            }
-        }
         console.log(`🔍 [onMessageExternal] 收到消息: action=${request.action}, senderUrl=${sender?.url || 'unknown'}, senderId=${sender?.id || 'unknown'}`);
         if (request.action === 'ping') {
             assistantTabId = sender.tab?.id || null;
-            // ping 响应附带令牌，供发品助手.html 存 localStorage 后随后续消息携带
-            const token = await getOrCreateToken();
-            sendResponse({ ok: true, version: '1.0.0', token });
+            sendResponse({ ok: true, version: '1.0.0' });
             return true;
         }
         if (request.action === 'clearAllColorImages') {
@@ -1676,9 +1652,9 @@ async function downloadDoubaoImage(url, filename, rowNum) {
                     const resp = await fetch(url, { headers: { 'Referer': 'https://www.doubao.com/' } });
                     if (resp.ok) {
                         const blob = await resp.blob();
-                        // M2-②：非图片响应（登录墙/劫持的 HTML）不生成 data URL，
-                        // 回退原始 URL 下载以保留 Chrome 对 text/html 等危险类型的防护
-                        if (blob.type && blob.type.startsWith('image/')) {
+                        // M2-②/M4：非 raster 图片响应（登录墙/劫持的 HTML、SVG 脚本等）不生成 data URL，
+                        // 回退原始 URL 下载以保留 Chrome 对危险类型的防护
+                        if (isRasterImageType(blob.type)) {
                             // MV3 Service Worker 没有 URL.createObjectURL，用 data URL 替代
                             dataUrl = await new Promise((r) => {
                                 const reader = new FileReader();
@@ -1862,9 +1838,9 @@ async function downloadViaFetch(url, filename, rowNum, relativePath) {
 
         const blob = await response.blob();
         // L4：MV3 Service Worker 无 URL.createObjectURL，改用 data URL（与 downloadDoubaoImage 主路径一致）
-        // 安全：非图片响应不生成 data URL（保持 Chrome 对危险 MIME 的防护），回退原始 URL 直下
+        // 安全：非 raster 图片响应不生成 data URL（保持 Chrome 对危险 MIME/SVG 的防护），回退原始 URL 直下
         let dataUrl = null;
-        if (blob.type && blob.type.startsWith('image/')) {
+        if (isRasterImageType(blob.type)) {
             dataUrl = await new Promise((resolveData, rejectData) => {
                 const reader = new FileReader();
                 reader.onloadend = () => resolveData(reader.result);

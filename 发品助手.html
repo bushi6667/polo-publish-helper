@@ -3221,27 +3221,6 @@ let extensionInstalled = false;
 let extensionPort = null;
 let extensionReconnectTimer = null;
 
-// H1 第2层：统一消息发送包装 —— 自动附带访问令牌（除首次 ping 换取令牌外）
-// 用 monkey-patch 一处实现，避免改造页面内全部 sendMessage 调用点；
-// 令牌由 background 在 ping 响应中发放（见下方 checkExtension 的回调），存 localStorage
-(function () {
-    if (window.__poloTokenPatched || !chrome || !chrome.runtime) return;
-    window.__poloTokenPatched = true;
-    const origSend = chrome.runtime.sendMessage.bind(chrome.runtime);
-    chrome.runtime.sendMessage = function (a, b, c) {
-        // 兼容 sendMessage(msg) 单参与 sendMessage(extId, msg, cb) 两参形式
-        const isTwoArg = typeof a === 'string';
-        const msg = isTwoArg ? b : a;
-        if (msg && typeof msg === 'object' && msg.action !== 'ping') {
-            const token = localStorage.getItem('polo_access_token') || '';
-            if (token) {
-                const wrapped = Object.assign({}, msg, { token });
-                return isTwoArg ? origSend(a, wrapped, c) : origSend(wrapped);
-            }
-        }
-        return isTwoArg ? origSend(a, msg, c) : origSend(msg);
-    };
-})();
 
 function setupExtensionReconnect() {
     if (extensionReconnectTimer) clearInterval(extensionReconnectTimer);
@@ -3271,10 +3250,6 @@ function checkExtension() {
                 return;
             }
             extensionInstalled = true;
-            // H1 第2层：保存 ping 响应中的访问令牌，后续消息经 sendMessage 包装自动携带
-            if (response && response.token) {
-                try { localStorage.setItem('polo_access_token', response.token); } catch (e) {}
-            }
             updateExtensionStatus();
             try {
                 if (!extensionPort) {

@@ -17,9 +17,10 @@ function sanitizeBaseFileName(fileName) {
         .replace(/[^a-zA-Z0-9\u4e00-\u9fff._-]/g, '_');
 }
 
-// downloadDoubaoImage：blob 类型是否为图片（M2-②）
+// downloadDoubaoImage/downloadViaFetch：blob 类型是否为 raster 图片（M2-②/M4）
+// 仅放行 png/jpeg/webp/gif/bmp，排除 image/svg+xml（含脚本的 SVG 本地打开可在 file:// 上下文执行）
 function isImageBlobType(blobType) {
-    return !!(blobType && blobType.startsWith('image/'));
+    return /^image\/(png|jpe?g|webp|gif|bmp)$/i.test(String(blobType || ''));
 }
 
 // ---------- 测试用例 ----------
@@ -55,15 +56,19 @@ console.log('[isImageBlobType 图片类型放行]');
 assert.strictEqual(isImageBlobType('image/png'), true, 'image/png');
 assert.strictEqual(isImageBlobType('image/jpeg'), true, 'image/jpeg');
 assert.strictEqual(isImageBlobType('image/webp'), true, 'image/webp');
-console.log('  ✅ 3/3');
+assert.strictEqual(isImageBlobType('image/gif'), true, 'image/gif');
+assert.strictEqual(isImageBlobType('image/bmp'), true, 'image/bmp');
+assert.strictEqual(isImageBlobType('IMAGE/PNG'), true, '大小写不敏感');
+console.log('  ✅ 6/6');
 
-console.log('[isImageBlobType 非图片类型拒绝（M2-② 核心）]');
+console.log('[isImageBlobType 非图片/危险类型拒绝（M2-②/M4 核心）]');
 assert.strictEqual(isImageBlobType('text/html'), false, 'text/html 拒绝');
 assert.strictEqual(isImageBlobType('application/javascript'), false, 'JS 拒绝');
+assert.strictEqual(isImageBlobType('image/svg+xml'), false, 'SVG 拒绝（含脚本风险）');
 assert.strictEqual(isImageBlobType(''), false, '空类型拒绝');
 assert.strictEqual(isImageBlobType(undefined), false, 'undefined 拒绝');
 assert.strictEqual(isImageBlobType(null), false, 'null 拒绝');
-console.log('  ✅ 5/5');
+console.log('  ✅ 6/6');
 
 console.log('\n----------------------------------------');
-console.log('通过 22 / 失败 0');
+console.log('通过 26 / 失败 0');
