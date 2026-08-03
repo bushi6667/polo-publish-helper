@@ -290,7 +290,7 @@ function isValidDir(v) {
 | P1 | M1 + M2-① + M3（eval 改 executeScript、filename 白名单含 typeof 防护、目录校验；顺带恢复 onMessageExternal 缩进） | ✅ 已实施（本次），node --check + 非法输入单测（文件名/URL/目录）+ 全量 205 断言 |
 | P2-a | L1 + L2 + L3 + L4 + I1（psEditSave 来源/大小、消息桥 origin、保留设备名、downloadViaFetch data URL、路径收敛知悉） | ✅ 已实施（3def0aa + 6559982 + 1b29cdc），node --check + 新增单测 + 全量 254 断言 |
 | P2-b | H1 第2层（token 握手：background 生成/校验 + 发品助手.html 携带） | ⛔ 已回退（security_review 评估：ping 免费发放 + file:// 共享 localStorage 可读，纵深防御形同虚设；移除 token 相关代码，保留第1层 sender.url 校验） |
-| P2-c（遗留） | H1 第3层（长连接收紧）+ F2 时序实测 + _server.js 'null' Origin 令牌 + M4 已实施（SVG raster 白名单） | ⏳ 待定：需运行时实测或产品决策 |
+| P2-c（遗留） | H1 第3层（长连接收紧）+ F2 时序实测 + _server.js 'null' Origin 令牌 + M4 已实施（SVG raster 白名单） | ⏳ 私用场景（不上架）：'null' Origin 令牌与 H1 第3层可跳过（威胁模型以误操作为主，已有第1层 + 127.0.0.1 + 路径校验足够）；F2 时序实测需浏览器环境，建议实测时一并验证 |
 
 现有测试（tests/ 下 11 个文件，254 项断言）与 `node --check` 为全量回归基线；H1/H3/M2 的纯逻辑（isTrustedSender / isValidDir / SAFE_FILENAME_RE / blob 类型判断 / isReservedWindowsName）抽成独立函数并补充 node 单元测试，便于直接纳入 tests/。
 
