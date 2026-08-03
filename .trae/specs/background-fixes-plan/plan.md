@@ -1,6 +1,6 @@
 # background.js 修复方案文档
 
-> 状态：方案已定稿，P0/P1 已实施（6be477c/988c5f5/a4abfee），P2 批次实施中
+> 状态：方案已定稿，P0/P1/P2-a/P2-b 已实施，P2-c 遗留（需运行时实测或产品决策）
 > 审查依据：review 子代理（功能 F1-F4）+ security_review 子代理（安全 H1-H3 / M1-M3 / L1-L2 / I1）+ 二次 review/security_review 复核
 > 关键结论补充（复核后确认）：
 > - **data URL 下载主路径动机成立**：MV3 Service Worker 无 `URL.createObjectURL`（downloadViaFetch :1661 的 blob fallback 必然失败），data URL 是必要方案；但必须加 `blob.type` 图片校验（M2）
@@ -291,7 +291,7 @@ function isValidDir(v) {
 | P2-b | H1 第2层（token 握手：background 生成/校验 + 发品助手.html 携带） | ✅ 已实施（d5b44bb + 6559982），monkey-patch 单点包装 + 写后读回原子性，全量回归 |
 | P2-c（遗留） | H1 第3层（长连接收紧）+ F2 时序实测 + _server.js 'null' Origin 令牌 | ⏳ 待定：需运行时实测或产品决策 |
 
-现有测试（tests/ 下 6 个文件，137 项断言）与 `node --check` 为全量回归基线；H1/H3/M2 的纯逻辑（isTrustedSender / isValidDir / SAFE_FILENAME_RE / blob 类型判断）抽成独立函数并补充 node 单元测试，便于直接纳入 tests/。
+现有测试（tests/ 下 11 个文件，254 项断言）与 `node --check` 为全量回归基线；H1/H3/M2 的纯逻辑（isTrustedSender / isValidDir / SAFE_FILENAME_RE / blob 类型判断 / isReservedWindowsName）抽成独立函数并补充 node 单元测试，便于直接纳入 tests/。
 
 ---
 
