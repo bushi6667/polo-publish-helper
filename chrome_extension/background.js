@@ -296,6 +296,8 @@ function productKey() {
 
 
 
+// 生成颜色图本地完整路径：按 COLOR_IMG_DIR/Polo发品_颜色图/{文件名}/rowN/rowN_{颜色}.png 拼接
+// （与 downloadDoubaoImage 的落盘目录保持一致）
 function buildColorImagePath(rowNum, color) {
     let base = COLOR_IMG_DIR;
     if (!base) {
@@ -317,6 +319,8 @@ function buildColorImagePath(rowNum, color) {
     return path;
 }
 
+// 读取某行某颜色的颜色图数据：优先当前文件键，其次 legacy 键（迁移后删除），
+// 返回 { url, path }（data URL 或本地路径），供发品页上传颜色图
 function getColorImagePathData(rowNum, color, callback) {
     const storageKey = colorKey(rowNum);
     console.log(`🔍 [getColorImagePathData] row=${rowNum}, color=${color}, COLOR_IMG_DIR=${COLOR_IMG_DIR}, CURRENT_FILENAME=${CURRENT_FILENAME}, storageKey=${storageKey}`);
@@ -407,6 +411,9 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
 });
 
+// 共享动作分发器：处理 onMessage/onMessageExternal 的 17 种业务动作
+// （saveProductData/saveBatchProducts/getProductByRow/openPublishPage/…/getConfig），
+// 各动作内直接操作 storage 与目录配置并 sendResponse
 async function handleSharedAction(request, sendResponse) {
     if (request.action === 'saveProductData') {
         const pKey = productKey();
@@ -1123,6 +1130,8 @@ async function fillBoxRuleHybrid(tabId) {
     return await fillBoxRuleViaTabScript(tabId);
 }
 
+// 箱规填写方案2：向 scm.alibaba.com 的模板关联弹窗 iframe 注入 boxRuleIframe.js
+// （webNavigation 事件定位 iframe 后 executeScript 注入）
 async function fillBoxRuleViaIframeScript(tabId) {
     const sendLog = async (msg) => {
         try { await chrome.tabs.sendMessage(tabId, { action: 'log', msg }); } catch (_) {}
@@ -1588,6 +1597,10 @@ async function uploadDoubaoImage(tabId, imagePath) {
     }
 }
 
+// AI 换色图片下载：优先预取 blob 转 data URL（MV3 SW 无 URL.createObjectURL）并存 IDB，
+// 再走 chrome.downloads 落盘到 Polo发品_颜色图/{文件名}/rowN/；
+// 强制文件名经 downloadFilenameMap（id/url 匹配）由 onDeterminingFilename 生效；
+// 失败降级 downloadViaFetch（fetch 拉取后 downloads 下载）
 async function downloadDoubaoImage(url, filename, rowNum) {
     return new Promise(async (resolve) => {
         try {
@@ -1934,6 +1947,9 @@ async function fetchColorImageAsBase64(rowNum, color) {
 const PS_SAVE_MARKER = 'http://ps-edit-save.local/save';
 let psEditState = null;
 
+// Photopea 在线 PS 编辑：打开 photopea.com（hash 携带图片 dataURL 与保存标记），
+// 注入 MAIN world fetch 拦截器捕获保存请求 + ISOLATED world 消息桥转发到扩展；
+// 保存结果经 psEditComplete 回写发品助手
 async function startPsEdit(task) {
     const { imageDataUrl, fileName, rowNum, imageDir } = task;
     const baseFileName = fileName
