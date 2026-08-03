@@ -134,19 +134,12 @@ const server = http.createServer((req, res) => {
 
   // ---------- 静态文件服务 ----------
   // 根路径映射到 index.html；按扩展名返回对应 MIME；文件不存在返回 404
-  // 安全：URL 解码异常兜底 + 路径归一化后强制在 BASE_DIR 内（防 ../ 路径遍历读取）
-  let urlPath;
-  try {
-    urlPath = decodeURIComponent(req.url.split('?')[0]);
-  } catch (e) {
-    res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', ...corsHeaders });
-    res.end('Bad Request');
-    return;
-  }
-  if (urlPath === '/') urlPath = '/index.html';
-  const filePath = buildSafeFilePath(urlPath);
+  // 安全：URL 解码统一在 buildSafeFilePath 内完成（单次解码 + 异常兜底 + BASE_DIR 前缀校验）
+  let rawPath = req.url.split('?')[0];
+  if (rawPath === '/') rawPath = '/index.html';
+  const filePath = buildSafeFilePath(rawPath);
   if (!filePath) {
-    // 路径逃逸 BASE_DIR（../ 穿越）或 URL 解码异常
+    // 路径逃逸 BASE_DIR（../ 穿越）、畸形 URL 编码或兄弟前缀绕过
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8', ...corsHeaders });
     res.end('Forbidden');
     return;

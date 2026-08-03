@@ -28,7 +28,9 @@ assert.strictEqual(buildSafeFilePath('..\\..\\evil.txt'), null, '反斜杠穿越
 // 兄弟目录同名前缀绕过（security_review 复核发现的残留 HIGH）：..\xlsx发品-副本-xx\ 不得放行
 const siblingPath = '/../' + path.basename(BASE_DIR) + '-sibling/evil.txt';
 assert.strictEqual(buildSafeFilePath(siblingPath), null, '兄弟目录同名前缀绕过拒绝');
-console.log('  ✅ 8/8');
+// 含字面 % 的文件名单次解码不误伤（双重解码回归防护）：/50%25off.html → /50%off.html 应放行
+assert.strictEqual(buildSafeFilePath('/50%25off.html'), path.join(BASE_DIR, '50%off.html'), '单次解码 %25 还原为 %，不二次解码');
+console.log('  ✅ 9/9');
 
 console.log('[sanitizeFileName 任意文件写防护]');
 assert.strictEqual(sanitizeFileName('local,10,row10_main.jpg'), 'row10_main.jpg', '正常 source 格式');
@@ -41,4 +43,4 @@ assert.strictEqual(sanitizeFileName(undefined), 'image.png', 'undefined 兜底')
 console.log('  ✅ 7/7');
 
 console.log('\n----------------------------------------');
-console.log('通过 20 / 失败 0');
+console.log('通过 21 / 失败 0');
