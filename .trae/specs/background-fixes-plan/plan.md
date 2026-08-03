@@ -83,8 +83,9 @@ const HELPER_PATH_KEY = 'polo_helper_path';
 
 async function isTrustedSender(sender) {
     const url = sender?.url || '';
-    if (url.startsWith('chrome-extension://')) return true;   // 扩展自身页面
-    if (!url.startsWith('file://')) return false;              // 拒绝 http/https 等网页
+    // 注意：扩展自身页面走 onMessage（内部消息），不会进入 onMessageExternal；
+    // 此处出现的 chrome-extension:// 来源只可能是其他扩展，一律拒绝（review blocking 修复）
+    if (!url.startsWith('file://')) return false;              // 拒绝 http/https 与 chrome-extension 等其他来源
     // file:// 路径标准化（去掉 file:// 前缀、统一分隔符）
     const path = decodeURIComponent(url.replace(/^file:\/\/\//, '').replace(/^file:\/\//, '')).replace(/\//g, '\\');
     // 优先精确匹配已配置的 helperPath

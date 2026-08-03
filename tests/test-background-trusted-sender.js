@@ -7,10 +7,10 @@
 // 如 background.js 的 isTrustedSender 逻辑变更需同步更新此处。
 //
 // 被测行为（background.js）：
-//   1. chrome-extension:// 来源放行（扩展自身页面）
-//   2. 非 file:// 来源拒绝（http/https 网页）
-//   3. file:// 来源：优先精确匹配 popup 配置的 helperPath（绝对路径完整相等 / 相对文件名结尾匹配，大小写不敏感）
-//   4. 未配置 helperPath 时兜底：路径包含"发品助手"
+//   1. 非 file:// 来源一律拒绝（含 http/https 网页与其他扩展——扩展自身页面走 onMessage 不进 external）
+//   2. file:// 来源：优先精确匹配 popup 配置的 helperPath（绝对路径完整相等 / 相对文件名结尾匹配，大小写不敏感）
+//   3. 未配置 helperPath 时兜底：路径包含"发品助手"
+//   4. 非法 URL 编码拒绝
 
 const assert = require('assert');
 
