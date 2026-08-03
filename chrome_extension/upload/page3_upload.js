@@ -541,7 +541,7 @@ async function waitForPage3UploadImages(tabId, sendLog, maxAttempts = 30) {
                 world: 'MAIN',
                 func: () => {
                     // 统计真实图片数量：排除 SVG 小图标/过小装饰图/占位符，只在列表项范围内统计
-function countRealImages(root) {
+                    function countRealImages(root) {
                         if (!root) return 0;
                         const items = root.querySelectorAll('.image-upload-list-item, .image-item');
                         let count = 0;
