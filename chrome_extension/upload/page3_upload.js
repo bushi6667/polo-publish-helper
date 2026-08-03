@@ -1,4 +1,13 @@
+// ============================================================
+// page3_upload.js —— 页3（publish）主图/颜色图上传执行器（background 侧 importScripts 加载）
+// 通过 chrome.debugger CDP 在 1688 发品页执行真实点击 + 文件注入：
+//   attach debugger → 在页面 MAIN world 查找上传占位区（含 Shadow DOM 递归）→
+//   真实鼠标点击触发文件选择器 → Page.fileChooserOpened → DOM.setFileInputFiles 注入 →
+//   轮询校验上传结果
+// 含两个入口：uploadPage3ImageViaCDP（主图）、uploadColorImageViaCDP（颜色图）
+// ============================================================
 async function uploadPage3ImageViaCDP(tabId, imagePath) {
+    // 页面内浮动面板日志（经 content script 的 log action 转发）
     const sendLog = async (msg) => {
         try { await chrome.tabs.sendMessage(tabId, { action: 'log', msg }); } catch (_) {}
     };
@@ -19,6 +28,8 @@ async function uploadPage3ImageViaCDP(tabId, imagePath) {
             target: { tabId: tabId },
             world: 'MAIN',
             func: () => {
+                // 递归查找上传占位区：优先顶层选择器，找不到则遍历 Shadow DOM 子树
+                // （页3 部分区域是 shadow DOM 包裹，常规 querySelector 无法穿透）
                 function findInShadow(root) {
                     if (!root) return null;
                     const sel = '#image-placeholder, .image-upload-photobank-placeholder, .upload-select-inner';
@@ -519,6 +530,8 @@ async function uploadPage3ImageViaCDP(tabId, imagePath) {
     }
 }
 
+// 轮询检测页3主图是否上传成功（注入 MAIN world 用 countRealImages 统计真实图片数），
+// 最多 maxAttempts 次；返回 true 表示检测到图片
 async function waitForPage3UploadImages(tabId, sendLog, maxAttempts = 30) {
     console.log('⏳ 轮询检测上传结果...');
     for (let i = 0; i < maxAttempts; i++) {
@@ -527,7 +540,8 @@ async function waitForPage3UploadImages(tabId, sendLog, maxAttempts = 30) {
                 target: { tabId: tabId },
                 world: 'MAIN',
                 func: () => {
-                    function countRealImages(root) {
+                    // 统计真实图片数量：排除 SVG 小图标/过小装饰图/占位符，只在列表项范围内统计
+function countRealImages(root) {
                         if (!root) return 0;
                         const items = root.querySelectorAll('.image-upload-list-item, .image-item');
                         let count = 0;
@@ -570,7 +584,10 @@ async function waitForPage3UploadImages(tabId, sendLog, maxAttempts = 30) {
     return false;
 }
 
+// 颜色图上传：先定位颜色规格行（colorLabel + icon 坐标），点击上传图标触发文件选择器，
+// 再经 CDP 注入颜色图文件；用于 1688 发品页的颜色规格图（按颜色逐一上传）
 async function uploadColorImageViaCDP(tabId, colorLabel, imagePath, iconX, iconY, itemIndex) {
+    // 页面内浮动面板日志
     const sendLog = async (msg) => {
         try { await chrome.tabs.sendMessage(tabId, { action: 'log', msg }); } catch (_) {}
     };
