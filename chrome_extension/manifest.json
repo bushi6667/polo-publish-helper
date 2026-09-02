@@ -20,7 +20,7 @@
     },
     {
       "matches": ["*://post.alibaba.com/product/publish*"],
-      "js": ["content/common.js", "content/configs/waitTimes.js", "content/configs/attributeFields.js", "content/configs/selectors.js", "content/utils/smartFind.js", "content/utils/domHelpers.js", "content/page3.js"],
+      "js": ["content/common.js", "content/configs/waitTimes.js", "content/configs/attributeFields.js", "content/configs/selectors.js", "content/configs/categoryConfig.js", "content/utils/smartFind.js", "content/utils/domHelpers.js", "content/page3.js"],
       "run_at": "document_end"
     },
     {

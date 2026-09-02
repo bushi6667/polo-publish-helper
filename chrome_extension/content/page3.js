@@ -44,23 +44,21 @@ function buildGroupCandidates(category) {
 
     if (exactMap[cat]) cands.push(...exactMap[cat]);
 
+    // 五类服装的候选词统一来自 categoryConfig.GROUP_CANDIDATES_BY_TYPE
+    // （含数字括号如 (4)/(5) 与关键词两条路径；数字括号命中后直接返回，保持原语义）
+    const ct = getCategoryInfo(cat);
+    const cfg = typeof window !== 'undefined' && window.categoryConfig;
+    const groupMap = (cfg && cfg.GROUP_CANDIDATES_BY_TYPE) || {};
     const numMatch = cat.match(/\((\d+)\)/);
     if (numMatch) {
-        const num = parseInt(numMatch[1]);
-        if (num === 1) cands.push('T-Shirts', 'T-shirts', 'T Shirts', 'T Shirt');
-        else if (num === 2) cands.push('Polo shirt', 'Polo shirts', 'Polo');
-        else if (num === 3) cands.push('Shirts');
-        else if (num === 4 || num === 5) cands.push('Hoodies & Sweatshirts', 'Hoodies', 'Sweatshirts');
+        if (ct.type && groupMap[ct.type]) cands.push(...groupMap[ct.type]);
         if (cands.length > 0) return [...new Set(cands)];
     }
 
-    if (cat.includes('polo')) cands.push('Polo shirt', 'Polo shirts', 'Polo');
-    if (cat.includes('t-shirt') || cat.includes('t shirt') || cat.includes('tshirt') || cat.includes('t恤')) cands.push('T-Shirts', 'T-shirts');
-    if (cat.includes('hoodie') || cat.includes('sweatshirt')) cands.push('Hoodies & Sweatshirts');
+    if (ct.type && groupMap[ct.type]) cands.push(...groupMap[ct.type]);
     if (cat.includes('jacket') || cat.includes('coat')) cands.push("Men's Jackets");
     if (cat.includes('vest')) cands.push("Men's vest");
     if (cat.includes('pant') || cat.includes('jean') || cat.includes('trouser')) cands.push('Mens Pants');
-    if (cat.includes('shirt') && !cat.includes('polo') && !cat.includes('t-shirt') && !cat.includes('t shirt') && !cat.includes('tshirt') && !cat.includes('t恤') && !cat.includes('hoodie') && !cat.includes('sweatshirt')) cands.push('Shirts');
 
     if (category) cands.push(category);
 
@@ -95,6 +93,14 @@ function matchGroupOption(optText, target) {
     return false;
 }
 
+// 取归一化类目信息：优先走 categoryConfig 单一真源，配置缺失时兜底为「未识别」
+function getCategoryInfo(category) {
+    const cfg = typeof window !== 'undefined' && window.categoryConfig;
+    return cfg
+        ? cfg.classifyCategory(category)
+        : { type: null, num: null, isPolo: false, isTshirt: false, isShirt: false, isHoodie: false, isSweatshirt: false };
+}
+
 function buildAttributeFields(product) {
     const hasVal = (v) => v && String(v).trim() && String(v).toLowerCase() !== 'none';
 
@@ -102,24 +108,9 @@ function buildAttributeFields(product) {
     const styleVal = hasVal(product.style_en) ? product.style_en : '';
 
     const category = (product.category || '').toLowerCase();
-    
-    const numMatch = category.match(/\((\d+)\)/);
-    let isPolo = false, isTshirt = false, isShirt = false, isHoodie = false, isSweatshirt = false;
-    
-    if (numMatch) {
-        const num = parseInt(numMatch[1]);
-        if (num === 1) isTshirt = true;
-        else if (num === 2) isPolo = true;
-        else if (num === 3) isShirt = true;
-        else if (num === 4) isHoodie = true;
-        else if (num === 5) isSweatshirt = true;
-    } else {
-        isHoodie = category.includes('hoodie');
-        isSweatshirt = category.includes('sweatshirt') && !isHoodie;
-        isPolo = category.includes('polo') && !isHoodie && !isSweatshirt;
-        isTshirt = (category.includes("t-shirt") || category.includes("t shirt") || category.includes("tshirt") || category.includes("t恤") || (category.includes("tee") && !category.includes("sweat"))) && !isHoodie && !isSweatshirt && !isPolo;
-        isShirt = category.includes("shirt") && !isPolo && !isTshirt && !isHoodie && !isSweatshirt;
-    }
+
+    // 类目判定统一收敛到 categoryConfig.classifyCategory（数字括号优先，关键词兜底）
+    const { isPolo, isTshirt, isShirt, isHoodie, isSweatshirt } = getCategoryInfo(category);
     
     const fabricVal = hasVal(product.fabric_en) ? product.fabric_en : (isShirt ? 'Poplin' : 'Knitted');
     
@@ -1430,13 +1421,7 @@ async function fillAttributesPage3(product) {
     }
 
     const cat = (product.category || '').toLowerCase();
-    const numMatch = cat.match(/\((\d+)\)/);
-    const isPolo = numMatch ? parseInt(numMatch[1]) === 2 : (
-        cat.includes("polo") ||
-        cat.includes("polo衫") ||
-        cat.includes("polo shirt") ||
-        cat.includes("men's polo")
-    );
+    const isPolo = getCategoryInfo(cat).isPolo;
     const _hasVal = (v) => v && String(v).trim() && String(v).toLowerCase() !== 'none';
     const sleeveVal = _hasVal(product.sleeve_en) ? product.sleeve_en : 'Short Sleeve';
     if (isPolo && sleeveVal) {
@@ -1655,12 +1640,9 @@ async function uploadColorImageViaBlob(colorKey, colorLabel, itemIndex, imageUrl
 // ============================================================
 async function fillColorsPage3(product) {
     const results = [];
-    const colorList = [
-        { key: 'white', label: 'White', labelAlt: '白色' },
-        { key: 'black', label: 'Black', labelAlt: '黑色' },
-        { key: 'gray', label: 'Gray', labelAlt: '灰色' },
-        { key: 'navy', label: 'Navy', labelAlt: '军蓝色' }
-    ];
+    // 颜色候选来自 categoryConfig.DEFAULT_COLORS（一处维护）
+    const cfg = typeof window !== 'undefined' && window.categoryConfig;
+    const colorList = (cfg && cfg.DEFAULT_COLORS) || [];
 
     const colorSelect = await scrollAndFind(() => document.querySelector('.posting-field-color-select input[role="colorCombobox"]'), 4);
     if (!colorSelect) {
@@ -1910,12 +1892,14 @@ async function fillColorsPage3(product) {
 // ============================================================
 async function fillSizesPage3(product) {
     const results = [];
-    const defaultSizes = ['S', 'M', 'L', 'XL', '2XL', '3XL'];
+    // 默认尺码与标签映射来自 categoryConfig.DEFAULT_SIZES / SIZE_LABEL_MAP
+    const cfg = typeof window !== 'undefined' && window.categoryConfig;
+    const defaultSizes = (cfg && cfg.DEFAULT_SIZES) || [];
     const sizeSection = await scrollAndFind(() => document.querySelector('[class*="size"] .next-checkbox-group, [class*="spec"] .next-checkbox-group, .next-checkbox-group'), 5);
     if (sizeSection) {
         await sleep3(300);
     }
-    const szMap = {'S':'S','M':'M','L':'L','XL':'Xl','2XL':'2 XL','3XL':'3 XL'};
+    const szMap = (cfg && cfg.SIZE_LABEL_MAP) || {};
     defaultSizes.forEach(s => {
         const cb = szMap[s] || s;
         document.querySelectorAll('.next-checkbox-wrapper .next-checkbox-label').forEach(l => {
@@ -1993,34 +1977,15 @@ async function fillSizeTemplate(product) {
     await realClick(templateSelect);
     await sleep3(1000);
     
-    // 根据类目确定要选择的模板
+    // 根据类目确定要选择的模板：类目判定走统一 classifyCategory，再查类型→模板映射
     const category = (product.category || '').toLowerCase();
-    const numMatch = category.match(/\((\d+)\)/);
-    
-    let isPolo = false, isTshirt = false, isShirt = false, isHoodie = false, isSweatshirt = false;
-    if (numMatch) {
-        const num = parseInt(numMatch[1]);
-        isTshirt = num === 1;
-        isPolo = num === 2;
-        isShirt = num === 3;
-        isHoodie = num === 4;
-        isSweatshirt = num === 5;
-    } else {
-        isHoodie = category.includes('hoodie');
-        isSweatshirt = category.includes('sweatshirt') && !isHoodie;
-        isPolo = category.includes('polo');
-        isTshirt = category.includes("t-shirt") || category.includes("t shirt") || category.includes("tshirt") || category.includes("t恤") || category.includes("tee");
-        isShirt = category.includes("shirt") && !isPolo && !isTshirt && !isHoodie && !isSweatshirt;
-    }
-    
-    let targetTemplate = '男士T恤通用';
-    if (isHoodie) {
-        // (4) Hooded sweatshirt = 帽衫，与无帽卫衣区分
-        targetTemplate = '男士帽衫通用';
-    } else if (isSweatshirt) {
-        // (5) Sweatshirt = 卫衣（无帽）
-        targetTemplate = '男士卫衣通用版';
-    } else if (isShirt || isPolo || category.includes('商务') || category.includes('正装')) {
+    const ct = getCategoryInfo(category);
+    const isShirt = ct.isShirt, isPolo = ct.isPolo, isTshirt = ct.isTshirt;
+
+    const cfg = typeof window !== 'undefined' && window.categoryConfig;
+    let targetTemplate = (cfg && cfg.SIZE_TEMPLATE_BY_TYPE && cfg.SIZE_TEMPLATE_BY_TYPE[ct.type]) || '男士T恤通用';
+    // 商务/正装 关键词强制走商务正装模板（与类型无关的局部覆盖）
+    if (isShirt || isPolo || category.includes('商务') || category.includes('正装')) {
         targetTemplate = '男士商务正装通用';
     }
 
@@ -2151,8 +2116,9 @@ async function fillSizeTemplate(product) {
         await sleep3(1500);
         
         // 重新勾选尺码（因为选择模板后可能会重置）
-        const defaultSizes = ['S', 'M', 'L', 'XL', '2XL', '3XL'];
-        const szMap = {'S':'S','M':'M','L':'L','XL':'Xl','2XL':'2 XL','3XL':'3 XL'};
+        const _sizeCfg = typeof window !== 'undefined' && window.categoryConfig;
+        const defaultSizes = (_sizeCfg && _sizeCfg.DEFAULT_SIZES) || [];
+        const szMap = (_sizeCfg && _sizeCfg.SIZE_LABEL_MAP) || {};
         
         for (const s of defaultSizes) {
             const cb = szMap[s] || s;
@@ -3494,24 +3460,14 @@ async function fillDetailTemplate(product) {
 }
 
 function pickCompanyIntroTemplate(product) {
-    const cat = (product.category || '').toLowerCase();
-    
-    const numMatch = cat.match(/\((\d+)\)/);
-    if (numMatch) {
-        const num = parseInt(numMatch[1]);
-        if (num === 1) return 'T恤';
-        if (num === 2) return 'Polo衫';
-        if (num === 3) return 'Shirt';
-        if (num === 4) return '卫衣有帽';
-        if (num === 5) return '卫衣无帽';
+    // 类目判定走统一 classifyCategory，再查类型→公司介绍模板映射
+    const ct = getCategoryInfo((product.category || '').toLowerCase());
+    const cfg = typeof window !== 'undefined' && window.categoryConfig;
+    if (ct.type && cfg && cfg.COMPANY_INTRO_BY_TYPE) {
+        const name = cfg.COMPANY_INTRO_BY_TYPE[ct.type];
+        if (name) return name;
     }
-    
-    if (cat.includes('hoodie')) return '卫衣有帽';
-    if (cat.includes('sweatshirt') && !cat.includes('hoodie')) return '卫衣无帽';
-    if (cat.includes('polo') || cat.includes('polo衫')) return 'Polo衫';
-    if (cat.includes('t-shirt') || cat.includes('t shirt') || cat.includes('tshirt') || cat.includes('t恤')) return 'T恤';
-    if (cat.includes('shirt') || cat.includes('衬衫') || cat.includes('衬衣')) return 'Shirt';
-    return 'Polo衫';
+    return (cfg && cfg.DEFAULT_COMPANY_INTRO) || 'Polo衫';
 }
 
 function parseFaqs(text) {
