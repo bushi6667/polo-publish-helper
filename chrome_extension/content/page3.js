@@ -939,13 +939,15 @@ async function findVisibleOptions(optionSelectors, maxAttempts = 10, interval = 
 }
 
 // 处理模板/尺码选择后弹出的确认对话框（清除尺码表数据 / 确认切换模板）
-// 原代码在 4 处各自实现，行为完全一致，仅对话框选择器略有差异，用 extraSelectors 补齐。
-// @param {string[]} extraSelectors - 额外对话框选择器（默认覆盖 role=alertdialog 等）
+// 原代码在 4 处各自实现，行为完全一致，仅对话框选择器略有差异，用 extraSelectors 补齐；
+// 按钮文案判定复用 utils/confirmText.js 的单一真源 isConfirmText。
+// @param {string[]} extraSelectors - 额外对话框选择器（优先级最高，避免尺码等专有弹窗被通用选择器抢先命中）
 // @param {number} timeoutMs - 轮询确认弹窗的总时长（默认 3000）
 // @returns {boolean} 是否成功点击了确认按钮
 async function dismissConfirmDialog(extraSelectors, timeoutMs = 3000) {
     const base = ['[role="alertdialog"]', '.component-dialog-confirm', '.next-dialog-quick'];
-    const all = extraSelectors && extraSelectors.length ? base.concat(extraSelectors) : base;
+    // 额外的专有选择器置前：专有弹窗（如尺码表确认）优先于通用弹窗识别
+    const all = extraSelectors && extraSelectors.length ? extraSelectors.concat(base) : base;
     const deadline = Date.now() + timeoutMs;
     while (Date.now() < deadline) {
         let dialog = null;
@@ -960,7 +962,7 @@ async function dismissConfirmDialog(extraSelectors, timeoutMs = 3000) {
             for (const btn of btns) {
                 const helper = btn.querySelector('.next-btn-helper');
                 const text = helper ? helper.innerText.trim() : btn.innerText.trim();
-                if (text === '确定' || text === '确认' || text === 'Confirm' || text === 'OK') {
+                if (isConfirmText(text)) {
                     confirmBtn = btn;
                     break;
                 }
