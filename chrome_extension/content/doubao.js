@@ -336,6 +336,22 @@ function getLastMessageInfo() {
     return { count: msgs.length, text: text.slice(0, 120), hasLoading, isAI, isUser };
 }
 
+// 纯字符串判定：给定最后一条消息的文本与其是否 AI/是否生成中，判断是否为"生成失败/被拒"类消息
+// 关键词越保守越好，避免误判正在生成的正常消息；AI 且未在生成中才可能判定为错误
+function isGenerationErrorText(text, isAI, hasLoading) {
+    if (!isAI || hasLoading) return false;
+    const txt = (text || '').toLowerCase();
+    const cnErr = ['生成失败', '出错了', '无法生成', '生成不了', '对不起', '抱歉', '未能', '失败了', '不可用', '被拒绝', '不被允许', '请重新'];
+    const enErr = ['failed', 'error', 'sorry', 'could not', 'unable to', 'cannot generate', 'is not allowed'];
+    return cnErr.some(k => txt.includes(k)) || enErr.some(k => txt.includes(k));
+}
+
+// 判断豆包是否返回了"生成失败/内容被拒"类错误消息，用于在轮询中提前中止，避免干等超时
+function isGenerationError() {
+    const info = getLastMessageInfo();
+    return isGenerationErrorText(info.text, info.isAI, info.hasLoading);
+}
+
 // 轮询等待图片生成完成：以现有图为基准，检测到 >= minImages 张新图即返回；
 // 超时（默认 10 分钟）返回已检测到的新图（可能不足）
 async function waitForGenerationComplete(timeout = 600000, minImages = 4) {
@@ -403,6 +419,12 @@ async function downloadImagesIncremental(rowNum, timeout = 600000, totalImages =
     while (Date.now() - startTime < timeout) {
         await sleep(2000);
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
+
+        // 生成被拒/失败时提前中止，避免把 10 分钟白白耗在等待上（清晰报告给调用方）
+        if (isGenerationError()) {
+            log('⚠️ 检测到豆包返回错误消息，生成失败，提前结束', 'warn');
+            break;
+        }
 
         const currentUrls = getAllImageUrls();
         const newUrls = currentUrls.filter(u => {
@@ -485,11 +507,17 @@ async function runColorTask(task) {
 
     try {
         results.step = '切换图像生成模式';
-        await switchToImageGenMode();
+        const switched = await switchToImageGenMode();
+        if (!switched) {
+            throw new Error('未找到"图像生成"模式按钮，请确认豆包页面已就绪');
+        }
         await sleep(1000);
 
         results.step = '上传图片';
-        await uploadImage(imagePath);
+        const uploaded = await uploadImage(imagePath);
+        if (!uploaded) {
+            throw new Error('图片上传失败，任务中止');
+        }
         await sleep(2000);
 
         results.step = '输入提示词';
