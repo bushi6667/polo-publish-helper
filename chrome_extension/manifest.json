@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Polo发品助手 - 自动填表上传",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "从Excel读取产品数据，自动填入1688发品页面，支持自动上传主图和AI换色",
   "permissions": ["activeTab", "scripting", "storage", "debugger", "downloads", "webNavigation"],
   "host_permissions": ["*://post.alibaba.com/*", "*://*.alibaba.com/*", "*://www.doubao.com/*", "*://doubao.com/*", "*://*.byteimg.com/*", "*://www.photopea.com/*", "*://photopea.com/*"],
