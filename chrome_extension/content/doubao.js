@@ -337,12 +337,13 @@ function getLastMessageInfo() {
 }
 
 // 纯字符串判定：给定最后一条消息的文本与其是否 AI/是否生成中，判断是否为"生成失败/被拒"类消息
-// 关键词越保守越好，避免误判正在生成的正常消息；AI 且未在生成中才可能判定为错误
+// 关键词取硬性失败语义，避免用宽泛词汇（如"未能/抱歉/失败了"）误伤正常成功的回复；
+// 且 AI 未在生成中才可能判定为错误
 function isGenerationErrorText(text, isAI, hasLoading) {
     if (!isAI || hasLoading) return false;
     const txt = (text || '').toLowerCase();
-    const cnErr = ['生成失败', '出错了', '无法生成', '生成不了', '对不起', '抱歉', '未能', '失败了', '不可用', '被拒绝', '不被允许', '请重新'];
-    const enErr = ['failed', 'error', 'sorry', 'could not', 'unable to', 'cannot generate', 'is not allowed'];
+    const cnErr = ['生成失败', '出错了', '无法生成', '生成不了', '被拒绝', '不被允许'];
+    const enErr = ['cannot generate', 'is not allowed', 'generation failed'];
     return cnErr.some(k => txt.includes(k)) || enErr.some(k => txt.includes(k));
 }
 
@@ -370,12 +371,6 @@ async function downloadImagesIncremental(rowNum, timeout = 600000, totalImages =
         await sleep(2000);
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
 
-        // 生成被拒/失败时提前中止，避免把 10 分钟白白耗在等待上（清晰报告给调用方）
-        if (isGenerationError()) {
-            log('⚠️ 检测到豆包返回错误消息，生成失败，提前结束', 'warn');
-            break;
-        }
-
         const currentUrls = getAllImageUrls();
         const newUrls = currentUrls.filter(u => {
             const h = getHashFromUrl(u);
@@ -387,9 +382,16 @@ async function downloadImagesIncremental(rowNum, timeout = 600000, totalImages =
             log(`[${elapsed}s] 图片增加: ${lastImageCount} 张`);
         }
 
+        // 成功优先：图片已达目标立即结束，避免"最后一条消息含错误字样但图其实已生成好"的误判丢弃图片
         if (newUrls.length >= totalImages) {
             allNewUrls = newUrls.slice(0, totalImages);
             log(`✅ 检测到 ${allNewUrls.length} 张新图 (已达到目标 ${totalImages} 张)`);
+            break;
+        }
+
+        // 生成被拒/失败时提前中止，避免把 10 分钟白白耗在等待上（仅当图片一直没出现时才有意义）
+        if (isGenerationError()) {
+            log('⚠️ 检测到豆包返回错误消息，生成失败，提前结束', 'warn');
             break;
         }
 
