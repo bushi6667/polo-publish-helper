@@ -2014,7 +2014,11 @@ async function fillSizeTemplate(product) {
     }
     
     let targetTemplate = '男士T恤通用';
-    if (isHoodie || isSweatshirt) {
+    if (isHoodie) {
+        // (4) Hooded sweatshirt = 帽衫，与无帽卫衣区分
+        targetTemplate = '男士帽衫通用';
+    } else if (isSweatshirt) {
+        // (5) Sweatshirt = 卫衣（无帽）
         targetTemplate = '男士卫衣通用版';
     } else if (isShirt || isPolo || category.includes('商务') || category.includes('正装')) {
         targetTemplate = '男士商务正装通用';
