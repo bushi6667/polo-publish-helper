@@ -8,6 +8,7 @@
  * 适用于网络较慢、页面渲染较慢的场景
  */
 const waitTimesStable = {
+    modeFactor: 1.0,      // 整体等待时长系数（稳定=1.0）
     scroll: {
         before: 150,      // 滚动前等待
         after: 300,       // 滚动后等待渲染
@@ -52,6 +53,7 @@ const waitTimesStable = {
  * 适用于网络良好、页面渲染快的场景
  */
 const waitTimesFast = {
+    modeFactor: 0.7,      // 整体等待时长系数（快速=0.7，缩短约三成）
     scroll: {
         before: 100,
         after: 200,

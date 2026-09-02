@@ -352,56 +352,6 @@ function isGenerationError() {
     return isGenerationErrorText(info.text, info.isAI, info.hasLoading);
 }
 
-// 轮询等待图片生成完成：以现有图为基准，检测到 >= minImages 张新图即返回；
-// 超时（默认 10 分钟）返回已检测到的新图（可能不足）
-async function waitForGenerationComplete(timeout = 600000, minImages = 4) {
-    log(`等待图片生成完成（最多${Math.round(timeout/60000)}分钟，至少${minImages}张）...`);
-
-    const existingUrls = getAllImageUrls();
-    const existingSet = new Set(existingUrls);
-    log(`已有图片 ${existingUrls.length} 张作为基准`);
-    log(`💡 提示：如果只显示 ${minImages-1} 张，请手动向上/向下滚动显示第 ${minImages} 张`);
-
-    const startTime = Date.now();
-    let lastImageCount = existingUrls.length;
-
-    while (Date.now() - startTime < timeout) {
-        await sleep(2000);
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-
-        const currentUrls = getAllImageUrls();
-        const currentCount = currentUrls.length;
-        const newUrls = currentUrls.filter(u => !existingSet.has(u));
-
-        if (currentCount > lastImageCount) {
-            log(`[${elapsed}s] 图片增加: ${lastImageCount} → ${currentCount} (新图${newUrls.length}张)`);
-            lastImageCount = currentCount;
-        }
-
-        if (newUrls.length >= minImages) {
-            log(`✨ 检测到 ${newUrls.length} 张新图，满足要求`);
-            await sleep(1500);
-            return getAllImageUrls().filter(u => !existingSet.has(u));
-        }
-
-        if (elapsed % 15 === 0 && elapsed > 0) {
-            log(`[${elapsed}s] 当前新图 ${newUrls.length}/${minImages} 张，请手动滚动显示更多`);
-        }
-    }
-
-    log('⚠️ 等待超时', 'warn');
-    const finalUrls = getAllImageUrls();
-    const finalNew = finalUrls.filter(u => !existingSet.has(u));
-
-    if (finalNew.length >= minImages) {
-        log(`✅ 超时后检测到 ${finalNew.length} 张新图`);
-        return finalNew;
-    }
-
-    log(`❌ 超时，只检测到 ${finalNew.length} 张新图`, 'error');
-    return finalNew;
-}
-
 // 增量下载新图：按 white/black/gray/navy 顺序命名 row{rowNum}_{color}.png，
 // 逐张发 downloadDoubaoImage 消息让 background 下载（自动建子文件夹）
 async function downloadImagesIncremental(rowNum, timeout = 600000, totalImages = 4) {

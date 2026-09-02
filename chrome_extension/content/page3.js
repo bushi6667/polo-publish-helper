@@ -899,7 +899,17 @@ async function setSearchDropdownPage3(containerId, val, labelHint, fallback) {
     return { ok: false, used: '' };
 }
 
-function sleep3(ms) { return new Promise(r => setTimeout(r, ms)); }
+// 统一等待函数：读取 waitTimes 当前模式的 modeFactor，使「稳定/快速」切换真正作用于所有 sleep3 等待
+// waitTimes.js 在 page3 之前加载；取不到配置时退化为原样等待，不影响既有行为
+function sleep3(ms) {
+    try {
+        const wt = typeof window !== 'undefined' && window.waitTimes;
+        const factor = (wt && typeof wt.get === 'function' && wt.get().modeFactor) || 1;
+        return new Promise(r => setTimeout(r, Math.round(ms * factor)));
+    } catch (e) {
+        return new Promise(r => setTimeout(r, ms));
+    }
+}
 
 // ============================================================
 // 通用小件：模板/类目/尺码下拉里"点开后轮询可见选项" + "处理选择后确认弹窗"
@@ -3868,6 +3878,10 @@ function createPage3Panel() {
                 </button>
             </div>
             </div>
+            <div id="polo-speed-container" style="display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
+                <button id="polo-speed-stable" style="flex:1;height:28px;border:none;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;">🐢 平稳</button>
+                <button id="polo-speed-fast" style="flex:1;height:28px;border:none;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;">⚡ 快速</button>
+            </div>
             <div id="polo-ext-container" style="position:relative;display:flex;gap:4px;padding:4px;margin-bottom:8px;background:#f1f5f9;border-radius:12px;border:1px solid #e2e8f0;">
                 <div style="position:absolute;top:4px;left:4px;height:28px;border-radius:10px;background:linear-gradient(135deg,#52c41a 0%,#389e0d 100%);box-shadow:0 2px 8px rgba(82,196,26,0.3);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),width 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:1;pointer-events:none;" id="polo-ext-glider"></div>
                 <button id="polo-ext-jpg" style="position:relative;z-index:2;flex:1;height:28px;border:none;background:transparent;color:#fff;font-size:12px;font-weight:500;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color 0.35s ease;">
@@ -3900,8 +3914,35 @@ function createPage3Panel() {
     const modeFillBtn = document.getElementById('polo-mode-fill-btn');
     const modeFillSplit = document.getElementById('polo-mode-fill-split');
     const modeFillDropdownBtn = document.getElementById('polo-mode-fill-dropdown-btn');
+    const speedContainer = document.getElementById('polo-speed-container');
+    const speedStableBtn = document.getElementById('polo-speed-stable');
+    const speedFastBtn = document.getElementById('polo-speed-fast');
     let isCollapsed = false;
     window.__polo_fill_mode = 'overwrite';
+
+    // 速度模式（稳定/快速）：写 waitTimes 并持久化，下次打开保持用户选择
+    function applySpeedMode(mode) {
+        const isFast = mode === 'fast';
+        if (window.waitTimes && typeof window.waitTimes.setMode === 'function') {
+            window.waitTimes.setMode(mode);   // 立即生效，sleep3 读取 modeFactor
+        }
+        if (speedStableBtn) {
+            speedStableBtn.style.color = isFast ? '#64748b' : '#fff';
+            speedStableBtn.style.background = isFast ? 'transparent' : 'linear-gradient(135deg,#667eea 0%,#764ba2 100%)';
+        }
+        if (speedFastBtn) {
+            speedFastBtn.style.color = isFast ? '#fff' : '#64748b';
+            speedFastBtn.style.background = isFast ? 'linear-gradient(135deg,#667eea 0%,#764ba2 100%)' : 'transparent';
+        }
+        chrome.storage.local.set({ polo_speed_mode: mode }, () => {});
+        log('⚡ 已切换到' + (isFast ? '快速' : '平稳') + '模式', 'info');
+    }
+    if (speedStableBtn) speedStableBtn.onclick = () => applySpeedMode('stable');
+    if (speedFastBtn) speedFastBtn.onclick = () => applySpeedMode('fast');
+    // 加载时恢复用户上次选择的速度模式
+    chrome.storage.local.get({ polo_speed_mode: 'stable' }, (res) => {
+        applySpeedMode(res.polo_speed_mode === 'fast' ? 'fast' : 'stable');
+    });
 
     function updateModeGlider() {
         if (!modeGlider) return;
@@ -3929,6 +3970,7 @@ function createPage3Panel() {
             if (modeAppendBtn) modeAppendBtn.style.display = 'none';
             if (modeGlider) modeGlider.style.display = 'none';
             if (modeFillSplit) { modeFillSplit.style.display = 'flex'; modeFillSplit.style.width = '100%'; }
+            if (speedContainer) speedContainer.style.display = 'none';
             
             panel.style.width = '260px';
             panel.style.maxHeight = 'auto';
@@ -3939,6 +3981,7 @@ function createPage3Panel() {
             autofillDropdownBtn.style.display = 'block';
             logArea.style.display = 'block';
             if (extContainer) extContainer.style.display = 'flex';
+            if (speedContainer) speedContainer.style.display = 'flex';
             
             if (modeOverwriteBtn) modeOverwriteBtn.style.display = 'flex';
             if (modeAppendBtn) modeAppendBtn.style.display = 'flex';
