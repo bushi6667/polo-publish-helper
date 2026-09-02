@@ -457,6 +457,10 @@ async function runColorTask(task) {
     const { imagePath, prompt, rowNum } = task;
     const results = { success: false, step: '', images: [], downloads: [] };
 
+    // 每次换色任务独立：清空上一任务累积的"无水印原图"基准，
+    // 否则批量多行时 isRaw 会用上一行残留的 hash 误判本行图片（同一页面会话内累积）
+    rawUrlMap.clear();
+
     try {
         results.step = '切换图像生成模式';
         const switched = await switchToImageGenMode();

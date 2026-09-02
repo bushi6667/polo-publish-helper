@@ -4349,7 +4349,8 @@ async function loadBatchProduct(rowNum) {
             const stopHeartbeat = startHeartbeat(15000);
             log('💓 保活心跳已启动（每15秒）', 'info');
             
-            await new Promise(r => setTimeout(r, 3000));
+            // 批量模式开始填写前的页面稳定等待，统一走 sleep3 以跟随快速模式系数
+            await sleep3(3000);
             
             try {
                 await ensureTabActive();
