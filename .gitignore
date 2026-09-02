@@ -3,6 +3,14 @@ extracted_images/
 
 # AI 会话元数据（Reasonix/trae 会话记录，不入库）
 .reasonix/
+.reasonix-tmp/
+
+# AI 工具探测/审查残留（临时，不入库）
+.tmp_asar_probe/
+.review_final/
+reasonix.toml
+ai_avatar.png
+gen_avatar.py
 
 # 常规忽略
 node_modules/
