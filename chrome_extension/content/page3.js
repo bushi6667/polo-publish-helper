@@ -901,6 +901,72 @@ async function setSearchDropdownPage3(containerId, val, labelHint, fallback) {
 
 function sleep3(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+// ============================================================
+// 通用小件：模板/类目/尺码下拉里"点开后轮询可见选项" + "处理选择后确认弹窗"
+// 背景：fillSizeTemplate/fillLogisticsTemplate/fillDetailTemplate/fillCompanyIntroTemplate
+//       四处重复同一套"点击下拉→轮询选项→命中→弹窗确认→报告"，且弹窗逻辑完全一致，
+//       收敛为两处可复用函数，避免各写一遍导致规则漂移。
+// ============================================================
+
+// 轮询一组候选选择器，返回第一个可用的"可见"下拉选项集合
+// @param {string[]} optionSelectors - CSS 选择器（按优先级排列）
+// @param {number} maxAttempts - 最大轮询次数（默认 10）
+// @param {number} interval - 每次轮询间隔 ms（默认 200）
+// @returns {Element[]} 可见选项数组（无则空数组）
+async function findVisibleOptions(optionSelectors, maxAttempts = 10, interval = 200) {
+    for (let i = 0; i < maxAttempts; i++) {
+        for (const sel of optionSelectors) {
+            const opts = document.querySelectorAll(sel);
+            const visible = Array.from(opts).filter(o => o.offsetHeight > 0);
+            if (visible.length > 0) {
+                log('🔍 找到 ' + visible.length + ' 个下拉选项 (选择器: ' + sel + ')', 'info');
+                return visible;
+            }
+        }
+        await sleep3(interval);
+    }
+    return [];
+}
+
+// 处理模板/尺码选择后弹出的确认对话框（清除尺码表数据 / 确认切换模板）
+// 原代码在 4 处各自实现，行为完全一致，仅对话框选择器略有差异，用 extraSelectors 补齐。
+// @param {string[]} extraSelectors - 额外对话框选择器（默认覆盖 role=alertdialog 等）
+// @param {number} timeoutMs - 轮询确认弹窗的总时长（默认 3000）
+// @returns {boolean} 是否成功点击了确认按钮
+async function dismissConfirmDialog(extraSelectors, timeoutMs = 3000) {
+    const base = ['[role="alertdialog"]', '.component-dialog-confirm', '.next-dialog-quick'];
+    const all = extraSelectors && extraSelectors.length ? base.concat(extraSelectors) : base;
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+        let dialog = null;
+        for (const sel of all) {
+            const el = document.querySelector(sel);
+            if (el && el.offsetHeight > 0) { dialog = el; break; }
+        }
+        if (dialog) {
+            log('⚠️ 检测到确认弹窗，点击确认...', 'warn');
+            let confirmBtn = null;
+            const btns = dialog.querySelectorAll('.next-btn');
+            for (const btn of btns) {
+                const helper = btn.querySelector('.next-btn-helper');
+                const text = helper ? helper.innerText.trim() : btn.innerText.trim();
+                if (text === '确定' || text === '确认' || text === 'Confirm' || text === 'OK') {
+                    confirmBtn = btn;
+                    break;
+                }
+            }
+            if (!confirmBtn) confirmBtn = dialog.querySelector('.next-btn-primary');
+            if (confirmBtn) {
+                await realClick(confirmBtn);
+                await sleep3(800);
+                return true;
+            }
+        }
+        await sleep3(150);
+    }
+    return false;
+}
+
 async function ensureTabActive() {
     if (document.visibilityState === 'visible') return true;
     try {
@@ -1991,8 +2057,7 @@ async function fillSizeTemplate(product) {
 
     log(`📋 查找模板: ${targetTemplate} (类目: ${category}, isShirt=${isShirt}, isPolo=${isPolo}, isTshirt=${isTshirt})`, 'info');
     
-    // 等待下拉选项出现 - 尝试多种选择器
-    let dropdownOptions = [];
+    // 等待下拉选项出现 - 尝试多种选择器（走统一轮询公共件）
     const optionSelectors = [
         '.next-select-menu .next-menu-item',
         '.next-overlay-wrapper .next-menu-item',
@@ -2000,23 +2065,7 @@ async function fillSizeTemplate(product) {
         '.next-select-dropdown li',
         'li[role="option"]',
     ];
-    
-    for (let i = 0; i < 15; i++) {
-        for (const sel of optionSelectors) {
-            const opts = document.querySelectorAll(sel);
-            if (opts.length > 0) {
-                // 过滤出可见的
-                const visible = Array.from(opts).filter(o => o.offsetHeight > 0);
-                if (visible.length > 0) {
-                    dropdownOptions = visible;
-                    log(`🔍 找到 ${visible.length} 个下拉选项 (选择器: ${sel})`, 'info');
-                    break;
-                }
-            }
-        }
-        if (dropdownOptions.length > 0) break;
-        await sleep3(200);
-    }
+    const dropdownOptions = await findVisibleOptions(optionSelectors, 15, 200);
     
     if (dropdownOptions.length === 0) {
         results.push('⚠️ 未找到模板下拉选项');
@@ -2078,33 +2127,8 @@ async function fillSizeTemplate(product) {
     
     await sleep3(200);
     
-    // 处理确认弹窗（清除尺码表数据）- 最多等待3秒
-    for (let i = 0; i < 20; i++) {
-        const confirmDialog = document.querySelector('.size-chart-dialog-confirm, .next-dialog-quick, [role="alertdialog"]');
-        if (confirmDialog && confirmDialog.offsetHeight > 0) {
-            log('⚠️ 检测到确认弹窗，点击确定...', 'warn');
-            // 找"确定"按钮（中英文都支持）
-            let confirmBtn = null;
-            const btns = confirmDialog.querySelectorAll('.next-btn');
-            for (const btn of btns) {
-                const helper = btn.querySelector('.next-btn-helper');
-                const text = helper ? helper.innerText.trim() : btn.innerText.trim();
-                if (text === '确定' || text === '确认' || text === 'Confirm' || text === 'OK') {
-                    confirmBtn = btn;
-                    break;
-                }
-            }
-            if (!confirmBtn) {
-                confirmBtn = confirmDialog.querySelector('.next-btn-primary');
-            }
-            if (confirmBtn) {
-                await realClick(confirmBtn);
-                await sleep3(800);
-                break;
-            }
-        }
-        await sleep3(150);
-    }
+    // 处理确认弹窗（清除尺码表数据）——走统一弹窗处理公共件
+    await dismissConfirmDialog(['.size-chart-dialog-confirm']);
     
     await sleep3(800);
     
@@ -2951,7 +2975,6 @@ async function fillLogisticsTemplate(product) {
     log('✅ 点击了模板下拉框', 'success');
     await sleep3(800);
 
-    let options = [];
     const optionSelectors = [
         '.component-template-select-custom-options',
         '.select-custom-options-label',
@@ -2960,19 +2983,7 @@ async function fillLogisticsTemplate(product) {
         'li[role="option"]',
     ];
 
-    for (let i = 0; i < 10; i++) {
-        for (const sel of optionSelectors) {
-            const opts = document.querySelectorAll(sel);
-            const visible = Array.from(opts).filter(o => o.offsetHeight > 0);
-            if (visible.length > 0) {
-                options = visible;
-                log('🔍 找到 ' + visible.length + ' 个模板选项 (选择器: ' + sel + ')', 'info');
-                break;
-            }
-        }
-        if (options.length > 0) break;
-        await sleep3(200);
-    }
+    const options = await findVisibleOptions(optionSelectors, 10, 200);
 
     if (options.length === 0) {
         results.push('⚠️ 未找到模板下拉选项');
@@ -3010,31 +3021,7 @@ async function fillLogisticsTemplate(product) {
 
     await sleep3(300);
 
-    for (let i = 0; i < 20; i++) {
-        const dialog = document.querySelector('[role="alertdialog"], .component-dialog-confirm, .next-dialog-quick');
-        if (dialog && dialog.offsetHeight > 0) {
-            log('⚠️ 检测到确认弹窗，点击确认...', 'warn');
-            let confirmBtn = null;
-            const btns = dialog.querySelectorAll('.next-btn');
-            for (const btn of btns) {
-                const helper = btn.querySelector('.next-btn-helper');
-                const text = helper ? helper.innerText.trim() : btn.innerText.trim();
-                if (text === '确认' || text === 'Confirm' || text === '确定' || text === 'OK') {
-                    confirmBtn = btn;
-                    break;
-                }
-            }
-            if (!confirmBtn) {
-                confirmBtn = dialog.querySelector('.next-btn-primary');
-            }
-            if (confirmBtn) {
-                await realClick(confirmBtn);
-                await sleep3(800);
-                break;
-            }
-        }
-        await sleep3(150);
-    }
+    await dismissConfirmDialog();
 
     await sleep3(500);
 
@@ -3357,7 +3344,6 @@ async function fillDetailTemplate(product) {
     log('✅ 点击了商品详情模板下拉框', 'success');
     await sleep3(800);
 
-    let options = [];
     const optionSelectors = [
         '.component-template-select-custom-options',
         '.select-custom-options-label',
@@ -3366,19 +3352,7 @@ async function fillDetailTemplate(product) {
         'li[role="option"]',
     ];
 
-    for (let i = 0; i < 10; i++) {
-        for (const sel of optionSelectors) {
-            const opts = document.querySelectorAll(sel);
-            const visible = Array.from(opts).filter(o => o.offsetHeight > 0);
-            if (visible.length > 0) {
-                options = visible;
-                log('🔍 找到 ' + visible.length + ' 个模板选项 (选择器: ' + sel + ')', 'info');
-                break;
-            }
-        }
-        if (options.length > 0) break;
-        await sleep3(200);
-    }
+    const options = await findVisibleOptions(optionSelectors, 10, 200);
 
     if (options.length === 0) {
         results.push('⚠️ 未找到模板下拉选项');
@@ -3418,31 +3392,7 @@ async function fillDetailTemplate(product) {
 
     await sleep3(300);
 
-    for (let i = 0; i < 20; i++) {
-        const dialog = document.querySelector('[role="alertdialog"], .component-dialog-confirm, .next-dialog-quick');
-        if (dialog && dialog.offsetHeight > 0) {
-            log('⚠️ 检测到确认弹窗，点击确认...', 'warn');
-            let confirmBtn = null;
-            const btns = dialog.querySelectorAll('.next-btn');
-            for (const btn of btns) {
-                const helper = btn.querySelector('.next-btn-helper');
-                const text = helper ? helper.innerText.trim() : btn.innerText.trim();
-                if (text === '确认' || text === 'Confirm' || text === '确定' || text === 'OK') {
-                    confirmBtn = btn;
-                    break;
-                }
-            }
-            if (!confirmBtn) {
-                confirmBtn = dialog.querySelector('.next-btn-primary');
-            }
-            if (confirmBtn) {
-                await realClick(confirmBtn);
-                await sleep3(800);
-                break;
-            }
-        }
-        await sleep3(150);
-    }
+    await dismissConfirmDialog();
 
     await sleep3(500);
 
@@ -3714,7 +3664,6 @@ async function fillCompanyIntroTemplate(product) {
     log('✅ 点击了公司介绍模板下拉框', 'success');
     await sleep3(800);
 
-    let options = [];
     const optionSelectors = [
         '.component-template-select-custom-options',
         '.select-custom-options-label',
@@ -3723,19 +3672,7 @@ async function fillCompanyIntroTemplate(product) {
         'li[role="option"]',
     ];
 
-    for (let i = 0; i < 10; i++) {
-        for (const sel of optionSelectors) {
-            const opts = document.querySelectorAll(sel);
-            const visible = Array.from(opts).filter(o => o.offsetHeight > 0);
-            if (visible.length > 0) {
-                options = visible;
-                log('🔍 找到 ' + visible.length + ' 个模板选项 (选择器: ' + sel + ')', 'info');
-                break;
-            }
-        }
-        if (options.length > 0) break;
-        await sleep3(200);
-    }
+    const options = await findVisibleOptions(optionSelectors, 10, 200);
 
     if (options.length === 0) {
         results.push('⚠️ 未找到模板下拉选项');
@@ -3775,31 +3712,7 @@ async function fillCompanyIntroTemplate(product) {
 
     await sleep3(300);
 
-    for (let i = 0; i < 20; i++) {
-        const dialog = document.querySelector('[role="alertdialog"], .component-dialog-confirm, .next-dialog-quick');
-        if (dialog && dialog.offsetHeight > 0) {
-            log('⚠️ 检测到确认弹窗，点击确认...', 'warn');
-            let confirmBtn = null;
-            const btns = dialog.querySelectorAll('.next-btn');
-            for (const btn of btns) {
-                const helper = btn.querySelector('.next-btn-helper');
-                const text = helper ? helper.innerText.trim() : btn.innerText.trim();
-                if (text === '确认' || text === 'Confirm' || text === '确定' || text === 'OK') {
-                    confirmBtn = btn;
-                    break;
-                }
-            }
-            if (!confirmBtn) {
-                confirmBtn = dialog.querySelector('.next-btn-primary');
-            }
-            if (confirmBtn) {
-                await realClick(confirmBtn);
-                await sleep3(800);
-                break;
-            }
-        }
-        await sleep3(150);
-    }
+    await dismissConfirmDialog();
 
     await sleep3(500);
 
@@ -4168,10 +4081,20 @@ function createPage3Panel() {
         btn.style.opacity = '0.5';
         try {
             await ensureTabActive();
-            log('开始自动填写页3...');
+            // 每次运行清空旧日志，避免上次内容干扰阅读
+            logArea.innerHTML = '';
+            log('==============================================', 'info');
+            log('🚀 开始自动填写页3（' + new Date().toLocaleTimeString() + '）', 'info');
+            log('==============================================', 'info');
             const results = await fillAllPage3(currentProduct);
             for (const r of results) log(r, r.startsWith('✅') ? 'success' : r.startsWith('⚠️') ? 'warn' : 'info');
-            
+
+            // 本次运行成功/告警汇总，方便一眼看出哪些项异常
+            const okCount = results.filter(r => r.startsWith('✅')).length;
+            const warnCount = results.filter(r => r.startsWith('⚠️')).length;
+            const totalCount = results.length;
+            log(`📊 本次填写汇总：${okCount}/${totalCount} 项成功${warnCount ? `，${warnCount} 项告警（向上滚可定位）` : ''}`, warnCount ? 'warn' : 'success');
+
             log('🎉 全部填入完成！', 'success');
             log('💡 请检查填写内容后，手动点击页面底部的保存按钮', 'success');
             
