@@ -14,6 +14,9 @@ function isRasterImageType(blobType) {
 }
 const IMAGE_DIR_KEY = 'polo_image_dir';
 const COLOR_IMG_DIR_KEY = 'polo_color_img_dir';
+// 颜色图目录未配置时的默认兜底路径（保持历史行为，避免颜色图落盘位置变化）。
+// 建议在 popup「颜色图目录」里显式配置；此兜底仅当 storage/popup 均未设置 COLOR_IMG_DIR 时生效。
+const DEFAULT_COLOR_IMG_DIR = 'D:\\下载\\gg';
 const PUBLISH_QUEUE_KEY = 'polo_publish_queue';
 const PENDING_COLOR_TASK_KEY = 'polo_pending_color_task';
 const DOUBAO_TAB_ID_KEY = 'polo_doubao_tab_id';
@@ -308,10 +311,7 @@ function productKey() {
 // 生成颜色图本地完整路径：按 COLOR_IMG_DIR/Polo发品_颜色图/{文件名}/rowN/rowN_{颜色}.png 拼接
 // （与 downloadDoubaoImage 的落盘目录保持一致）
 function buildColorImagePath(rowNum, color) {
-    let base = COLOR_IMG_DIR;
-    if (!base) {
-        base = 'D:\\下载\\gg';
-    }
+    let base = COLOR_IMG_DIR || DEFAULT_COLOR_IMG_DIR;
     const sep = base.includes('/') ? '/' : '\\';
     const dir = base.endsWith('\\') || base.endsWith('/')
         ? base.slice(0, -1)
